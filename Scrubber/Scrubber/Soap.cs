@@ -160,15 +160,9 @@ namespace Scrubber
             return str;
         }
 
-        private Result<string> Order(string dirtyFile)
-        {
-            return Result<string>.CreateSuccess(dirtyFile);
-        }
+        private Result<string> Order(string dirtyFile) => Result<string>.CreateSuccess(dirtyFile);
 
-        public void Scrub(DirtyFile dirtyFile)
-        {
-            dirtyFile.IsClean = Format(dirtyFile);
-        }
+        public void Scrub(DirtyFile dirtyFile) => dirtyFile.IsClean = Format(dirtyFile);
 
         private static bool WriteToFile(DirtyFile dirtyFile, Result<string> fileSpinResult)
         {

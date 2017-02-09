@@ -7,10 +7,14 @@ namespace Scrubber
     public static class Extenstions
     {
         public static List<string> FileByExtenstion(this string path, string extenstion,
-            SearchOption searchOption = SearchOption.AllDirectories) =>
-            Directory.GetFiles(path, extenstion, searchOption).ToList();
+            SearchOption searchOption = SearchOption.AllDirectories)
+        {
+            return Directory.GetFiles(path, extenstion, searchOption).ToList();
+        }
 
-        public static string GetFileName(this string file) =>
-            Path.GetFileName(file);
+        public static string GetFileName(this string file)
+        {
+            return Path.GetFileName(file);
+        }
     }
 }

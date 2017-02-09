@@ -17,21 +17,12 @@ namespace Scrubber
             _options = options;
         }
 
-        public Result<List<DirtyFile>> Drain()
-        {
-            return DirtyFiles.All(df => df.IsClean) 
-                ? Result<List<DirtyFile>>.CreateSuccess(DirtyFiles) 
-                : Result<List<DirtyFile>>.CreateFail(DirtyFiles);
-        }
+        public Result<List<DirtyFile>> Drain() => DirtyFiles.All(df => df.IsClean) 
+            ? Result<List<DirtyFile>>.CreateSuccess(DirtyFiles) 
+            : Result<List<DirtyFile>>.CreateFail(DirtyFiles);
 
-        public void Fill()
-        {
-            FolderPath.FileByExtenstion("*.xaml").ForEach(file => DirtyFiles.Add(new DirtyFile(file)));
-        }
+        public void Fill() => FolderPath.FileByExtenstion("*.xaml").ForEach(file => DirtyFiles.Add(new DirtyFile(file)));
 
-        public void Rinse()
-        {
-            DirtyFiles.ForEach(dirtyFile => _soap.Scrub(dirtyFile));
-        }
+        public void Rinse() => DirtyFiles.ForEach(dirtyFile => _soap.Scrub(dirtyFile));
     }
 }
