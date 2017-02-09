@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using NLog;
 using Scrubber.Helpers;
 using Scrubber.Objects;
 
@@ -9,6 +10,12 @@ namespace Scrubber.Workers
 {
     public class Soap
     {
+        private readonly Logger _logger;
+
+        public Soap(Logger logger)
+        {
+            _logger = logger;
+        }
         private static int AttributeCountTolerance => 1;
         private static string IndentString => "\t";
         
@@ -192,6 +199,7 @@ namespace Scrubber.Workers
             catch (Exception)
             {
                 dirtyFile.IsClean = false;
+                _logger.Error($"FileName: {dirtyFile.FileName}");
             }
         }
     }
