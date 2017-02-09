@@ -1,11 +1,13 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
+using Bootstrap;
 using Bootstrap.Ninject;
 using CommandLine;
 using Ninject;
 using Scrubber.Helpers;
 using Scrubber.Interfaces;
+using Scrubber.Objects;
 using Scrubber.Workers;
-using Bootstrapper = Bootstrap.Bootstrapper;
 
 namespace Scrubber
 {
@@ -25,11 +27,9 @@ namespace Scrubber
 
                 bathtub.Fill();
                 bathtub.Rinse();
-                var result = bathtub.Drain();
 
-                MessageBox.Show(result.Success
-                    ? $"Operation Completed. {result.ResultValue.Count} Cleaned."
-                    : $"Operation Completed With Errors. {result.ResultValue.Count} Failed.");
+                var result = bathtub.Drain();
+                bathtub.FinishScrub(result);
 
                 return 0;
             }, error => -1);
