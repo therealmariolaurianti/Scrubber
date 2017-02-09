@@ -13,13 +13,12 @@ namespace Scrubber.Workers
 
         private bool Format(DirtyFile dirtyFile)
         {
-            var cleanedFile = Indent(File.ReadAllText(dirtyFile.File));
-            return WriteToFile(dirtyFile, Order(cleanedFile));
+            var cleanedFile = FormatAndOrder(File.ReadAllText(dirtyFile.File));
+            return WriteToFile(dirtyFile, cleanedFile);
         }
 
         private Result<string> Order(string dirtyFile)
         {
-
             return Result<string>.CreateSuccess(dirtyFile);
         }
 
@@ -28,7 +27,7 @@ namespace Scrubber.Workers
             dirtyFile.IsClean = Format(dirtyFile);
         }
 
-        private static bool WriteToFile(DirtyFile dirtyFile, Result<string> fileSpinResult)
+        private bool WriteToFile(DirtyFile dirtyFile, Result<string> fileSpinResult)
         {
             if (!fileSpinResult.Success)
                 return false;
@@ -36,7 +35,7 @@ namespace Scrubber.Workers
             return true;
         }
 
-        private static string Indent(string fileContent)
+        private Result<string> FormatAndOrder(string fileContent)
         {
             var stream = new MemoryStream(fileContent.Length);
             var writer = new StreamWriter(stream);
@@ -46,7 +45,7 @@ namespace Scrubber.Workers
             var reader = new StreamReader(stream);
             var reader2 = XmlReader.Create(reader.BaseStream);
             reader2.Read();
-            var str = "";
+            var cleanedFile = "";
             while (!reader2.EOF)
             {
                 string str2;
@@ -57,9 +56,11 @@ namespace Scrubber.Workers
                 switch (reader2.NodeType)
                 {
                     case XmlNodeType.Comment:
+                    {
                         str2 = "";
                         num4 = 0;
                         goto Label_0465;
+                    }
 
                     case XmlNodeType.Whitespace:
                         {
@@ -67,14 +68,18 @@ namespace Scrubber.Workers
                             continue;
                         }
                     case XmlNodeType.EndElement:
+                    {
                         str2 = "";
                         num2 = 0;
                         goto Label_039D;
+                    }
 
                     case XmlNodeType.Element:
+                    {
                         str2 = "";
                         num = 0;
                         goto Label_015F;
+                    }
 
                     case XmlNodeType.Text:
                         {
@@ -83,18 +88,21 @@ namespace Scrubber.Workers
                                     .Replace("<", "&lt;")
                                     .Replace(">", "&gt;")
                                     .Replace("\"", "&quot;");
-                            str = str + str7;
+                            cleanedFile = cleanedFile + str7;
                             reader2.Read();
                             continue;
                         }
                     case XmlNodeType.ProcessingInstruction:
+                    {
                         str2 = "";
                         num3 = 0;
                         goto Label_040D;
+                    }
 
                     default:
                         goto Label_04CD;
                 }
+
                 Label_014A:
                 str2 = str2 + IndentString;
                 num++;
@@ -102,9 +110,9 @@ namespace Scrubber.Workers
                 if (num < reader2.Depth)
                     goto Label_014A;
                 var name = reader2.Name;
-                var str4 = str;
+                var str4 = cleanedFile;
                 string[] textArray1 = { str4, "\r\n", str2, "<", reader2.Name };
-                str = string.Concat(textArray1);
+                cleanedFile = string.Concat(textArray1);
                 var isEmptyElement = reader2.IsEmptyElement;
                 if (reader2.HasAttributes)
                 {
@@ -123,22 +131,22 @@ namespace Scrubber.Workers
                         str2 = str2 + IndentString;
                     foreach (var pair in list)
                     {
-                        var str9 = str;
+                        var str9 = cleanedFile;
                         if (list.Count > AttributeCountTolerance && !AttributeValuePair.ForceNoLineBreaks(name))
                         {
                             string[] textArray2 = { str9, "\r\n", str2, str8, pair.Name, "=\"", pair.Value, "\"" };
-                            str = string.Concat(textArray2);
+                            cleanedFile = string.Concat(textArray2);
                         }
                         else
                         {
                             string[] textArray3 = { str9, " ", pair.Name, "=\"", pair.Value, "\"" };
-                            str = string.Concat(textArray3);
+                            cleanedFile = string.Concat(textArray3);
                         }
                     }
                 }
                 if (isEmptyElement)
-                    str = str + "/";
-                str = str + ">";
+                    cleanedFile = cleanedFile + "/";
+                cleanedFile = cleanedFile + ">";
                 reader2.Read();
                 continue;
                 Label_0388:
@@ -147,9 +155,9 @@ namespace Scrubber.Workers
                 Label_039D:
                 if (num2 < reader2.Depth)
                     goto Label_0388;
-                var str5 = str;
+                var str5 = cleanedFile;
                 string[] textArray4 = { str5, "\r\n", str2, "</", reader2.Name, ">" };
-                str = string.Concat(textArray4);
+                cleanedFile = string.Concat(textArray4);
                 reader2.Read();
                 continue;
                 Label_03F8:
@@ -158,9 +166,9 @@ namespace Scrubber.Workers
                 Label_040D:
                 if (num3 < reader2.Depth)
                     goto Label_03F8;
-                var str6 = str;
+                var str6 = cleanedFile;
                 string[] textArray5 = { str6, "\r\n", str2, "<?Mapping ", reader2.Value, " ?>" };
-                str = string.Concat(textArray5);
+                cleanedFile = string.Concat(textArray5);
                 reader2.Read();
                 continue;
                 Label_0465:
@@ -169,15 +177,17 @@ namespace Scrubber.Workers
                     str2 = str2 + IndentString;
                     num4++;
                 }
-                string[] textArray6 = { str, "\r\n", str2, "<!--", reader2.Value, "-->" };
-                str = string.Concat(textArray6);
+                string[] textArray6 = { cleanedFile, "\r\n", str2, "<!--", reader2.Value, "-->" };
+                cleanedFile = string.Concat(textArray6);
                 reader2.Read();
                 continue;
                 Label_04CD:
                 reader2.Read();
             }
             reader2.Close();
-            return str;
+
+            var cleanedAndOrderedFile = Order(cleanedFile);
+            return cleanedAndOrderedFile;
         }
     }
 }
