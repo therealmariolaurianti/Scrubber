@@ -61,8 +61,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeType.cs" />
+    <Compile Include="AttributeValuePair.cs" />
+    <Compile Include="Bathtub.cs" />
+    <Compile Include="DirtyFile.cs" />
+    <Compile Include="Extenstions.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="Soap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
