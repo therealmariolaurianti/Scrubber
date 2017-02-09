@@ -61,16 +61,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeType.cs" />
-    <Compile Include="AttributeValuePair.cs" />
-    <Compile Include="Bathtub.cs" />
-    <Compile Include="DirtyFile.cs" />
-    <Compile Include="Extenstions.cs" />
-    <Compile Include="Options.cs" />
+    <Compile Include="Enums\AttributeType.cs" />
+    <Compile Include="Helpers\AttributeValuePair.cs" />
+    <Compile Include="Workers\Bathtub.cs" />
+    <Compile Include="Objects\DirtyFile.cs" />
+    <Compile Include="Helpers\Extenstions.cs" />
+    <Compile Include="Helpers\Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Result.cs" />
-    <Compile Include="Soap.cs" />
+    <Compile Include="Helpers\Result.cs" />
+    <Compile Include="Workers\Soap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
