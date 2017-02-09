@@ -1,8 +1,10 @@
+using CommandLine;
+
 namespace Scrubber.Helpers
 {
-    public class Options
+    public class Options : IOptions
     {
-        public string FolderPath =>
-            @"D:\New Scheduling Board\VetSchedulingBoard";
+        [Option('f', "folderPath", HelpText = "FolderPath", Required = true)]
+        public string FolderPath { get; set; }
     }
 }
