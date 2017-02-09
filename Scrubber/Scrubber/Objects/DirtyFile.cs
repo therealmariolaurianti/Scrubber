@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
+using Scrubber.Helpers;
 
-namespace Scrubber
+namespace Scrubber.Objects
 {
     [DebuggerDisplay("{" + nameof(FileName) + "}")]
     public class DirtyFile

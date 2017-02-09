@@ -1,6 +1,7 @@
 using System;
+using Scrubber.Enums;
 
-namespace Scrubber
+namespace Scrubber.Helpers
 {
     public class AttributeValuePair : IComparable
     {

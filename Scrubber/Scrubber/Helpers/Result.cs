@@ -1,4 +1,4 @@
-﻿namespace Scrubber
+﻿namespace Scrubber.Helpers
 {
     public class Result<T>
     {

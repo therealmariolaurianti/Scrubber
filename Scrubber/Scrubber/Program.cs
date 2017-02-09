@@ -1,6 +1,8 @@
 ﻿using System.Windows.Forms;
 using Bootstrap.Ninject;
 using Ninject;
+using Scrubber.Helpers;
+using Scrubber.Workers;
 using Bootstrapper = Bootstrap.Bootstrapper;
 
 namespace Scrubber

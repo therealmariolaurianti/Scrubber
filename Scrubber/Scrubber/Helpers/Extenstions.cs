@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Scrubber
+namespace Scrubber.Helpers
 {
     public static class Extenstions
     {

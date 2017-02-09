@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Scrubber.Helpers;
+using Scrubber.Objects;
 
-namespace Scrubber
+namespace Scrubber.Workers
 {
     public class Bathtub
     {

@@ -1,4 +1,4 @@
-namespace Scrubber
+namespace Scrubber.Enums
 {
     public enum AttributeType
     {
