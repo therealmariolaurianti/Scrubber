@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Scrubber.Helpers;
+using Scrubber.Interfaces;
 using Scrubber.Objects;
 
 namespace Scrubber.Workers

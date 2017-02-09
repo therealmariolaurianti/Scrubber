@@ -3,6 +3,7 @@ using Bootstrap.Ninject;
 using CommandLine;
 using Ninject;
 using Scrubber.Helpers;
+using Scrubber.Interfaces;
 using Scrubber.Workers;
 using Bootstrapper = Bootstrap.Bootstrapper;
 
@@ -32,10 +33,5 @@ namespace Scrubber
                 return 0;
             }, error => -1);
         }
-    }
-
-    public interface IOptions
-    {
-        string FolderPath { get; set; }
     }
 }

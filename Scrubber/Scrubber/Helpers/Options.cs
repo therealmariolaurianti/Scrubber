@@ -1,4 +1,5 @@
 using CommandLine;
+using Scrubber.Interfaces;
 
 namespace Scrubber.Helpers
 {
