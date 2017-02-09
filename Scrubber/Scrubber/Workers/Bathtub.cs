@@ -34,18 +34,16 @@ namespace Scrubber.Workers
         public void FinishScrub(Result<Dictionary<bool, List<DirtyFile>>> result)
         {
             string messageText;
+            var cleaned = result.ResultValue[true].Count;
 
             if (!result.Success)
             {
-                var cleaned = result.ResultValue[true].Count;
                 var dirty = result.ResultValue[false].Count;
 
                 messageText = $"Operation Completed With Errors. {cleaned} Cleaned. {dirty} Failed.";
             }
             else
-            {
-                messageText = $"Operation Completed. {result.ResultValue.Count} Cleaned.";
-            }
+                messageText = $"Operation Completed. {cleaned} Cleaned.";
 
             MessageBox.Show(messageText);
         }

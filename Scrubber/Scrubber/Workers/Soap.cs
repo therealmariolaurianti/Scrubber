@@ -33,7 +33,8 @@ namespace Scrubber.Workers
         {
             if (!cleanedAndOrderedFile.Success)
                 return false;
-            File.WriteAllText(dirtyFile.File, cleanedAndOrderedFile.ResultValue);
+
+            //File.WriteAllText(dirtyFile.File, cleanedAndOrderedFile.ResultValue);
             return true;
         }
 
