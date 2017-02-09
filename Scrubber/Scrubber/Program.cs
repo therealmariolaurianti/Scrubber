@@ -26,9 +26,10 @@ namespace Scrubber
                 bathtub.Fill();
                 bathtub.Rinse();
                 var result = bathtub.Drain();
+
                 MessageBox.Show(result.Success
                     ? $"Operation Completed. {result.ResultValue.Count} Cleaned."
-                    : "Operation Failed.");
+                    : $"Operation Completed With Errors. {result.ResultValue.Count} Failed.");
 
                 return 0;
             }, error => -1);

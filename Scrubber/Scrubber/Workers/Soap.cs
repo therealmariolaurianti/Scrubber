@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -10,13 +11,7 @@ namespace Scrubber.Workers
     {
         private static int AttributeCountTolerance => 1;
         private static string IndentString => "\t";
-
-        private bool Format(DirtyFile dirtyFile)
-        {
-            var cleanedFile = FormatAndOrder(File.ReadAllText(dirtyFile.File));
-            return WriteToFile(dirtyFile, cleanedFile);
-        }
-
+        
         private Result<string> Order(string dirtyFile)
         {
             return Result<string>.CreateSuccess(dirtyFile);
@@ -24,7 +19,7 @@ namespace Scrubber.Workers
 
         public void Scrub(DirtyFile dirtyFile)
         {
-            dirtyFile.IsClean = Format(dirtyFile);
+            FormatAndOrder(dirtyFile);
         }
 
         private bool WriteToFile(DirtyFile dirtyFile, Result<string> fileSpinResult)
@@ -35,53 +30,57 @@ namespace Scrubber.Workers
             return true;
         }
 
-        private Result<string> FormatAndOrder(string fileContent)
+        private void FormatAndOrder(DirtyFile dirtyFile)
         {
-            var stream = new MemoryStream(fileContent.Length);
-            var writer = new StreamWriter(stream);
-            writer.Write(fileContent);
-            writer.Flush();
-            stream.Seek(0L, SeekOrigin.Begin);
-            var reader = new StreamReader(stream);
-            var reader2 = XmlReader.Create(reader.BaseStream);
-            reader2.Read();
-            var cleanedFile = "";
-            while (!reader2.EOF)
+            try
             {
-                string str2;
-                int num;
-                int num2;
-                int num3;
-                int num4;
-                switch (reader2.NodeType)
-                {
-                    case XmlNodeType.Comment:
-                    {
-                        str2 = "";
-                        num4 = 0;
-                        goto Label_0465;
-                    }
+                var fileContent = File.ReadAllText(dirtyFile.File);
 
-                    case XmlNodeType.Whitespace:
+                var stream = new MemoryStream(fileContent.Length);
+                var writer = new StreamWriter(stream);
+                writer.Write(fileContent);
+                writer.Flush();
+                stream.Seek(0L, SeekOrigin.Begin);
+                var reader = new StreamReader(stream);
+                var reader2 = XmlReader.Create(reader.BaseStream);
+                reader2.Read();
+                var cleanedFile = "";
+                while (!reader2.EOF)
+                {
+                    string str2;
+                    int num;
+                    int num2;
+                    int num3;
+                    int num4;
+                    switch (reader2.NodeType)
+                    {
+                        case XmlNodeType.Comment:
+                        {
+                            str2 = "";
+                            num4 = 0;
+                            goto Label_0465;
+                        }
+
+                        case XmlNodeType.Whitespace:
                         {
                             reader2.Read();
                             continue;
                         }
-                    case XmlNodeType.EndElement:
-                    {
-                        str2 = "";
-                        num2 = 0;
-                        goto Label_039D;
-                    }
+                        case XmlNodeType.EndElement:
+                        {
+                            str2 = "";
+                            num2 = 0;
+                            goto Label_039D;
+                        }
 
-                    case XmlNodeType.Element:
-                    {
-                        str2 = "";
-                        num = 0;
-                        goto Label_015F;
-                    }
+                        case XmlNodeType.Element:
+                        {
+                            str2 = "";
+                            num = 0;
+                            goto Label_015F;
+                        }
 
-                    case XmlNodeType.Text:
+                        case XmlNodeType.Text:
                         {
                             var str7 =
                                 reader2.Value.Replace("&", "&amp;")
@@ -92,102 +91,108 @@ namespace Scrubber.Workers
                             reader2.Read();
                             continue;
                         }
-                    case XmlNodeType.ProcessingInstruction:
-                    {
-                        str2 = "";
-                        num3 = 0;
-                        goto Label_040D;
+                        case XmlNodeType.ProcessingInstruction:
+                        {
+                            str2 = "";
+                            num3 = 0;
+                            goto Label_040D;
+                        }
+
+                        default:
+                            goto Label_04CD;
                     }
 
-                    default:
-                        goto Label_04CD;
-                }
-
-                Label_014A:
-                str2 = str2 + IndentString;
-                num++;
-                Label_015F:
-                if (num < reader2.Depth)
-                    goto Label_014A;
-                var name = reader2.Name;
-                var str4 = cleanedFile;
-                string[] textArray1 = { str4, "\r\n", str2, "<", reader2.Name };
-                cleanedFile = string.Concat(textArray1);
-                var isEmptyElement = reader2.IsEmptyElement;
-                if (reader2.HasAttributes)
-                {
-                    var list = new List<AttributeValuePair>(reader2.AttributeCount);
-                    for (var i = 0; i < reader2.AttributeCount; i++)
-                    {
-                        reader2.MoveToAttribute(i);
-                        if (!AttributeValuePair.IsCommonDefault(name, reader2.Name, reader2.Value))
-                            list.Add(new AttributeValuePair(name, reader2.Name, reader2.Value));
-                    }
-                    list.Sort();
-                    str2 = "";
-                    var str8 = "";
-                    var depth = reader2.Depth;
-                    for (var j = 0; j < depth; j++)
-                        str2 = str2 + IndentString;
-                    foreach (var pair in list)
-                    {
-                        var str9 = cleanedFile;
-                        if (list.Count > AttributeCountTolerance && !AttributeValuePair.ForceNoLineBreaks(name))
-                        {
-                            string[] textArray2 = { str9, "\r\n", str2, str8, pair.Name, "=\"", pair.Value, "\"" };
-                            cleanedFile = string.Concat(textArray2);
-                        }
-                        else
-                        {
-                            string[] textArray3 = { str9, " ", pair.Name, "=\"", pair.Value, "\"" };
-                            cleanedFile = string.Concat(textArray3);
-                        }
-                    }
-                }
-                if (isEmptyElement)
-                    cleanedFile = cleanedFile + "/";
-                cleanedFile = cleanedFile + ">";
-                reader2.Read();
-                continue;
-                Label_0388:
-                str2 = str2 + IndentString;
-                num2++;
-                Label_039D:
-                if (num2 < reader2.Depth)
-                    goto Label_0388;
-                var str5 = cleanedFile;
-                string[] textArray4 = { str5, "\r\n", str2, "</", reader2.Name, ">" };
-                cleanedFile = string.Concat(textArray4);
-                reader2.Read();
-                continue;
-                Label_03F8:
-                str2 = str2 + "    ";
-                num3++;
-                Label_040D:
-                if (num3 < reader2.Depth)
-                    goto Label_03F8;
-                var str6 = cleanedFile;
-                string[] textArray5 = { str6, "\r\n", str2, "<?Mapping ", reader2.Value, " ?>" };
-                cleanedFile = string.Concat(textArray5);
-                reader2.Read();
-                continue;
-                Label_0465:
-                if (num4 < reader2.Depth)
-                {
+                    Label_014A:
                     str2 = str2 + IndentString;
-                    num4++;
+                    num++;
+                    Label_015F:
+                    if (num < reader2.Depth)
+                        goto Label_014A;
+                    var name = reader2.Name;
+                    var str4 = cleanedFile;
+                    string[] textArray1 = {str4, "\r\n", str2, "<", reader2.Name};
+                    cleanedFile = string.Concat(textArray1);
+                    var isEmptyElement = reader2.IsEmptyElement;
+                    if (reader2.HasAttributes)
+                    {
+                        var list = new List<AttributeValuePair>(reader2.AttributeCount);
+                        for (var i = 0; i < reader2.AttributeCount; i++)
+                        {
+                            reader2.MoveToAttribute(i);
+                            if (!AttributeValuePair.IsCommonDefault(name, reader2.Name, reader2.Value))
+                                list.Add(new AttributeValuePair(name, reader2.Name, reader2.Value));
+                        }
+                        list.Sort();
+                        str2 = "";
+                        var str8 = "";
+                        var depth = reader2.Depth;
+                        for (var j = 0; j < depth; j++)
+                            str2 = str2 + IndentString;
+                        foreach (var pair in list)
+                        {
+                            var str9 = cleanedFile;
+                            if (list.Count > AttributeCountTolerance && !AttributeValuePair.ForceNoLineBreaks(name))
+                            {
+                                string[] textArray2 = {str9, "\r\n", str2, str8, pair.Name, "=\"", pair.Value, "\""};
+                                cleanedFile = string.Concat(textArray2);
+                            }
+                            else
+                            {
+                                string[] textArray3 = {str9, " ", pair.Name, "=\"", pair.Value, "\""};
+                                cleanedFile = string.Concat(textArray3);
+                            }
+                        }
+                    }
+                    if (isEmptyElement)
+                        cleanedFile = cleanedFile + "/";
+                    cleanedFile = cleanedFile + ">";
+                    reader2.Read();
+                    continue;
+                    Label_0388:
+                    str2 = str2 + IndentString;
+                    num2++;
+                    Label_039D:
+                    if (num2 < reader2.Depth)
+                        goto Label_0388;
+                    var str5 = cleanedFile;
+                    string[] textArray4 = {str5, "\r\n", str2, "</", reader2.Name, ">"};
+                    cleanedFile = string.Concat(textArray4);
+                    reader2.Read();
+                    continue;
+                    Label_03F8:
+                    str2 = str2 + "    ";
+                    num3++;
+                    Label_040D:
+                    if (num3 < reader2.Depth)
+                        goto Label_03F8;
+                    var str6 = cleanedFile;
+                    string[] textArray5 = {str6, "\r\n", str2, "<?Mapping ", reader2.Value, " ?>"};
+                    cleanedFile = string.Concat(textArray5);
+                    reader2.Read();
+                    continue;
+                    Label_0465:
+                    if (num4 < reader2.Depth)
+                    {
+                        str2 = str2 + IndentString;
+                        num4++;
+                    }
+                    string[] textArray6 = {cleanedFile, "\r\n", str2, "<!--", reader2.Value, "-->"};
+                    cleanedFile = string.Concat(textArray6);
+                    reader2.Read();
+                    continue;
+                    Label_04CD:
+                    reader2.Read();
                 }
-                string[] textArray6 = { cleanedFile, "\r\n", str2, "<!--", reader2.Value, "-->" };
-                cleanedFile = string.Concat(textArray6);
-                reader2.Read();
-                continue;
-                Label_04CD:
-                reader2.Read();
-            }
-            reader2.Close();
 
-            var cleanedAndOrderedFile = Order(cleanedFile);
-            return cleanedAndOrderedFile;
+                reader2.Close();
+
+                var cleanedAndOrderedFile = Order(cleanedFile);
+                dirtyFile.IsClean = WriteToFile(dirtyFile, cleanedAndOrderedFile);
+            }
+            catch (Exception)
+            {
+                dirtyFile.IsClean = false;
+            }
         }
     }
 }

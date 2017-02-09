@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using Scrubber.Helpers;
 using Scrubber.Interfaces;
 using Scrubber.Objects;
@@ -20,9 +21,12 @@ namespace Scrubber.Workers
             _options = options;
         }
 
-        public Result<List<DirtyFile>> Drain() => DirtyFiles.All(df => df.IsClean) 
-            ? Result<List<DirtyFile>>.CreateSuccess(DirtyFiles) 
-            : Result<List<DirtyFile>>.CreateFail(DirtyFiles);
+        public Result<List<DirtyFile>> Drain()
+        {
+            if(DirtyFiles.Any(df => !df.IsClean))
+                Result<List<DirtyFile>>.CreateFail(DirtyFiles.Where(df => !df.IsClean).ToList());
+            return Result<List<DirtyFile>>.CreateSuccess(DirtyFiles);
+        }
 
         public void Fill() => FolderPath.FileByExtenstion("*.xaml").ForEach(file => DirtyFiles.Add(new DirtyFile(file)));
 
