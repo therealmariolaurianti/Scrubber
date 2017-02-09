@@ -8,12 +8,12 @@ namespace Scrubber.Workers
     public class Bathtub
     {
         private readonly Soap _soap;
-        private readonly Options _options;
+        private readonly IOptions _options;
 
         private List<DirtyFile> DirtyFiles { get; } = new List<DirtyFile>();
         public string FolderPath => _options.FolderPath;
         
-        public Bathtub(Soap soap, Options options)
+        public Bathtub(Soap soap, IOptions options)
         {
             _soap = soap;
             _options = options;
