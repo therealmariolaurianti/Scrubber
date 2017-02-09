@@ -29,11 +29,12 @@ namespace Scrubber.Workers
             FormatAndOrder(dirtyFile);
         }
 
-        private bool WriteToFile(DirtyFile dirtyFile, Result<string> fileSpinResult)
+        private bool WriteToFile(DirtyFile dirtyFile, Result<string> cleanedAndOrderedFile)
         {
-            if (!fileSpinResult.Success)
+            if (!cleanedAndOrderedFile.Success)
                 return false;
-            File.WriteAllText(dirtyFile.File, fileSpinResult.ResultValue);
+
+            //TODO: File.WriteAllText(dirtyFile.File, fileSpinResult.ResultValue);
             return true;
         }
 
