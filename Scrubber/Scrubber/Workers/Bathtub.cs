@@ -54,8 +54,4 @@ namespace Scrubber.Workers
 
         public void Rinse() => DirtyFiles.ForEach(dirtyFile => _soap.Scrub(dirtyFile));
     }
-
-    public class FormattedFiles
-    {
-    }
 }
