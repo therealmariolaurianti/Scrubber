@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26206.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrubber", "Scrubber\Scrubber.csproj", "{7AE2604A-AD48-483D-9247-2FE980A5DAEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7AE2604A-AD48-483D-9247-2FE980A5DAEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AE2604A-AD48-483D-9247-2FE980A5DAEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AE2604A-AD48-483D-9247-2FE980A5DAEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AE2604A-AD48-483D-9247-2FE980A5DAEE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
