@@ -8,7 +8,7 @@ namespace Scrubber.Helpers
 {
     public static class Extenstions
     {
-        public static List<string> FileByExtenstion(this string path, string extenstion,
+        public static List<string> GetFilesByExtenstion(this string path, string extenstion,
             SearchOption searchOption = SearchOption.AllDirectories)
         {
             return Directory.GetFiles(path, extenstion, searchOption).ToList();

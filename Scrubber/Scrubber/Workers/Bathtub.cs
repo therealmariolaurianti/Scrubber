@@ -33,7 +33,7 @@ namespace Scrubber.Workers
 
         public void Fill()
         {
-            FolderPath.FileByExtenstion("*.xaml").ForEach(file =>
+            FolderPath.GetFilesByExtenstion("*.xaml").ForEach(file =>
             {
                 var dirtyFile = new DirtyFile(file);
                 DirtyFiles.Add(dirtyFile);
