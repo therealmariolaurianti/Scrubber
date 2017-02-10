@@ -38,21 +38,22 @@ namespace Scrubber.Workers
             foreach (XmlNode childNode in node.ChildNodes)
                 ProcessChildNode(childNode, xDoc);
 
-            //CreateAttribute(node, xDoc, attributeName, 0);
+            //var attribute = new AdditionalAttribute("TabIndex", 0);
+            //AddAttributeToNode(node, xDoc, attribute);
         }
 
-        private void CreateAttribute(XmlNode node, XmlDocument xDoc, string attributeName, object attributeValue)
+        private void AddAttributeToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
         {
             if (node.Attributes != null && node.Attributes.Count > 0)
             {
-                var existing = node.Attributes.GetNamedItem(attributeName);
+                var existing = node.Attributes.GetNamedItem(additionalAttribute.Name);
 
                 if (existing != null)
-                    node.Attributes.Remove(node.Attributes[attributeName]);
+                    node.Attributes.Remove(node.Attributes[additionalAttribute.Name]);
             }
 
-            var attribute = xDoc.CreateAttribute(attributeName);
-            attribute.Value = attributeValue.ToString();
+            var attribute = xDoc.CreateAttribute(additionalAttribute.Name);
+            attribute.Value = additionalAttribute.Value.ToString();
 
             node.Attributes?.Append(attribute);
         }

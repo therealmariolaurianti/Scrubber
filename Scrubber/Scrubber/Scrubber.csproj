@@ -93,6 +93,7 @@
     <Compile Include="Enums\AttributeType.cs" />
     <Compile Include="Helpers\AttributeValuePair.cs" />
     <Compile Include="Interfaces\IOptions.cs" />
+    <Compile Include="Objects\AdditionalAttribute.cs" />
     <Compile Include="Workers\Bathtub.cs" />
     <Compile Include="Objects\DirtyFile.cs" />
     <Compile Include="Helpers\Extenstions.cs" />
