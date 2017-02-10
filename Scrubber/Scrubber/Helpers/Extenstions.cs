@@ -21,10 +21,5 @@ namespace Scrubber.Helpers
         {
             return collection.Any(s.Contains);
         }
-
-        public static void WriteTextToFile(this string s, string filePath)
-        {
-            File.WriteAllText(filePath, s);
-        }
     }
 }

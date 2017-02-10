@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using System.Xml.Linq;
 using NLog;
 using Scrubber.Helpers;
 using Scrubber.Objects;
@@ -12,19 +11,14 @@ namespace Scrubber.Workers
 {
     public class Soap
     {
-        private readonly List<string> _containers = new List<string>
-        {
-            "GroupBox",
-            "syncfusion:TabControlExt",
-            "Button",
-            "syncfusion:TabItemExt"
-        };
+        private readonly AttributeHelper _attributeHelper;
 
         private readonly Logger _logger;
 
         public Soap(Logger logger)
         {
             _logger = logger;
+            _attributeHelper = new AttributeHelper();
         }
 
         private static int AttributeCountTolerance => 1;
@@ -54,8 +48,7 @@ namespace Scrubber.Workers
             foreach (XmlNode childNode in node.ChildNodes)
                 ProcessChildNode(childNode, xDoc);
 
-            CleanComments(node);
-            DisableTabStopForContainers(node, xDoc, node.Name);
+            _attributeHelper.InitialClean(node, xDoc);
 
             if (!node.Name.Equals("Grid"))
                 return;
@@ -73,43 +66,9 @@ namespace Scrubber.Workers
                     ProcessChildNode(orderedNode, xDoc);
 
             node.RemoveAll();
-            RebuildDefaultAttributes(node, xDoc, nodeAttributes);
+            _attributeHelper.RebuildDefaultAttributes(node, xDoc, nodeAttributes);
 
             orderedNodes.ForEach(on => node.AppendChild(on));
-        }
-
-        private void CleanComments(XmlNode node)
-        {
-            if (node.NodeType == XmlNodeType.Comment)
-                node.ParentNode?.RemoveChild(node);
-        }
-
-        private void RebuildDefaultAttributes(XmlNode node, XmlDocument xDoc, List<AdditionalAttribute> nodeAttributes)
-        {
-            foreach (var additionalAttribute in nodeAttributes)
-                AddAttributeToNode(node, xDoc, additionalAttribute);
-        }
-
-        private void DisableTabStopForContainers(XmlNode node, XmlDocument xDoc, string nodeName)
-        {
-            if (_containers.Any(nodeName.Equals))
-                AddAttributeToNode(node, xDoc, new AdditionalAttribute("IsTabStop", false));
-        }
-
-        private void AddAttributeToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
-        {
-            if (node.Attributes != null && node.Attributes.Count > 0)
-            {
-                var existing = node.Attributes.GetNamedItem(additionalAttribute.Name);
-
-                if (existing != null)
-                    node.Attributes.Remove(node.Attributes[additionalAttribute.Name]);
-            }
-
-            var attribute = xDoc.CreateAttribute(additionalAttribute.Name);
-            attribute.Value = additionalAttribute.Value.ToString();
-
-            node.Attributes?.Append(attribute);
         }
 
         private void FormatAndOrder(DirtyFile dirtyFile)
@@ -275,7 +234,7 @@ namespace Scrubber.Workers
 
                 xmlReader.Close();
 
-                cleanedFile.WriteTextToFile(dirtyFile.FilePath);
+                File.WriteAllText(dirtyFile.FilePath, cleanedFile);
                 dirtyFile.IsClean = true;
             }
             catch (Exception exception)
