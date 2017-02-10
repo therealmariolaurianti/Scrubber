@@ -21,14 +21,20 @@ namespace Scrubber.Workers
         private static readonly List<string> IncludeList = new List<string>
         {
             "TextBox",
-            "TypeEntityComboBox",
+            "ComboBox",
             "CheckBox",
             "UpDown",
             "Button",
-            "RadioButton",
-            "DoubleTextBox",
+            "Radio",
             "DateTimeEdit",
             "AutoCompleteControl"
+        };
+
+        private static readonly List<string> ExcludeList = new List<string>
+        {
+            "addEditDeleteButtons:AddEditDeleteButtons",
+            "userControls:EntityGridCheckBoxColumn",
+            "userControls:EntityComboBoxItemsGridColumn"
         };
 
         private static int AttributeCountTolerance => 1;
@@ -45,32 +51,32 @@ namespace Scrubber.Workers
             {
                 foreach (XmlNode rootChildNode in root.ChildNodes)
                 {
-                    ProcessChildNode(rootChildNode, xDoc);
+                    ProcessChildNode(rootChildNode, xDoc, "TabIndex");
                 }
             }
 
             xDoc.Save(filePath);
         }
 
-        private void ProcessChildNode(XmlNode node, XmlDocument xDoc)
+        private void ProcessChildNode(XmlNode node, XmlDocument xDoc, string tabIndex)
         {
             foreach (XmlNode childNode in node.ChildNodes)
             {
-                ProcessChildNode(childNode, xDoc);
+                ProcessChildNode(childNode, xDoc, tabIndex);
             }
 
-            if (!IncludeList.Any(node.Name.Contains))
+            if (!IncludeList.Any(node.Name.Contains) || ExcludeList.Any(node.Name.Contains))
                 return;
 
-            if (node.Attributes != null)
+            if (node.Attributes != null && node.Attributes.Count > 0)
             {
-                var existingTabIndexAttribute = node.Attributes["TabIndex"];
+                var existingTabIndexAttribute = node.Attributes.GetNamedItem(tabIndex);
 
-                if (existingTabIndexAttribute.Specified)
-                    node.Attributes.Remove(existingTabIndexAttribute);
+                if (existingTabIndexAttribute != null)
+                    node.Attributes.Remove(node.Attributes[tabIndex]);
             }
 
-            var tabIndexAttribute = xDoc.CreateAttribute("TabIndex");
+            var tabIndexAttribute = xDoc.CreateAttribute(tabIndex);
             tabIndexAttribute.Value = _counter.ToString();
 
             node.Attributes?.Append(tabIndexAttribute);
@@ -82,24 +88,36 @@ namespace Scrubber.Workers
             FormatAndOrder(dirtyFile);
         }
 
-
         private void FormatAndOrder(DirtyFile dirtyFile)
         {
             try
             {
                 AddTabAttribute(dirtyFile.FilePath);
 
-                var reader2 = StartXmlReader(dirtyFile.FilePath);
-                reader2.Read();
+                var path = dirtyFile.FilePath;
+                var fileContent = File.ReadAllText(path);
+
+                var stream = new MemoryStream(fileContent.Length);
+
+                var writer = new StreamWriter(stream);
+                writer.Write(fileContent);
+                writer.Flush();
+
+                stream.Seek(0L, SeekOrigin.Begin);
+                var streamReader = new StreamReader(stream);
+
+                var xmlReader = XmlReader.Create(streamReader.BaseStream);
+                xmlReader.Read();
+
                 var cleanedFile = "";
-                while (!reader2.EOF)
+                while (!xmlReader.EOF)
                 {
                     string str2;
                     int num;
                     int num2;
                     int num3;
                     int num4;
-                    switch (reader2.NodeType)
+                    switch (xmlReader.NodeType)
                     {
                         case XmlNodeType.Comment:
                         {
@@ -110,7 +128,7 @@ namespace Scrubber.Workers
 
                         case XmlNodeType.Whitespace:
                         {
-                            reader2.Read();
+                            xmlReader.Read();
                             continue;
                         }
                         case XmlNodeType.EndElement:
@@ -130,12 +148,12 @@ namespace Scrubber.Workers
                         case XmlNodeType.Text:
                         {
                             var str7 =
-                                reader2.Value.Replace("&", "&amp;")
+                                xmlReader.Value.Replace("&", "&amp;")
                                     .Replace("<", "&lt;")
                                     .Replace(">", "&gt;")
                                     .Replace("\"", "&quot;");
                             cleanedFile = cleanedFile + str7;
-                            reader2.Read();
+                            xmlReader.Read();
                             continue;
                         }
                         case XmlNodeType.ProcessingInstruction:
@@ -153,26 +171,26 @@ namespace Scrubber.Workers
                     str2 = str2 + IndentString;
                     num++;
                     Label_015F:
-                    if (num < reader2.Depth)
+                    if (num < xmlReader.Depth)
                         goto Label_014A;
-                    var name = reader2.Name;
+                    var name = xmlReader.Name;
                     var str4 = cleanedFile;
-                    string[] textArray1 = {str4, "\r\n", str2, "<", reader2.Name};
+                    string[] textArray1 = {str4, "\r\n", str2, "<", xmlReader.Name};
                     cleanedFile = string.Concat(textArray1);
-                    var isEmptyElement = reader2.IsEmptyElement;
-                    if (reader2.HasAttributes)
+                    var isEmptyElement = xmlReader.IsEmptyElement;
+                    if (xmlReader.HasAttributes)
                     {
-                        var list = new List<AttributeValuePair>(reader2.AttributeCount);
-                        for (var i = 0; i < reader2.AttributeCount; i++)
+                        var list = new List<AttributeValuePair>(xmlReader.AttributeCount);
+                        for (var i = 0; i < xmlReader.AttributeCount; i++)
                         {
-                            reader2.MoveToAttribute(i);
-                            if (!AttributeValuePair.IsCommonDefault(name, reader2.Name, reader2.Value))
-                                list.Add(new AttributeValuePair(name, reader2.Name, reader2.Value));
+                            xmlReader.MoveToAttribute(i);
+                            if (!AttributeValuePair.IsCommonDefault(name, xmlReader.Name, xmlReader.Value))
+                                list.Add(new AttributeValuePair(name, xmlReader.Name, xmlReader.Value));
                         }
                         list.Sort();
                         str2 = "";
                         var str8 = "";
-                        var depth = reader2.Depth;
+                        var depth = xmlReader.Depth;
                         for (var j = 0; j < depth; j++)
                             str2 = str2 + IndentString;
                         foreach (var pair in list)
@@ -193,45 +211,45 @@ namespace Scrubber.Workers
                     if (isEmptyElement)
                         cleanedFile = cleanedFile + "/";
                     cleanedFile = cleanedFile + ">";
-                    reader2.Read();
+                    xmlReader.Read();
                     continue;
                     Label_0388:
                     str2 = str2 + IndentString;
                     num2++;
                     Label_039D:
-                    if (num2 < reader2.Depth)
+                    if (num2 < xmlReader.Depth)
                         goto Label_0388;
                     var str5 = cleanedFile;
-                    string[] textArray4 = {str5, "\r\n", str2, "</", reader2.Name, ">"};
+                    string[] textArray4 = {str5, "\r\n", str2, "</", xmlReader.Name, ">"};
                     cleanedFile = string.Concat(textArray4);
-                    reader2.Read();
+                    xmlReader.Read();
                     continue;
                     Label_03F8:
                     str2 = str2 + "    ";
                     num3++;
                     Label_040D:
-                    if (num3 < reader2.Depth)
+                    if (num3 < xmlReader.Depth)
                         goto Label_03F8;
                     var str6 = cleanedFile;
-                    string[] textArray5 = {str6, "\r\n", str2, "<?Mapping ", reader2.Value, " ?>"};
+                    string[] textArray5 = {str6, "\r\n", str2, "<?Mapping ", xmlReader.Value, " ?>"};
                     cleanedFile = string.Concat(textArray5);
-                    reader2.Read();
+                    xmlReader.Read();
                     continue;
                     Label_0465:
-                    if (num4 < reader2.Depth)
+                    if (num4 < xmlReader.Depth)
                     {
                         str2 = str2 + IndentString;
                         num4++;
                     }
-                    string[] textArray6 = {cleanedFile, "\r\n", str2, "<!--", reader2.Value, "-->"};
+                    string[] textArray6 = {cleanedFile, "\r\n", str2, "<!--", xmlReader.Value, "-->"};
                     cleanedFile = string.Concat(textArray6);
-                    reader2.Read();
+                    xmlReader.Read();
                     continue;
                     Label_04CD:
-                    reader2.Read();
+                    xmlReader.Read();
                 }
 
-                reader2.Close();
+                xmlReader.Close();
 
                 cleanedFile.WriteTextToFile(dirtyFile.FilePath);
                 dirtyFile.IsClean = true;
@@ -241,19 +259,6 @@ namespace Scrubber.Workers
                 dirtyFile.IsClean = false;
                 _logger.Error($"FileName: {dirtyFile.FileName}, Exception: {exception.Message}");
             }
-        }
-
-        private XmlReader StartXmlReader(string dirtyFile, bool isFilePath = true)
-        {
-            var fileContent = isFilePath ? File.ReadAllText(dirtyFile) : dirtyFile;
-            var stream = new MemoryStream(fileContent.Length);
-            var writer = new StreamWriter(stream);
-            writer.Write(fileContent);
-            writer.Flush();
-            stream.Seek(0L, SeekOrigin.Begin);
-            var reader = new StreamReader(stream);
-            var reader2 = XmlReader.Create(reader.BaseStream);
-            return reader2;
         }
     }
 }
