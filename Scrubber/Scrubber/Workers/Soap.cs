@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using NLog;
 using Scrubber.Helpers;
@@ -11,6 +12,7 @@ namespace Scrubber.Workers
     public class Soap
     {
         private readonly Logger _logger;
+        private int _counter = 1;
 
         public Soap(Logger logger)
         {
@@ -19,6 +21,12 @@ namespace Scrubber.Workers
 
         private static int AttributeCountTolerance => 1;
         private static string IndentString => "\t";
+
+        //Entry
+        public void Scrub(DirtyFile dirtyFile)
+        {
+            FormatAndOrder(dirtyFile);
+        }
 
         private void AddTabAttribute(string filePath)
         {
@@ -38,8 +46,15 @@ namespace Scrubber.Workers
             foreach (XmlNode childNode in node.ChildNodes)
                 ProcessChildNode(childNode, xDoc);
 
-            //var attribute = new AdditionalAttribute("TabIndex", 0);
-            //AddAttributeToNode(node, xDoc, attribute);
+            if (!node.Name.Equals("Grid"))
+                return;
+
+            var orderedNodes = node.ChildNodes.Cast<XmlNode>()
+                .OrderBy(un => un.Attributes?["Grid.Column"]?.Value)
+                .ThenBy(un => un.Attributes?["Grid.Row"]?.Value).ToList();
+
+            node.RemoveAll();
+            orderedNodes.ForEach(on => node.AppendChild(on));
         }
 
         private void AddAttributeToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
@@ -56,11 +71,6 @@ namespace Scrubber.Workers
             attribute.Value = additionalAttribute.Value.ToString();
 
             node.Attributes?.Append(attribute);
-        }
-
-        public void Scrub(DirtyFile dirtyFile)
-        {
-            FormatAndOrder(dirtyFile);
         }
 
         private void FormatAndOrder(DirtyFile dirtyFile)

@@ -1,5 +1,8 @@
+using System.Diagnostics;
+
 namespace Scrubber.Objects
 {
+    [DebuggerDisplay("{Name}, {Value}")]
     public class AdditionalAttribute
     {
         public AdditionalAttribute(string name, object value)
