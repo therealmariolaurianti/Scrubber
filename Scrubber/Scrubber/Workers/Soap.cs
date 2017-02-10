@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using NLog;
 using Scrubber.Helpers;
@@ -16,12 +17,64 @@ namespace Scrubber.Workers
         {
             _logger = logger;
         }
+
+        private static readonly List<string> IncludeList = new List<string>
+        {
+            "TextBox",
+            "TypeEntityComboBox",
+            "CheckBox",
+            "UpDown",
+            "Button",
+            "RadioButton",
+            "DoubleTextBox",
+            "DateTimeEdit",
+            "AutoCompleteControl"
+        };
+
         private static int AttributeCountTolerance => 1;
         private static string IndentString => "\t";
+        private int _counter = 1;
         
-        private Result<string> Order(string dirtyFile)
+        private void AddTabAttribute(string filePath)
         {
-            return Result<string>.CreateSuccess(dirtyFile);
+            var xDoc = new XmlDocument();
+            xDoc.Load(filePath);
+
+            var root = xDoc.DocumentElement;
+            if (root != null)
+            {
+                foreach (XmlNode rootChildNode in root.ChildNodes)
+                {
+                    ProcessChildNode(rootChildNode, xDoc);
+                }
+            }
+
+            xDoc.Save(filePath);
+        }
+
+        private void ProcessChildNode(XmlNode node, XmlDocument xDoc)
+        {
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                ProcessChildNode(childNode, xDoc);
+            }
+
+            if (!IncludeList.Any(node.Name.Contains))
+                return;
+
+            if (node.Attributes != null)
+            {
+                var existingTabIndexAttribute = node.Attributes["TabIndex"];
+
+                if (existingTabIndexAttribute.Specified)
+                    node.Attributes.Remove(existingTabIndexAttribute);
+            }
+
+            var tabIndexAttribute = xDoc.CreateAttribute("TabIndex");
+            tabIndexAttribute.Value = _counter.ToString();
+
+            node.Attributes?.Append(tabIndexAttribute);
+            _counter++;
         }
 
         public void Scrub(DirtyFile dirtyFile)
@@ -29,28 +82,14 @@ namespace Scrubber.Workers
             FormatAndOrder(dirtyFile);
         }
 
-        private bool WriteToFile(DirtyFile dirtyFile, Result<string> cleanedAndOrderedFile)
-        {
-            if (!cleanedAndOrderedFile.Success)
-                return false;
-
-            //File.WriteAllText(dirtyFile.File, cleanedAndOrderedFile.ResultValue);
-            return true;
-        }
 
         private void FormatAndOrder(DirtyFile dirtyFile)
         {
             try
             {
-                var fileContent = File.ReadAllText(dirtyFile.File);
+                AddTabAttribute(dirtyFile.FilePath);
 
-                var stream = new MemoryStream(fileContent.Length);
-                var writer = new StreamWriter(stream);
-                writer.Write(fileContent);
-                writer.Flush();
-                stream.Seek(0L, SeekOrigin.Begin);
-                var reader = new StreamReader(stream);
-                var reader2 = XmlReader.Create(reader.BaseStream);
+                var reader2 = StartXmlReader(dirtyFile.FilePath);
                 reader2.Read();
                 var cleanedFile = "";
                 while (!reader2.EOF)
@@ -194,14 +233,27 @@ namespace Scrubber.Workers
 
                 reader2.Close();
 
-                var cleanedAndOrderedFile = Order(cleanedFile);
-                dirtyFile.IsClean = WriteToFile(dirtyFile, cleanedAndOrderedFile);
+                cleanedFile.WriteTextToFile(dirtyFile.FilePath);
+                dirtyFile.IsClean = true;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 dirtyFile.IsClean = false;
-                _logger.Error($"FileName: {dirtyFile.FileName}");
+                _logger.Error($"FileName: {dirtyFile.FileName}, Exception: {exception.Message}");
             }
+        }
+
+        private XmlReader StartXmlReader(string dirtyFile, bool isFilePath = true)
+        {
+            var fileContent = isFilePath ? File.ReadAllText(dirtyFile) : dirtyFile;
+            var stream = new MemoryStream(fileContent.Length);
+            var writer = new StreamWriter(stream);
+            writer.Write(fileContent);
+            writer.Flush();
+            stream.Seek(0L, SeekOrigin.Begin);
+            var reader = new StreamReader(stream);
+            var reader2 = XmlReader.Create(reader.BaseStream);
+            return reader2;
         }
     }
 }

@@ -8,12 +8,14 @@ namespace Scrubber.Objects
     {
         public DirtyFile(string file)
         {
-            File = file;
+            FilePath = file;
         }
 
-        public string File { get; set; }
+        public string FilePath { get; set; }
 
-        public string FileName => File.GetFileName();
+        public string FileContent { get; set; }
+
+        public string FileName => FilePath.GetFileName();
 
         public bool IsClean { get; set; }
     }

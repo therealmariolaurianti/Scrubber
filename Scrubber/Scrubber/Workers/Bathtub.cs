@@ -34,7 +34,9 @@ namespace Scrubber.Workers
         public void FinishScrub(Result<Dictionary<bool, List<DirtyFile>>> result)
         {
             string messageText;
-            var cleaned = result.ResultValue[true].Count;
+            var cleaned = result.ResultValue.Any(r => r.Key) 
+                ? result.ResultValue[true].Count 
+                : 0;
 
             if (!result.Success)
             {
@@ -43,13 +45,23 @@ namespace Scrubber.Workers
                 messageText = $"Operation Completed With Errors. {cleaned} Cleaned. {dirty} Failed.";
             }
             else
-                messageText = $"Operation Completed. {cleaned} Cleaned.";
+                messageText = $"Operation Completed. {cleaned} Cleaned. 0 Failed.";
 
             MessageBox.Show(messageText);
         }
 
-        public void Fill() => FolderPath.FileByExtenstion("*.xaml").ForEach(file => DirtyFiles.Add(new DirtyFile(file)));
+        public void Fill()
+        {
+            FolderPath.FileByExtenstion("*.xaml").ForEach(file =>
+            {
+                var dirtyFile = new DirtyFile(file);
+                DirtyFiles.Add(dirtyFile);
+            });
+        }
 
-        public void Rinse() => DirtyFiles.ForEach(dirtyFile => _soap.Scrub(dirtyFile));
+        public void Rinse()
+        {
+            DirtyFiles.ForEach(dirtyFile => _soap.Scrub(dirtyFile));
+        }
     }
 }

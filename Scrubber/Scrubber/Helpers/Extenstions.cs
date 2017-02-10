@@ -16,5 +16,15 @@ namespace Scrubber.Helpers
         {
             return Path.GetFileName(file);
         }
+
+        public static bool ContainsAny(this string s, List<string> collection)
+        {
+            return collection.Any(s.Contains);
+        }
+
+        public static void WriteTextToFile(this string s, string filePath)
+        {
+            File.WriteAllText(filePath, s);
+        }
     }
 }
