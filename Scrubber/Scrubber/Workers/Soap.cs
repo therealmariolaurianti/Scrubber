@@ -28,15 +28,15 @@ namespace Scrubber.Workers
             var root = xDoc.DocumentElement;
             if (root != null)
                 foreach (XmlNode rootChildNode in root.ChildNodes)
-                    ProcessChildNode(rootChildNode, xDoc, "TabIndex");
+                    ProcessChildNode(rootChildNode, xDoc);
 
             xDoc.Save(filePath);
         }
 
-        private void ProcessChildNode(XmlNode node, XmlDocument xDoc, string tabIndex)
+        private void ProcessChildNode(XmlNode node, XmlDocument xDoc)
         {
             foreach (XmlNode childNode in node.ChildNodes)
-                ProcessChildNode(childNode, xDoc, tabIndex);
+                ProcessChildNode(childNode, xDoc);
 
             //CreateAttribute(node, xDoc, attributeName, 0);
         }
