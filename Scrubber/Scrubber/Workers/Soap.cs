@@ -49,11 +49,27 @@ namespace Scrubber.Workers
             if (!node.Name.Equals("Grid"))
                 return;
 
+            var nodeAttributes = (from XmlAttribute nodeAttribute 
+                                  in node.Attributes
+                                  select new AdditionalAttribute(nodeAttribute)).ToList();
+
             var orderedNodes = node.ChildNodes.Cast<XmlNode>()
                 .OrderBy(un => un.Attributes?["Grid.Column"]?.Value)
                 .ThenBy(un => un.Attributes?["Grid.Row"]?.Value).ToList();
 
+            foreach (var orderedNode in orderedNodes)
+            {
+                if(orderedNode.HasChildNodes)
+                    ProcessChildNode(orderedNode, xDoc);
+            }
+
             node.RemoveAll();
+
+            foreach (var additionalAttribute in nodeAttributes)
+            {
+                AddAttributeToNode(node, xDoc, additionalAttribute);
+            }
+
             orderedNodes.ForEach(on => node.AppendChild(on));
         }
 

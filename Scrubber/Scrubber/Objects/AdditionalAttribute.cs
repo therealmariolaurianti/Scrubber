@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Xml;
 
 namespace Scrubber.Objects
 {
@@ -9,6 +10,12 @@ namespace Scrubber.Objects
         {
             Name = name;
             Value = value;
+        }
+
+        public AdditionalAttribute(XmlAttribute nodeAttribute)
+        {
+            Name = nodeAttribute.Name;
+            Value = nodeAttribute.Value;
         }
 
         public string Name { get; set; }
