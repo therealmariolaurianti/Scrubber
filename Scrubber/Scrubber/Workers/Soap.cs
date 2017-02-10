@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using NLog;
 using Scrubber.Helpers;
@@ -18,29 +17,9 @@ namespace Scrubber.Workers
             _logger = logger;
         }
 
-        private static readonly List<string> IncludeList = new List<string>
-        {
-            "TextBox",
-            "ComboBox",
-            "CheckBox",
-            "UpDown",
-            "Button",
-            "Radio",
-            "DateTimeEdit",
-            "AutoCompleteControl"
-        };
-
-        private static readonly List<string> ExcludeList = new List<string>
-        {
-            "addEditDeleteButtons:AddEditDeleteButtons",
-            "userControls:EntityGridCheckBoxColumn",
-            "userControls:EntityComboBoxItemsGridColumn"
-        };
-
         private static int AttributeCountTolerance => 1;
         private static string IndentString => "\t";
-        private int _counter = 1;
-        
+
         private void AddTabAttribute(string filePath)
         {
             var xDoc = new XmlDocument();
@@ -48,12 +27,8 @@ namespace Scrubber.Workers
 
             var root = xDoc.DocumentElement;
             if (root != null)
-            {
                 foreach (XmlNode rootChildNode in root.ChildNodes)
-                {
                     ProcessChildNode(rootChildNode, xDoc, "TabIndex");
-                }
-            }
 
             xDoc.Save(filePath);
         }
@@ -61,26 +36,25 @@ namespace Scrubber.Workers
         private void ProcessChildNode(XmlNode node, XmlDocument xDoc, string tabIndex)
         {
             foreach (XmlNode childNode in node.ChildNodes)
-            {
                 ProcessChildNode(childNode, xDoc, tabIndex);
-            }
 
-            if (!IncludeList.Any(node.Name.Contains) || ExcludeList.Any(node.Name.Contains))
-                return;
+            //CreateAttribute(node, xDoc, attributeName, 0);
+        }
 
+        private void CreateAttribute(XmlNode node, XmlDocument xDoc, string attributeName, object attributeValue)
+        {
             if (node.Attributes != null && node.Attributes.Count > 0)
             {
-                var existingTabIndexAttribute = node.Attributes.GetNamedItem(tabIndex);
+                var existing = node.Attributes.GetNamedItem(attributeName);
 
-                if (existingTabIndexAttribute != null)
-                    node.Attributes.Remove(node.Attributes[tabIndex]);
+                if (existing != null)
+                    node.Attributes.Remove(node.Attributes[attributeName]);
             }
 
-            var tabIndexAttribute = xDoc.CreateAttribute(tabIndex);
-            tabIndexAttribute.Value = _counter.ToString();
+            var attribute = xDoc.CreateAttribute(attributeName);
+            attribute.Value = attributeValue.ToString();
 
-            node.Attributes?.Append(tabIndexAttribute);
-            _counter++;
+            node.Attributes?.Append(attribute);
         }
 
         public void Scrub(DirtyFile dirtyFile)
