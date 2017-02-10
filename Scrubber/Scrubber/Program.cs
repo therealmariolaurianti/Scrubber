@@ -34,7 +34,7 @@ namespace Scrubber
                 bathtub.Rinse();
 
                 var result = bathtub.Drain();
-                bathtub.FinishScrub(result);
+                result.DisplayResult();
 
                 return 0;
             }, error => -1);

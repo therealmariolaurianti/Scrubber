@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Scrubber.Interfaces;
 using Scrubber.Objects;
 
 namespace Scrubber.Workers
@@ -14,6 +15,13 @@ namespace Scrubber.Workers
             "Button",
             "syncfusion:TabItemExt"
         };
+
+        private readonly IOptions _options;
+
+        public AttributeHelper(IOptions options)
+        {
+            _options = options;
+        }
 
         public void AddAttributeToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
         {
@@ -51,7 +59,8 @@ namespace Scrubber.Workers
 
         public void InitialClean(XmlNode node, XmlDocument xDoc)
         {
-            CleanComments(node);
+            if (_options.ClearComments)
+                CleanComments(node);
             DisableTabStopForContainers(node, xDoc);
         }
     }

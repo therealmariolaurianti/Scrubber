@@ -31,25 +31,6 @@ namespace Scrubber.Workers
                 : Result<Dictionary<bool, List<DirtyFile>>>.CreateSuccess(result);
         }
 
-        public void FinishScrub(Result<Dictionary<bool, List<DirtyFile>>> result)
-        {
-            string messageText;
-            var cleaned = result.ResultValue.Any(r => r.Key) 
-                ? result.ResultValue[true].Count 
-                : 0;
-
-            if (!result.Success)
-            {
-                var dirty = result.ResultValue[false].Count;
-
-                messageText = $"Operation Completed With Errors. {cleaned} Cleaned. {dirty} Failed.";
-            }
-            else
-                messageText = $"Operation Completed. {cleaned} Cleaned. 0 Failed.";
-
-            MessageBox.Show(messageText);
-        }
-
         public void Fill()
         {
             FolderPath.FileByExtenstion("*.xaml").ForEach(file =>

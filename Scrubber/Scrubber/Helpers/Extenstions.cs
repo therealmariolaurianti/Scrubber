@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
+using Scrubber.Objects;
 
 namespace Scrubber.Helpers
 {
@@ -20,6 +22,25 @@ namespace Scrubber.Helpers
         public static bool ContainsAny(this string s, List<string> collection)
         {
             return collection.Any(s.Contains);
+        }
+
+        public static void DisplayResult(this Result<Dictionary<bool, List<DirtyFile>>> result)
+        {
+            string messageText;
+            var cleaned = result.ResultValue.Any(r => r.Key)
+                ? result.ResultValue[true].Count
+                : 0;
+
+            if (!result.Success)
+            {
+                var dirty = result.ResultValue[false].Count;
+
+                messageText = $"Operation Completed With Errors. {cleaned} Cleaned. {dirty} Failed.";
+            }
+            else
+                messageText = $"Operation Completed. {cleaned} Cleaned. 0 Failed.";
+
+            MessageBox.Show(messageText);
         }
     }
 }

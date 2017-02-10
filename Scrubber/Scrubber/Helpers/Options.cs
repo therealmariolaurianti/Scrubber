@@ -7,5 +7,8 @@ namespace Scrubber.Helpers
     {
         [Option('f', "folderPath", HelpText = "FolderPath", Required = true)]
         public string FolderPath { get; set; }
+
+        [Option('c', "clearComments", HelpText = "ClearComments", Required = true)]
+        public bool ClearComments { get; set; }
     }
 }

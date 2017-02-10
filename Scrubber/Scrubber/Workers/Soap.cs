@@ -12,13 +12,12 @@ namespace Scrubber.Workers
     public class Soap
     {
         private readonly AttributeHelper _attributeHelper;
-
         private readonly Logger _logger;
 
-        public Soap(Logger logger)
+        public Soap(Logger logger, AttributeHelper attributeHelper)
         {
             _logger = logger;
-            _attributeHelper = new AttributeHelper();
+            _attributeHelper = attributeHelper;
         }
 
         private static int AttributeCountTolerance => 1;
