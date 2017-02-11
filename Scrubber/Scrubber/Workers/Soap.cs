@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using NLog;
+using Scrubber.Enums;
 using Scrubber.Helpers;
 using Scrubber.Objects;
 

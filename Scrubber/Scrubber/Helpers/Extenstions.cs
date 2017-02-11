@@ -3,10 +3,22 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Xml;
+using Scrubber.Enums;
 using Scrubber.Objects;
+using Scrubber.Workers;
 
 namespace Scrubber.Helpers
 {
+    public static class Containers
+    {
+        public static readonly List<string> ExactContainers = new List<string>
+        {
+            "GroupBox",
+            "syncfusion:TabControlExt",
+            "Button",
+            "syncfusion:TabItemExt"
+        };
+    }
     public static class Extenstions
     {
         public static List<string> GetFilesByExtenstion(this string path, string extenstion,
@@ -30,8 +42,26 @@ namespace Scrubber.Helpers
             return s.ToString().ToLower();
         }
 
+        public static bool Contains(this string s, CommonControls controlName)
+        {
+            return s.Contains(controlName.ToString());
+        }
+
+        public static bool EnumEquals(this string s, CommonControls controlName)
+        {
+            return s.Equals(controlName.ToString());
+        }
+
         public static void RemoveExistingAttribute(this XmlNode node, string attributeName)
         {
+            var attribute = node.Attributes?[attributeName];
+            if (attribute != null)
+                node.Attributes.Remove(attribute);
+        }
+
+        public static void RemoveExistingAttribute(this XmlNode node, CommonAttributes commonAttribute)
+        {
+            var attributeName = commonAttribute.ToString();
             var attribute = node.Attributes?[attributeName];
             if (attribute != null)
                 node.Attributes.Remove(attribute);

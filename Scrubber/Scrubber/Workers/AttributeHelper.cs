@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Scrubber.Enums;
 using Scrubber.Helpers;
 using Scrubber.Interfaces;
 using Scrubber.Objects;
@@ -9,14 +10,6 @@ namespace Scrubber.Workers
 {
     public class AttributeHelper
     {
-        private readonly List<string> _containers = new List<string>
-        {
-            "GroupBox",
-            "syncfusion:TabControlExt",
-            "Button",
-            "syncfusion:TabItemExt"
-        };
-
         private readonly IOptions _options;
 
         public AttributeHelper(IOptions options)
@@ -48,7 +41,8 @@ namespace Scrubber.Workers
                 node.ParentNode?.RemoveChild(node);
         }
 
-        public void RebuildDefaultAttributes(XmlNode node, XmlDocument xDoc, List<XmlAttribute> xmlAttributes)
+        public void RebuildDefaultAttributes(XmlNode node, XmlDocument xDoc,
+            List<XmlAttribute> xmlAttributes)
         {
             foreach (var xmlAttribute in xmlAttributes)
                 node.Attributes?.Append(xmlAttribute);
@@ -56,8 +50,8 @@ namespace Scrubber.Workers
 
         private void DisableTabStopForContainers(XmlNode node, XmlDocument xDoc)
         {
-            if (_containers.Any(node.Name.Equals))
-                AddAttributeToNode(node, xDoc, new AdditionalAttribute("IsTabStop", false));
+            if (Containers.ExactContainers.Any(node.Name.Equals))
+                AddAttributeToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.IsTabStop, false));
         }
 
         public void InitialClean(XmlNode node, XmlDocument xDoc)
@@ -75,30 +69,32 @@ namespace Scrubber.Workers
 
         private void AddPaddingToGroupBox(XmlNode node, XmlDocument xDoc)
         {
-            if (node.Name.Equals("GroupBox"))
-                AddAttributeToNode(node, xDoc, new AdditionalAttribute("Padding", 0));
+            if (node.Name.EnumEquals(CommonControls.GroupBox))
+                AddAttributeToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.Padding, 0));
         }
 
         private void RemovePaddingFromGroupBox(XmlNode node)
         {
-            if (!node.Name.Equals("GroupBox"))
+            if (!node.Name.EnumEquals(CommonControls.GroupBox))
                 return;
 
-            node.RemoveExistingAttribute("Padding");
+            node.RemoveExistingAttribute(CommonAttributes.Padding);
         }
 
         private void AddFontSizeToTabItems(XmlNode node, XmlDocument xDoc)
         {
-            if (node.Name.Contains("TabItemExt") || node.Name.Contains("TabControlExt"))
-                AddAttributeToNode(node, xDoc, new AdditionalAttribute("FontSize", 12));
+            if (node.Name.Contains(CommonControls.TabItemExt) ||
+                node.Name.Contains(CommonControls.TabControlExt))
+                AddAttributeToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.FontSize, 12));
         }
 
         private void RemoveFontSizeFromTabItems(XmlNode node)
         {
-            if (!node.Name.Contains("TabItemExt") && node.Name.Contains("TabControlExt"))
+            if (!node.Name.Contains(CommonControls.TabItemExt) &&
+                node.Name.Contains(CommonControls.TabControlExt))
                 return;
 
-            node.RemoveExistingAttribute("FontSize");
+            node.RemoveExistingAttribute(CommonAttributes.FontSize);
         }
     }
 }
