@@ -19,9 +19,10 @@ namespace Scrubber.Objects
             Value = nodeAttribute.Value;
         }
 
-        public string Name { get; set; }
-        public object Value { get; set; }
         public bool IsDesignTimeAttribute => Value.ToString().Contains("d:");
+
+        public string Name { get; set; }
         public string NamespaceXmnlsCharacter => IsDesignTimeAttribute ? Name[0].ToLowerCaseString() : string.Empty;
+        public object Value { get; set; }
     }
 }

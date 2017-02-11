@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -63,7 +62,6 @@ namespace Scrubber.Workers
             foreach (var orderedNode in orderedNodes)
                 if (orderedNode.HasChildNodes)
                     ProcessChildNode(orderedNode, xDoc);
-
 
             node.RemoveAll();
             _attributeHelper.RebuildDefaultAttributes(node, xDoc, nodeAttributes);

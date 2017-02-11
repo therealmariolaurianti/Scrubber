@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using Scrubber.Helpers;
 using Scrubber.Interfaces;
 using Scrubber.Objects;

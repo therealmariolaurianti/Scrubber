@@ -16,12 +16,12 @@ namespace Scrubber.Workers
             "syncfusion:TabItemExt"
         };
 
+        private readonly IOptions _options;
+
         private Dictionary<string, string> _namespaces = new Dictionary<string, string>
         {
-            {"d", "http://schemas.microsoft.com/expression/blend/2008" }
+            {"d", "http://schemas.microsoft.com/expression/blend/2008"}
         };
-
-        private readonly IOptions _options;
 
         public AttributeHelper(IOptions options)
         {
@@ -73,7 +73,7 @@ namespace Scrubber.Workers
         {
             CleanComments(node);
             DisableTabStopForContainers(node, xDoc);
-            
+
             //TEMP BECUASE OF SYNCFUSION BULLSHIT
             AddFontSizeToTabItems(node, xDoc);
             AddPaddingToGroupBox(node, xDoc);
@@ -81,7 +81,7 @@ namespace Scrubber.Workers
 
         private void AddPaddingToGroupBox(XmlNode node, XmlDocument xDoc)
         {
-            if (node.Name.Contains("GroupBox") && !node.Name.Contains("Header"))
+            if (node.Name.Equals("GroupBox"))
                 AddAttributeToNode(node, xDoc, new AdditionalAttribute("Padding", 0));
         }
 

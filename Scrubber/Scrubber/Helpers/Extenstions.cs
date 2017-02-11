@@ -43,7 +43,9 @@ namespace Scrubber.Helpers
                 messageText = $"Operation Completed With Errors. {cleaned} Cleaned. {dirty} Failed.";
             }
             else
+            {
                 messageText = $"Operation Completed. {cleaned} Cleaned. 0 Failed.";
+            }
 
             MessageBox.Show(messageText);
         }
