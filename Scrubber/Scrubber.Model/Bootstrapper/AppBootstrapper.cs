@@ -2,45 +2,52 @@
 using System.Collections.Generic;
 using System.Windows;
 using Caliburn.Micro;
-using Scrubber.Model.Shell.ViewModels;
+using Ninject;
+using Scrubber.Model.Maintenance.Shell.ViewModels;
 
 namespace Scrubber.Model.Bootstrapper
 {
     public class AppBootstrapper : BootstrapperBase
     {
-        private SimpleContainer container;
+        private IKernel _kernel;
 
         public AppBootstrapper()
         {
             Initialize();
         }
 
-        protected override void Configure()
+        protected override void OnExit(object sender, EventArgs e)
         {
-            container = new SimpleContainer();
-
-            container.Singleton<IWindowManager, WindowManager>();
-            container.Singleton<IEventAggregator, EventAggregator>();
-            container.PerRequest<IShell, ShellViewModel>();
+            _kernel.Dispose();
+            base.OnExit(sender, e);
         }
 
         protected override object GetInstance(Type service, string key)
         {
-            return container.GetInstance(service, key);
+            if (service == null)
+                throw new ArgumentNullException(nameof(service));
+
+            return _kernel.Get(service);
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
         {
-            return container.GetAllInstances(service);
+            return _kernel.GetAll(service);
         }
 
         protected override void BuildUp(object instance)
         {
-            container.BuildUp(instance);
+            _kernel.Inject(instance);
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            _kernel = new StandardKernel();
+
+            _kernel.Bind<IWindowManager>().To<WindowManager>().InSingletonScope();
+            _kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
+            _kernel.Bind<IShell>().To<ShellViewModel>().InSingletonScope();
+
             DisplayRootViewFor<IShell>();
         }
     }

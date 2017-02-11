@@ -1,4 +1,4 @@
-﻿namespace Scrubber.Model.Shell.Views
+﻿namespace Scrubber.Model.Maintenance.Shell.Views
 {
     /// <summary>
     /// Interaction logic for ShellViewModel.xaml
