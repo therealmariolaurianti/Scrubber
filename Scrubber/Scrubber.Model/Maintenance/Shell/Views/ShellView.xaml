@@ -3,23 +3,40 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Scrubber.Model.Maintenance.Shell.ViewModels"
         mc:Ignorable="d"
-        Title="Scrubber" Height="500" Width="700">
+        WindowStartupLocation="CenterScreen"
+        Title="Scrubber"
+        Height="500"
+        Width="800" d:DataContext="{d:DesignInstance viewModels:ShellViewModel }">
+    <Window.InputBindings>
+        <KeyBinding
+            Key="Enter"
+            Command="{Binding ScrubCommand}" />
+    </Window.InputBindings>
     <Grid>
-        <StackPanel
-            HorizontalAlignment="Center"
+        <Grid
             VerticalAlignment="Center">
-            <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="22"
-                Text="Hello World" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox
+                VerticalContentAlignment="Center"
+                Height="50"
+                Grid.Row="0"
+                Name="FolderPath"
+                Margin="10"
+                FontSize="20" />
             <Button
-                Name="RunScrubber"
-                Margin="20"
+                Grid.Row="0"
+                Grid.Column="1"
+                x:Name="RunScrubber"
+                Margin="10,20,20,20"
                 Height="50"
                 FontSize="22"
                 Content="SCRUB"
-                Width="100"/>
-        </StackPanel>
+                Width="100" />
+        </Grid>
     </Grid>
 </Window>

@@ -4,6 +4,7 @@ using System.Windows;
 using Bootstrap.Ninject;
 using Caliburn.Micro;
 using Ninject;
+using Scrubber.Helpers;
 using Scrubber.Model.Maintenance.Shell.ViewModels;
 using Scrubber.Workers;
 

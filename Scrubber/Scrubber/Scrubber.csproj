@@ -82,6 +82,8 @@
     <Compile Include="Enums\CommonControls.cs" />
     <Compile Include="Factories\IBathtubFactory.cs" />
     <Compile Include="Factories\IFactory.cs" />
+    <Compile Include="Helpers\DelegateCommand.cs" />
+    <Compile Include="Helpers\IShell.cs" />
     <Compile Include="Workers\AttributeHelper.cs" />
     <Compile Include="Enums\AttributeType.cs" />
     <Compile Include="Enums\CommonAttributes.cs" />
