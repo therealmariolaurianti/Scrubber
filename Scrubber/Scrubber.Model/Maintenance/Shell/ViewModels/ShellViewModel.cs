@@ -28,7 +28,6 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
         protected override void OnActivate()
         {
-            RowThenColumn = true;
             DisplayName = "Scrubber";
 
             base.OnActivate();
