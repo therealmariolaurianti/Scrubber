@@ -5,5 +5,6 @@ namespace Scrubber.Enums
         TabItemExt,
         TabControlExt,
         GroupBox,
+        Grid
     }
 }

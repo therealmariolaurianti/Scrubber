@@ -50,7 +50,7 @@ namespace Scrubber.Workers
 
             _attributeHelper.InitialClean(node, xDoc);
 
-            if (!node.Name.Equals("Grid"))
+            if (!node.Name.EnumEquals(CommonControls.Grid))
                 return;
 
             // ReSharper disable once AssignNullToNotNullAttribute
