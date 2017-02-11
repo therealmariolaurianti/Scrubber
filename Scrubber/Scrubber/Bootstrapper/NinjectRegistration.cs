@@ -10,12 +10,12 @@ namespace Scrubber.Bootstrapper
     {
         public void Register(IKernel container)
         {
-            var logger = LogManager.GetLogger("Log");
-            container.Bind<Logger>().ToConstant(logger).InSingletonScope();
-
             container.Bind(x => x.FromThisAssembly()
                 .SelectAllInterfaces().InheritedFrom<IFactory>()
                 .BindToFactory());
+
+            var logger = LogManager.GetLogger("Log");
+            container.Bind<Logger>().ToConstant(logger).InSingletonScope();
         }
     }
 }

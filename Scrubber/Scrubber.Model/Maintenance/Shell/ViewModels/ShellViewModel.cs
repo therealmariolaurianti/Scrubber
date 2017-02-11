@@ -1,14 +1,21 @@
 ﻿using Caliburn.Micro;
+using Scrubber.Factories;
 using Scrubber.Helpers;
-using Scrubber.Workers;
 
 namespace Scrubber.Model.Maintenance.Shell.ViewModels
 {
     public class ShellViewModel : PropertyChangedBase, IShell
     {
+        private readonly IBathtubFactory _bathtubFactory;
+
+        public ShellViewModel(IBathtubFactory bathtubFactory)
+        {
+            _bathtubFactory = bathtubFactory;
+        }
+
         public void RunScrubber()
         {
-            var bathtub = IoC.Get<Bathtub>();
+            var bathtub = _bathtubFactory.Create(FolderPath);
 
             bathtub.Fill();
             bathtub.Rinse();
@@ -16,6 +23,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             var result = bathtub.Drain();
             result.DisplayResult();
         }
+
+        public string FolderPath { get; set; }
     }
 
     public interface IShell

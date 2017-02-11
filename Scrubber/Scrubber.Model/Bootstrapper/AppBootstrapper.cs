@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using Bootstrap.Ninject;
 using Caliburn.Micro;
 using Ninject;
 using Scrubber.Model.Maintenance.Shell.ViewModels;
+using Scrubber.Workers;
 
 namespace Scrubber.Model.Bootstrapper
 {
@@ -47,6 +49,11 @@ namespace Scrubber.Model.Bootstrapper
             _kernel.Bind<IWindowManager>().To<WindowManager>().InSingletonScope();
             _kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
             _kernel.Bind<IShell>().To<ShellViewModel>().InSingletonScope();
+
+            Bootstrap.Bootstrapper
+                .Including.Assembly(typeof(AppBootstrapper).Assembly)
+                .AndAssembly(typeof(Soap).Assembly)
+                .With.Ninject().WithContainer(_kernel).Start();
 
             DisplayRootViewFor<IShell>();
         }
