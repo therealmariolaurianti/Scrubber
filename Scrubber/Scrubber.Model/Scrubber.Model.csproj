@@ -109,10 +109,11 @@
     </Compile>
     <Compile Include="Bootstrapper\AppBootstrapper.cs" />
     <Compile Include="Bootstrapper\NinjectRegistration.cs" />
-    <Compile Include="Maintenance\Shell\ViewModels\ShellViewModel.cs" />
     <Compile Include="Maintenance\Shell\Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Maintenance\Shell\ViewModels\ShellViewModel.cs" />
+    <Compile Include="UserSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

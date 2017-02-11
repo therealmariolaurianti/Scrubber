@@ -24,7 +24,7 @@ namespace Scrubber.Workers
             node.Attributes?.Append(attribute);
         }
 
-        private void CleanComments(XmlNode node, bool clearComments)
+        public void CleanComments(XmlNode node, bool clearComments)
         {
             if (!clearComments)
                 return;
@@ -48,7 +48,6 @@ namespace Scrubber.Workers
 
         public void InitialClean(XmlNode node, XmlDocument xDoc)
         {
-            CleanComments(node, true);
             DisableTabStopForContainers(node, xDoc);
 
             //TEMP BECUASE OF SYNCFUSION BULLSHIT

@@ -7,7 +7,7 @@ namespace Scrubber.Model.Bootstrapper
     {
         public void Register(IKernel container)
         {
-            
+            container.Bind<UserSettings>().ToSelf().InSingletonScope();
         }
     }
 }

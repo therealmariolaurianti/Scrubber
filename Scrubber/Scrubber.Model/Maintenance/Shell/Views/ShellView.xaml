@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:Scrubber.Model.Maintenance.Shell.ViewModels"
         xmlns:calcBinding="clr-namespace:CalcBinding;assembly=CalcBinding"
         xmlns:cal="http://www.caliburnproject.org"
+        xmlns:model="clr-namespace:Scrubber.Model"
+        xmlns:viewModels="clr-namespace:Scrubber.Model.Maintenance.Shell.ViewModels"
         mc:Ignorable="d"
         WindowStyle="SingleBorderWindow"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -149,6 +150,7 @@
                             Content="SCRUB"
                             Width="100" />
                         <Button
+                            Name="Close"
                             Margin="10,20,20,20"
                             Height="50"
                             FontSize="22"

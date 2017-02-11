@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Caliburn.Micro;
@@ -10,43 +10,18 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
     public class ShellViewModel : Screen, IShell
     {
         private readonly IBathtubFactory _bathtubFactory;
-        private string _folderPath;
         private bool _columnThenRow;
-        private bool _rowThenColumn;
+        private string _folderPath;
         private bool _isLoading;
+        private bool _rowThenColumn;
+        private readonly UserSettings _userSettings;
 
-        public ShellViewModel(IBathtubFactory bathtubFactory)
+        public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings)
         {
             _bathtubFactory = bathtubFactory;
-        }
+            _userSettings = userSettings;
 
-        protected override void OnActivate()
-        {
-            base.OnActivate();
-            RowThenColumn = true;
-            DisplayName = "Scrubber";
-        }
-
-        public string FolderPath
-        {
-            get { return _folderPath; }
-            set
-            {
-                if (value == _folderPath) return;
-                _folderPath = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
-        public bool RowThenColumn   
-        {
-            get { return _rowThenColumn; }
-            set
-            {
-                if (value == _rowThenColumn) return;
-                _rowThenColumn = value;
-                NotifyOfPropertyChange();
-            }
+            _userSettings.Load(this);
         }
 
         public bool ColumnThenRow
@@ -57,6 +32,19 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 if (value == _columnThenRow) return;
                 _columnThenRow = value;
                 NotifyOfPropertyChange();
+            }
+        }
+
+        public string FolderPath
+        {
+            get { return _folderPath; }
+            set
+            {
+                if (value == _folderPath) return;
+                _folderPath = value;
+                NotifyOfPropertyChange();
+
+                _userSettings?.SaveSingle(nameof(FolderPath), value);
             }
         }
 
@@ -71,8 +59,26 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             }
         }
 
+        public bool RowThenColumn
+        {
+            get { return _rowThenColumn; }
+            set
+            {
+                if (value == _rowThenColumn) return;
+                _rowThenColumn = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
 
         public ICommand ScrubCommand => new DelegateCommand(RunScrubber);
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+            RowThenColumn = true;
+            DisplayName = "Scrubber";
+        }
 
         public void ColumnThenRowChecked()
         {
@@ -97,19 +103,24 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 MessageBox.Show("Enter path.");
                 return;
             }
-
-            IsLoading = true;
             Task.Run(() =>
-            {
-                var bathtub = _bathtubFactory.Create(FolderPath);
+                {
+                    IsLoading = true;
 
-                bathtub.Fill();
-                bathtub.Rinse();
+                    var bathtub = _bathtubFactory.Create(FolderPath);
 
-                var result = bathtub.Drain();
-                result.DisplayResult();
-            }).GetAwaiter()
-              .OnCompleted(() => { IsLoading = false; });
+                    bathtub.Fill();
+                    bathtub.Rinse();
+
+                    var result = bathtub.Drain();
+                    result.DisplayResult();
+                }).GetAwaiter()
+                .OnCompleted(() => { IsLoading = false; });
+        }
+
+        public void Close()
+        {
+            TryClose();
         }
     }
 }
