@@ -16,6 +16,11 @@ namespace Scrubber.Workers
             "syncfusion:TabItemExt"
         };
 
+        private Dictionary<string, string> _namespaces = new Dictionary<string, string>
+        {
+            {"d", "http://schemas.microsoft.com/expression/blend/2008" }
+        };
+
         private readonly IOptions _options;
 
         public AttributeHelper(IOptions options)
@@ -34,6 +39,10 @@ namespace Scrubber.Workers
             }
 
             var attribute = xDoc.CreateAttribute(additionalAttribute.Name);
+
+            if (additionalAttribute.IsDesignTimeAttribute)
+                attribute.Prefix = additionalAttribute.NamespaceXmnlsCharacter;
+
             attribute.Value = additionalAttribute.Value.ToString();
 
             node.Attributes?.Append(attribute);
@@ -41,14 +50,17 @@ namespace Scrubber.Workers
 
         private void CleanComments(XmlNode node)
         {
+            if (!_options.ClearComments)
+                return;
+
             if (node.NodeType == XmlNodeType.Comment)
                 node.ParentNode?.RemoveChild(node);
         }
 
-        public void RebuildDefaultAttributes(XmlNode node, XmlDocument xDoc, List<AdditionalAttribute> nodeAttributes)
+        public void RebuildDefaultAttributes(XmlNode node, XmlDocument xDoc, List<XmlAttribute> xmlAttributes)
         {
-            foreach (var additionalAttribute in nodeAttributes)
-                AddAttributeToNode(node, xDoc, additionalAttribute);
+            foreach (var xmlAttribute in xmlAttributes)
+                node.Attributes?.Append(xmlAttribute);
         }
 
         private void DisableTabStopForContainers(XmlNode node, XmlDocument xDoc)
@@ -59,9 +71,24 @@ namespace Scrubber.Workers
 
         public void InitialClean(XmlNode node, XmlDocument xDoc)
         {
-            if (_options.ClearComments)
-                CleanComments(node);
+            CleanComments(node);
             DisableTabStopForContainers(node, xDoc);
+            
+            //TEMP BECUASE OF SYNCFUSION BULLSHIT
+            AddFontSizeToTabItems(node, xDoc);
+            AddPaddingToGroupBox(node, xDoc);
+        }
+
+        private void AddPaddingToGroupBox(XmlNode node, XmlDocument xDoc)
+        {
+            if (node.Name.Contains("GroupBox") && !node.Name.Contains("Header"))
+                AddAttributeToNode(node, xDoc, new AdditionalAttribute("Padding", 0));
+        }
+
+        private void AddFontSizeToTabItems(XmlNode node, XmlDocument xDoc)
+        {
+            if (node.Name.Contains("TabItemExt") || node.Name.Contains("TabControlExt"))
+                AddAttributeToNode(node, xDoc, new AdditionalAttribute("FontSize", 12));
         }
     }
 }

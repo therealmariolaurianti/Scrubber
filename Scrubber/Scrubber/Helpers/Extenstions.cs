@@ -24,6 +24,11 @@ namespace Scrubber.Helpers
             return collection.Any(s.Contains);
         }
 
+        public static string ToLowerCaseString(this object s)
+        {
+            return s.ToString().ToLower();
+        }
+
         public static void DisplayResult(this Result<Dictionary<bool, List<DirtyFile>>> result)
         {
             string messageText;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -52,9 +53,8 @@ namespace Scrubber.Workers
             if (!node.Name.Equals("Grid"))
                 return;
 
-            var nodeAttributes = (from XmlAttribute nodeAttribute
-                in node.Attributes
-                select new AdditionalAttribute(nodeAttribute)).ToList();
+            // ReSharper disable once AssignNullToNotNullAttribute
+            var nodeAttributes = new List<XmlAttribute>(node.Attributes.Cast<XmlAttribute>().ToList());
 
             var orderedNodes = node.ChildNodes.Cast<XmlNode>()
                 .OrderBy(un => un.Attributes?["Grid.Column"]?.Value)
@@ -63,6 +63,7 @@ namespace Scrubber.Workers
             foreach (var orderedNode in orderedNodes)
                 if (orderedNode.HasChildNodes)
                     ProcessChildNode(orderedNode, xDoc);
+
 
             node.RemoveAll();
             _attributeHelper.RebuildDefaultAttributes(node, xDoc, nodeAttributes);
