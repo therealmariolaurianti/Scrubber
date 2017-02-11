@@ -24,7 +24,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             result.DisplayResult();
         }
 
-        public string FolderPath { get; set; }
+        public string FolderPath
+            => @"D:\Projects\VET\VisualEstiTrack\VisualEstiTrack.Estimates\Maintenance\Quotes\Views";
     }
 
     public interface IShell

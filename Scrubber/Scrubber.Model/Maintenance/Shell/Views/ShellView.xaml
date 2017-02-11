@@ -6,10 +6,20 @@
         mc:Ignorable="d"
         Title="Scrubber" Height="500" Width="700">
     <Grid>
-        <TextBlock
+        <StackPanel
             HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="22"
-            Text="Hello World" />
+            VerticalAlignment="Center">
+            <TextBlock
+                HorizontalAlignment="Center"
+                FontSize="22"
+                Text="Hello World" />
+            <Button
+                Name="RunScrubber"
+                Margin="20"
+                Height="50"
+                FontSize="22"
+                Content="SCRUB"
+                Width="100"/>
+        </StackPanel>
     </Grid>
 </Window>
