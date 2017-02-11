@@ -4,39 +4,159 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Scrubber.Model.Maintenance.Shell.ViewModels"
+        xmlns:calcBinding="clr-namespace:CalcBinding;assembly=CalcBinding"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
+        WindowStyle="SingleBorderWindow"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         WindowStartupLocation="CenterScreen"
         Title="Scrubber"
         Height="500"
-        Width="800" d:DataContext="{d:DesignInstance viewModels:ShellViewModel }">
+        Width="750" d:DataContext="{d:DesignInstance viewModels:ShellViewModel }">
     <Window.InputBindings>
         <KeyBinding
             Key="Enter"
             Command="{Binding ScrubCommand}" />
     </Window.InputBindings>
     <Grid>
-        <Grid
-            VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBox
-                VerticalContentAlignment="Center"
-                Height="50"
-                Grid.Row="0"
-                Name="FolderPath"
-                Margin="10"
-                FontSize="20" />
-            <Button
-                Grid.Row="0"
-                Grid.Column="1"
-                x:Name="RunScrubber"
-                Margin="10,20,20,20"
-                Height="50"
-                FontSize="22"
-                Content="SCRUB"
-                Width="100" />
+        <Border
+            Grid.Row="0"
+            Panel.ZIndex="5"
+            Background="Gray"
+            Opacity=".8"
+            Visibility="{calcBinding:Binding IsLoading}" />
+        <Grid>
+            <GroupBox
+                Margin="5">
+                <GroupBox.Header>
+                    <TextBlock
+                        Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        Margin="2"
+                        Text="Scrubber Details" />
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="Label">
+                            <Setter Property="FontSize" Value="15" />
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </Grid.Resources>
+                    <Label
+                        Content="Folder Path"
+                        Grid.Row="0"
+                        Grid.Column="0" />
+                    <TextBox
+                        Name="FolderPath"
+                        Grid.ColumnSpan="2"
+                        FontSize="15"
+                        Margin="2"
+                        Grid.Row="0"
+                        Grid.Column="1" />
+                    <Label
+                        Content="Clear Comments"
+                        Grid.Row="1"
+                        Grid.Column="0" />
+                    <ToggleButton
+                        Margin="5"
+                        HorizontalAlignment="Left"
+                        Grid.Row="1"
+                        Grid.Column="1" />
+                    <Label
+                        Content="Order By"
+                        Grid.Row="2"
+                        Grid.Column="0" />
+                    <StackPanel
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal"
+                        Grid.Row="2"
+                        Grid.Column="1">
+                        <CheckBox
+                            Margin="5"
+                            Name="RowThenColumn"
+                            cal:Message.Attach="[Event Checked] = [Action RowThenColumnChecked()]"
+                            Content="Row then Column" />
+                        <CheckBox
+                            Name="ColumnThenRow"
+                            cal:Message.Attach="[Event Checked] = [Action ColumnThenRowChecked()]"
+                            Margin="5"
+                            Content="Column then Row" />
+                    </StackPanel>
+                    <GroupBox
+                        Margin="5"
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        Grid.ColumnSpan="2">
+                        <GroupBox.Header>
+                            <TextBlock
+                                Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                FontWeight="SemiBold"
+                                Foreground="White"
+                                Margin="2"
+                                Text="Additional Attributes" />
+                        </GroupBox.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <StackPanel
+                                Grid.Row="1"
+                                Orientation="Horizontal">
+                                <Button
+                                    Width="100"
+                                    Margin="5"
+                                    Content="Add"
+                                    Height="30" />
+                                <Button
+                                    Margin="5"
+                                    Width="100"
+                                    Content="Remove"
+                                    Height="30" />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Grid.Row="3"
+                        Grid.Column="2">
+                        <Button
+                            Name="RunScrubber"
+                            Margin="10,20,20,20"
+                            Height="50"
+                            FontSize="22"
+                            Content="SCRUB"
+                            Width="100" />
+                        <Button
+                            Margin="10,20,20,20"
+                            Height="50"
+                            FontSize="22"
+                            Content="CLOSE"
+                            Width="100" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
         </Grid>
     </Grid>
 </Window>
