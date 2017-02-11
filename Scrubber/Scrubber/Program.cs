@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-using Bootstrap;
+﻿using Bootstrap;
 using Bootstrap.Ninject;
 using CommandLine;
 using Ninject;
 using NLog;
 using Scrubber.Helpers;
 using Scrubber.Interfaces;
-using Scrubber.Objects;
 using Scrubber.Workers;
 
 namespace Scrubber

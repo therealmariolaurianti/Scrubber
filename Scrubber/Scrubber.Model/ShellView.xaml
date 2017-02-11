@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Scrubber.Model.ShellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             MinWidth="600"
+             Height="200">
+    <Grid Background="AliceBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock 
+            Text="Enter Path:"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            FontSize="40" />
+        <TextBox
+            VerticalContentAlignment="Center"
+            FontSize="20"
+            Margin="15"
+            Grid.Row="1"/>
+        <Button
+            FontSize="20"
+            Width="100"
+            Content="GO"
+            Margin="10"
+            Height="30"
+            Grid.Row="2"/>
+    </Grid>
+</UserControl>
