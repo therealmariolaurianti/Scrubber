@@ -31,12 +31,7 @@ namespace Scrubber.Workers
         public void AddAttributeToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
         {
             if (node.Attributes != null && node.Attributes.Count > 0)
-            {
-                var existing = node.Attributes.GetNamedItem(additionalAttribute.Name);
-
-                if (existing != null)
-                    node.Attributes.Remove(node.Attributes[additionalAttribute.Name]);
-            }
+                RemoveExistingAttribute(node, additionalAttribute.Name);
 
             var attribute = xDoc.CreateAttribute(additionalAttribute.Name);
 
@@ -77,6 +72,9 @@ namespace Scrubber.Workers
             //TEMP BECUASE OF SYNCFUSION BULLSHIT
             AddFontSizeToTabItems(node, xDoc);
             AddPaddingToGroupBox(node, xDoc);
+
+            //RemoveFontSizeFromTabItems(node);
+            //RemovePaddingFromGroupBox(node);
         }
 
         private void AddPaddingToGroupBox(XmlNode node, XmlDocument xDoc)
@@ -85,10 +83,33 @@ namespace Scrubber.Workers
                 AddAttributeToNode(node, xDoc, new AdditionalAttribute("Padding", 0));
         }
 
+        private void RemovePaddingFromGroupBox(XmlNode node)
+        {
+            if (!node.Name.Equals("GroupBox"))
+                return;
+
+            RemoveExistingAttribute(node, "Padding");
+        }
+
+        private static void RemoveExistingAttribute(XmlNode node, string attributeName)
+        {
+            var attribute = node.Attributes?[attributeName];
+            if (attribute != null)
+                node.Attributes.Remove(attribute);
+        }
+
         private void AddFontSizeToTabItems(XmlNode node, XmlDocument xDoc)
         {
             if (node.Name.Contains("TabItemExt") || node.Name.Contains("TabControlExt"))
                 AddAttributeToNode(node, xDoc, new AdditionalAttribute("FontSize", 12));
+        }
+
+        private void RemoveFontSizeFromTabItems(XmlNode node)
+        {
+            if (!node.Name.Contains("TabItemExt") && node.Name.Contains("TabControlExt"))
+                return;
+
+            RemoveExistingAttribute(node, "FontSize");
         }
     }
 }
