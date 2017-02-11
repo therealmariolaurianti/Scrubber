@@ -94,12 +94,8 @@
                         Grid.Column="1">
                         <CheckBox
                             Margin="5"
-                            Name="RowThenColumn"
-                            cal:Message.Attach="[Event Checked] = [Action RowThenColumnChecked()]"
                             Content="Row then Column" />
                         <CheckBox
-                            Name="ColumnThenRow"
-                            cal:Message.Attach="[Event Checked] = [Action ColumnThenRowChecked()]"
                             Margin="5"
                             Content="Column then Row" />
                     </StackPanel>
