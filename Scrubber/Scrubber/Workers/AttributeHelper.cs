@@ -3,20 +3,12 @@ using System.Linq;
 using System.Xml;
 using Scrubber.Enums;
 using Scrubber.Helpers;
-using Scrubber.Interfaces;
 using Scrubber.Objects;
 
 namespace Scrubber.Workers
 {
     public class AttributeHelper
     {
-        private readonly IOptions _options;
-
-        public AttributeHelper(IOptions options)
-        {
-            _options = options;
-        }
-
         public void AddAttributeToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
         {
             if (node.Attributes != null && node.Attributes.Count > 0)
@@ -32,9 +24,9 @@ namespace Scrubber.Workers
             node.Attributes?.Append(attribute);
         }
 
-        private void CleanComments(XmlNode node)
+        private void CleanComments(XmlNode node, bool clearComments)
         {
-            if (!_options.ClearComments)
+            if (!clearComments)
                 return;
 
             if (node.NodeType == XmlNodeType.Comment)
@@ -56,7 +48,7 @@ namespace Scrubber.Workers
 
         public void InitialClean(XmlNode node, XmlDocument xDoc)
         {
-            CleanComments(node);
+            CleanComments(node, true);
             DisableTabStopForContainers(node, xDoc);
 
             //TEMP BECUASE OF SYNCFUSION BULLSHIT

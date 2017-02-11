@@ -123,7 +123,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Scrubber\Scrubber.csproj">
+      <Project>{7AE2604A-AD48-483D-9247-2FE980A5DAEE}</Project>
+      <Name>Scrubber</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Maintenance\Shell\Views\ShellView.xaml">
       <SubType>Designer</SubType>

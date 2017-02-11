@@ -1,24 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using Scrubber.Helpers;
-using Scrubber.Interfaces;
 using Scrubber.Objects;
 
 namespace Scrubber.Workers
 {
     public class Bathtub
     {
-        private readonly IOptions _options;
         private readonly Soap _soap;
 
-        public Bathtub(Soap soap, IOptions options)
+        public Bathtub(Soap soap, string folderPath)
         {
+            FolderPath = folderPath;
             _soap = soap;
-            _options = options;
         }
 
         private List<DirtyFile> DirtyFiles { get; } = new List<DirtyFile>();
-        public string FolderPath => _options.FolderPath;
+        public string FolderPath { get; set; }
 
         public Result<Dictionary<bool, List<DirtyFile>>> Drain()
         {
