@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Scrubber.Helpers;
 using Scrubber.Interfaces;
 using Scrubber.Objects;
 
@@ -18,11 +19,6 @@ namespace Scrubber.Workers
 
         private readonly IOptions _options;
 
-        private Dictionary<string, string> _namespaces = new Dictionary<string, string>
-        {
-            {"d", "http://schemas.microsoft.com/expression/blend/2008"}
-        };
-
         public AttributeHelper(IOptions options)
         {
             _options = options;
@@ -31,7 +27,7 @@ namespace Scrubber.Workers
         public void AddAttributeToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
         {
             if (node.Attributes != null && node.Attributes.Count > 0)
-                RemoveExistingAttribute(node, additionalAttribute.Name);
+                node.RemoveExistingAttribute(additionalAttribute.Name);
 
             var attribute = xDoc.CreateAttribute(additionalAttribute.Name);
 
@@ -88,14 +84,7 @@ namespace Scrubber.Workers
             if (!node.Name.Equals("GroupBox"))
                 return;
 
-            RemoveExistingAttribute(node, "Padding");
-        }
-
-        private static void RemoveExistingAttribute(XmlNode node, string attributeName)
-        {
-            var attribute = node.Attributes?[attributeName];
-            if (attribute != null)
-                node.Attributes.Remove(attribute);
+            node.RemoveExistingAttribute("Padding");
         }
 
         private void AddFontSizeToTabItems(XmlNode node, XmlDocument xDoc)
@@ -109,7 +98,7 @@ namespace Scrubber.Workers
             if (!node.Name.Contains("TabItemExt") && node.Name.Contains("TabControlExt"))
                 return;
 
-            RemoveExistingAttribute(node, "FontSize");
+            node.RemoveExistingAttribute("FontSize");
         }
     }
 }

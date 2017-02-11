@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Xml;
 using Scrubber.Objects;
 
 namespace Scrubber.Helpers
@@ -27,6 +28,13 @@ namespace Scrubber.Helpers
         public static string ToLowerCaseString(this object s)
         {
             return s.ToString().ToLower();
+        }
+
+        public static void RemoveExistingAttribute(this XmlNode node, string attributeName)
+        {
+            var attribute = node.Attributes?[attributeName];
+            if (attribute != null)
+                node.Attributes.Remove(attribute);
         }
 
         public static void DisplayResult(this Result<Dictionary<bool, List<DirtyFile>>> result)
