@@ -7,6 +7,13 @@
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="Files"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
         SizeToContent="Width"
@@ -25,8 +32,22 @@
             <DataGrid
                 cal:Message.Attach="[Event MouseDoubleClick] = [Action OpenFile()]"
                 IsReadOnly="True"
+                AutoGenerateColumns="False"
                 SelectedItem="{Binding SelectedFile}"
-                ItemsSource="{Binding Files}" />
+                ItemsSource="{Binding Files}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Header="File Name"
+                        Binding="{Binding FileName}" />
+                    <DataGridCheckBoxColumn
+                        ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                        Header="Is Clean"
+                        Binding="{Binding IsClean}" />
+                    <DataGridTextColumn
+                        Header="File Path"
+                        Binding="{Binding FilePath}" />
+                </DataGrid.Columns>
+            </DataGrid>
         </ScrollViewer>
         <Button
             Margin="5"
