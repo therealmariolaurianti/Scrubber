@@ -7,6 +7,8 @@
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="Files"
+        MaxWidth="1500"
+        MinWidth="300"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -27,7 +29,7 @@
         <ScrollViewer
             PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
             CanContentScroll="True"
-            HorizontalScrollBarVisibility="Disabled"
+            HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Auto">
             <DataGrid
                 cal:Message.Attach="[Event MouseDoubleClick] = [Action OpenFile()]"
