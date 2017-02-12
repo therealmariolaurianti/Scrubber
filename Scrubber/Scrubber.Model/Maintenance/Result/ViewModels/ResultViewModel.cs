@@ -8,7 +8,7 @@ using Scrubber.Objects;
 
 namespace Scrubber.Model.Maintenance.Result.ViewModels
 {
-    public class ResultViewModel : Screen
+    public class ResultViewModel : ViewModel
     {
         public Result<Dictionary<bool, List<DirtyFile>>> Result { get; }
         private readonly IFileViewModelFactory _fileViewModelFactory;
@@ -28,11 +28,6 @@ namespace Scrubber.Model.Maintenance.Result.ViewModels
         {
             DisplayName = "Results";
             base.OnActivate();
-        }
-
-        public void Close()
-        {
-            TryClose();
         }
 
         public void ViewFiles()

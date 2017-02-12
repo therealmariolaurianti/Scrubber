@@ -7,7 +7,7 @@ using Scrubber.Objects;
 
 namespace Scrubber.Model.Maintenance.Files.ViewModels
 {
-    public class FileViewModel : Screen
+    public class FileViewModel : ViewModel
     {
         public List<DirtyFile> Files { get; }
         public DirtyFile SelectedFile { get; set; }
@@ -23,11 +23,6 @@ namespace Scrubber.Model.Maintenance.Files.ViewModels
         {
             if (SelectedFile != null)
                 Process.Start(SelectedFile.FilePath);
-        }
-
-        public void Close()
-        {
-            TryClose();
         }
     }
 }

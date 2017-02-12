@@ -10,16 +10,16 @@ using Scrubber.Objects;
 
 namespace Scrubber.Model.Maintenance.Shell.ViewModels
 {
-    public class ShellViewModel : Screen
+    public class ShellViewModel : ViewModel
     {
         private readonly IBathtubFactory _bathtubFactory;
 
         private readonly IResultViewModelFactory _resultViewModelFactory;
         private readonly UserSettings _userSettings;
+        private readonly IWindowManager _windowManager;
         private bool _clearComments;
         private string _folderPath;
         private bool _isLoading;
-        private readonly IWindowManager _windowManager;
 
         public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings,
             IWindowManager windowManager, IResultViewModelFactory resultViewModelFactory)
@@ -31,6 +31,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
             _userSettings.Load(this);
         }
+
+        private Result<Dictionary<bool, List<DirtyFile>>> CleaningResults { get; set; }
 
         public bool ClearComments
         {
@@ -74,7 +76,6 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         protected override void OnActivate()
         {
             DisplayName = "Scrubber";
-
             base.OnActivate();
         }
 
@@ -121,13 +122,6 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
                     IsLoading = false;
                 });
-        }
-
-        private Result<Dictionary<bool, List<DirtyFile>>> CleaningResults { get; set; }
-
-        public void Close()
-        {
-            TryClose();
         }
     }
 }
