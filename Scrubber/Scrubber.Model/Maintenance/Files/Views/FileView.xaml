@@ -20,6 +20,11 @@
         WindowStyle="None"
         SizeToContent="Width"
         d:DataContext="{d:DesignInstance viewModels:FileViewModel }">
+    <Window.InputBindings>
+        <KeyBinding
+            Key="Enter"
+            Command="{Binding CloseCommand}" />
+    </Window.InputBindings>
     <Grid
         Margin="5">
         <Grid.RowDefinitions>
@@ -40,14 +45,14 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn
                         Header="File Name"
-                        Binding="{Binding FileName}" />
+                        Binding="{Binding FileName}"/>
                     <DataGridCheckBoxColumn
                         ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
                         Header="Is Clean"
                         Binding="{Binding IsClean}" />
                     <DataGridTextColumn
                         Header="File Path"
-                        Binding="{Binding FilePath}" />
+                        Binding="{Binding FilePath}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>

@@ -18,6 +18,11 @@
     Height="100"
     Width="300"
     d:DataContext="{d:DesignInstance viewModels:ResultViewModel}">
+    <Window.InputBindings>
+        <KeyBinding
+            Key="Enter"
+            Command="{Binding ViewFilesCommand}" />
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />

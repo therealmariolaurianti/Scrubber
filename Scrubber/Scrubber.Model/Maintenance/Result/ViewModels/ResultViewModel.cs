@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 using Caliburn.Micro;
 using Scrubber.Helpers;
 using Scrubber.Model.Factories;
@@ -59,5 +60,6 @@ namespace Scrubber.Model.Maintenance.Result.ViewModels
             }
         }
 
+        public ICommand ViewFilesCommand => new DelegateCommand(ViewFiles);
     }
 }

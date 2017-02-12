@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Input;
 using Caliburn.Micro;
+using Scrubber.Helpers;
 using Scrubber.Objects;
 
 namespace Scrubber.Model.Maintenance.Files.ViewModels
@@ -9,6 +11,8 @@ namespace Scrubber.Model.Maintenance.Files.ViewModels
     {
         public List<DirtyFile> Files { get; }
         public DirtyFile SelectedFile { get; set; }
+
+        public ICommand CloseCommand => new DelegateCommand(Close);
 
         public FileViewModel(List<DirtyFile> files)
         {
