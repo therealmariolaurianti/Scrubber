@@ -18,7 +18,7 @@ namespace Scrubber.Model.Maintenance.Result.Views
     /// <summary>
     /// Interaction logic for ResultView.xaml
     /// </summary>
-    public partial class ResultView : UserControl
+    public partial class ResultView 
     {
         public ResultView()
         {

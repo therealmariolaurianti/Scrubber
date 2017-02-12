@@ -21,6 +21,11 @@ namespace Scrubber.Model.Maintenance.Result.ViewModels
             base.OnActivate();
         }
 
+        public void Close()
+        {
+            TryClose();
+        }
+
         public string ResultString
         {
             get
