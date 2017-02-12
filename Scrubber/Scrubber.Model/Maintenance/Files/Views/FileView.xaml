@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Scrubber.Model.Maintenance.Files.ViewModels"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="Files"
         WindowStartupLocation="CenterOwner"
@@ -22,6 +23,9 @@
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
             <DataGrid
+                cal:Message.Attach="[Event MouseDoubleClick] = [Action OpenFile()]"
+                IsReadOnly="True"
+                SelectedItem="{Binding SelectedFile}"
                 ItemsSource="{Binding Files}" />
         </ScrollViewer>
         <Button
