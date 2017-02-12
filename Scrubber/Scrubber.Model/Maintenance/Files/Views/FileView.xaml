@@ -7,6 +7,7 @@
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="Files"
+        AllowsTransparency="True"
         MaxWidth="1500"
         MinWidth="300"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"

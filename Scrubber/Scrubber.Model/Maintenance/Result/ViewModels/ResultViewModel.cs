@@ -11,7 +11,7 @@ namespace Scrubber.Model.Maintenance.Result.ViewModels
     public class ResultViewModel : Screen
     {
         public Result<Dictionary<bool, List<DirtyFile>>> Result { get; }
-        private IFileViewModelFactory _fileViewModelFactory;
+        private readonly IFileViewModelFactory _fileViewModelFactory;
         private readonly IWindowManager _windowManager;
 
         public ResultViewModel(

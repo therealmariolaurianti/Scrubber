@@ -33,13 +33,11 @@
             Opacity=".8"
             Visibility="{calcBinding:Binding IsLoading}" />
         <Grid>
-            <GroupBox
-                Margin="5">
+            <GroupBox>
                 <GroupBox.Header>
                     <TextBlock
                         Style="{DynamicResource MaterialDesignTitleTextBlock}"
                         FontWeight="SemiBold"
-                        Foreground="White"
                         Margin="2"
                         Text="Scrubber Details" />
                 </GroupBox.Header>
@@ -55,7 +53,7 @@
                     <Grid.Resources>
                         <Style TargetType="Label">
                             <Setter Property="FontSize" Value="15" />
-                            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}" />
                             <Setter Property="HorizontalAlignment" Value="Right" />
                             <Setter Property="VerticalAlignment" Value="Center" />
                         </Style>
@@ -115,7 +113,6 @@
                             <TextBlock
                                 Style="{DynamicResource MaterialDesignTitleTextBlock}"
                                 FontWeight="SemiBold"
-                                Foreground="White"
                                 Margin="2"
                                 Text="Additional Attributes" />
                         </GroupBox.Header>

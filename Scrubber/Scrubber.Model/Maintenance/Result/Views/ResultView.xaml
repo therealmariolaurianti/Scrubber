@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:viewModels="clr-namespace:Scrubber.Model.Maintenance.Result.ViewModels"
     mc:Ignorable="d"
+    AllowsTransparency="True"
     WindowStartupLocation="CenterOwner"
     WindowStyle="None"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -15,7 +16,7 @@
     TextOptions.TextRenderingMode="Auto"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{DynamicResource MaterialDesignFont}"
-    Height="100"
+    Height="120"
     Width="300"
     d:DataContext="{d:DesignInstance viewModels:ResultViewModel}">
     <Window.InputBindings>
@@ -35,6 +36,7 @@
             Margin="2"
             Text="{Binding ResultString}" />
         <StackPanel
+            Margin="10"
             HorizontalAlignment="Center"
             Orientation="Horizontal"
             Grid.Row="1">
