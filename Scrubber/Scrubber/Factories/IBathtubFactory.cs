@@ -1,6 +1,6 @@
 ﻿using Scrubber.Workers;
 
-namespace Scrubber.Factories
+namespace Scrubber.Model.Factories
 {
     public interface IBathtubFactory : IFactory
     {

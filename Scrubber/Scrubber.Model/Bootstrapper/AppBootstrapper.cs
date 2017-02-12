@@ -49,14 +49,13 @@ namespace Scrubber.Model.Bootstrapper
 
             _kernel.Bind<IWindowManager>().To<WindowManager>().InSingletonScope();
             _kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
-            _kernel.Bind<IShell>().To<ShellViewModel>().InSingletonScope();
-
+            
             Bootstrap.Bootstrapper
                 .Including.Assembly(typeof(AppBootstrapper).Assembly)
                 .AndAssembly(typeof(Soap).Assembly)
                 .With.Ninject().WithContainer(_kernel).Start();
 
-            DisplayRootViewFor<IShell>();
+            DisplayRootViewFor<ShellViewModel>();
         }
     }
 }

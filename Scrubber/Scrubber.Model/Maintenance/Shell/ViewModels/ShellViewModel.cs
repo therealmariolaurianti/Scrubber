@@ -1,27 +1,71 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Caliburn.Micro;
-using Scrubber.Extensions;
-using Scrubber.Factories;
 using Scrubber.Helpers;
+using Scrubber.Model.Factories;
+using Scrubber.Objects;
 
 namespace Scrubber.Model.Maintenance.Shell.ViewModels
 {
-    public class ShellViewModel : Screen, IShell
+    public class ShellViewModel : Screen
     {
         private readonly IBathtubFactory _bathtubFactory;
+
+        private readonly IResultViewModelFactory _resultViewModelFactory;
         private readonly UserSettings _userSettings;
+        private bool _clearComments;
         private string _folderPath;
         private bool _isLoading;
-        private bool _clearComments;
+        private readonly IWindowManager _windowManager;
 
-        public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings)
+        public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings,
+            IWindowManager windowManager, IResultViewModelFactory resultViewModelFactory)
         {
             _bathtubFactory = bathtubFactory;
             _userSettings = userSettings;
+            _windowManager = windowManager;
+            _resultViewModelFactory = resultViewModelFactory;
 
             _userSettings.Load(this);
+        }
+
+        public bool ClearComments
+        {
+            get { return _clearComments; }
+            set
+            {
+                if (value == _clearComments) return;
+                _clearComments = value;
+                NotifyOfPropertyChange();
+
+                _userSettings?.SaveSingle(nameof(ClearComments), value);
+            }
+        }
+
+        public string FolderPath
+        {
+            get { return _folderPath; }
+            set
+            {
+                if (value == _folderPath) return;
+                _folderPath = value;
+                NotifyOfPropertyChange();
+
+                _userSettings?.SaveSingle(nameof(FolderPath), value);
+            }
+        }
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                if (value == _isLoading) return;
+                _isLoading = value;
+                NotifyOfPropertyChange();
+            }
         }
 
         public ICommand ScrubCommand => new DelegateCommand(RunScrubber);
@@ -49,52 +93,23 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                     bathtub.Fill();
                     bathtub.Rinse();
 
-                    var result = bathtub.Drain();
-                    result.DisplayResult();
+                    CleaningResults = bathtub.Drain();
+
                 }).GetAwaiter()
-                .OnCompleted(() => { IsLoading = false; });
+                .OnCompleted(() =>
+                {
+                    var resultViewModel = _resultViewModelFactory.Create(CleaningResults);
+                    _windowManager.ShowDialog(resultViewModel);
+
+                    IsLoading = false;
+                });
         }
 
-        public bool ClearComments
-        {
-            get { return _clearComments; }
-            set
-            {
-                if (value == _clearComments) return;
-                _clearComments = value;
-                NotifyOfPropertyChange();
-
-                _userSettings?.SaveSingle(nameof(ClearComments), value);
-            }
-        }
+        private Result<Dictionary<bool, List<DirtyFile>>> CleaningResults { get; set; }
 
         public void Close()
         {
             TryClose();
-        }
-
-        public string FolderPath
-        {
-            get { return _folderPath; }
-            set
-            {
-                if (value == _folderPath) return;
-                _folderPath = value;
-                NotifyOfPropertyChange();
-
-                _userSettings?.SaveSingle(nameof(FolderPath), value);
-            }
-        }
-
-        public bool IsLoading
-        {
-            get { return _isLoading; }
-            set
-            {
-                if (value == _isLoading) return;
-                _isLoading = value;
-                NotifyOfPropertyChange();
-            }
         }
     }
 }

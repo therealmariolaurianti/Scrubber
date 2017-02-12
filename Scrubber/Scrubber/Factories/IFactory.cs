@@ -1,4 +1,4 @@
-﻿namespace Scrubber.Factories
+﻿namespace Scrubber.Model.Factories
 {
     public interface IFactory
     {
