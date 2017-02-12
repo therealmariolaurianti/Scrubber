@@ -80,6 +80,10 @@
   <ItemGroup>
     <Compile Include="Bootstrapper\NinjectRegistration.cs" />
     <Compile Include="Enums\CommonControls.cs" />
+    <Compile Include="Extensions\AttributeExtensions.cs" />
+    <Compile Include="Extensions\Containers.cs" />
+    <Compile Include="Extensions\LinqExtensions.cs" />
+    <Compile Include="Factories\IAdditionalAttributeFactory.cs" />
     <Compile Include="Factories\IBathtubFactory.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
@@ -92,7 +96,7 @@
     <Compile Include="Objects\AdditionalAttribute.cs" />
     <Compile Include="Workers\Bathtub.cs" />
     <Compile Include="Objects\DirtyFile.cs" />
-    <Compile Include="Helpers\Extenstions.cs" />
+    <Compile Include="Extensions\Extenstions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\Result.cs" />
     <Compile Include="Workers\Soap.cs" />

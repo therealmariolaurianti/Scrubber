@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 using Scrubber.Enums;
+using Scrubber.Extensions;
 using Scrubber.Helpers;
 using Scrubber.Objects;
 

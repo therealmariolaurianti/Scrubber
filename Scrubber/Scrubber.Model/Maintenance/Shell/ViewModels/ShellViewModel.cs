@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Caliburn.Micro;
+using Scrubber.Extensions;
 using Scrubber.Factories;
 using Scrubber.Helpers;
 

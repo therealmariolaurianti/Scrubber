@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Scrubber.Enums;
+using Scrubber.Extensions;
 using Scrubber.Factories;
 using Scrubber.Workers;
 

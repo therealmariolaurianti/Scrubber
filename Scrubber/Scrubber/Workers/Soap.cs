@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using NLog;
 using Scrubber.Enums;
+using Scrubber.Extensions;
 using Scrubber.Helpers;
 using Scrubber.Objects;
 
