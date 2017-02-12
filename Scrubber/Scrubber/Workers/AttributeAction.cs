@@ -7,7 +7,7 @@ namespace Scrubber.Workers
 {
     public class AttributeAction
     {
-        public void AddAttributeToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
+        public void AddToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
         {
             if (node.Attributes != null && node.Attributes.Count > 0)
                 node.RemoveExistingAttribute(additionalAttribute.Name);
@@ -25,7 +25,7 @@ namespace Scrubber.Workers
         public void AddPaddingToGroupBox(XmlNode node, XmlDocument xDoc)
         {
             if (node.Name.EnumEquals(CommonControls.GroupBox))
-                AddAttributeToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.Padding, 0));
+                AddToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.Padding, 0));
         }
 
         public void RemovePaddingFromGroupBox(XmlNode node)
@@ -40,7 +40,7 @@ namespace Scrubber.Workers
         {
             if (node.Name.Contains(CommonControls.TabItemExt) ||
                 node.Name.Contains(CommonControls.TabControlExt))
-                AddAttributeToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.FontSize, 12));
+                AddToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.FontSize, 12));
         }
 
         public void RemoveFontSizeFromTabItems(XmlNode node)

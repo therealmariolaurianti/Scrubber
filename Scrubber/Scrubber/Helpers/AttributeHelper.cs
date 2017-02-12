@@ -2,18 +2,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Scrubber.Enums;
-using Scrubber.Helpers;
-using Scrubber.Objects;
+using Scrubber.Factories;
+using Scrubber.Workers;
 
-namespace Scrubber.Workers
+namespace Scrubber.Helpers
 {
     public class AttributeHelper
     {
+        private readonly IAdditionalAttributeFactory _additionalAttributeFactory;
         private readonly AttributeAction _attributeAction;
 
-        public AttributeHelper(AttributeAction attributeAction)
+        public AttributeHelper(AttributeAction attributeAction, 
+            IAdditionalAttributeFactory additionalAttributeFactory)
         {
             _attributeAction = attributeAction;
+            _additionalAttributeFactory = additionalAttributeFactory;
         }
 
         public void ClearComments(XmlNode node, bool clearComments)
@@ -35,7 +38,8 @@ namespace Scrubber.Workers
         private void DisableTabStopForContainers(XmlNode node, XmlDocument xDoc)
         {
             if (Containers.ExactContainers.Any(node.Name.Equals))
-                _attributeAction.AddAttributeToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.IsTabStop, false));
+                _attributeAction.AddToNode(node, xDoc, 
+                    _additionalAttributeFactory.Create(CommonAttributes.IsTabStop, false));
         }
 
         public void InitialClean(XmlNode node, XmlDocument xDoc)
