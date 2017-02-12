@@ -23,6 +23,9 @@
         <KeyBinding
             Key="Enter"
             Command="{Binding ViewFilesCommand}" />
+        <KeyBinding
+            Key="Escape"
+            Command="{Binding CloseCommand}" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>

@@ -25,6 +25,9 @@
         <KeyBinding
             Key="Enter"
             Command="{Binding CloseCommand}" />
+        <KeyBinding
+            Key="Escape"
+            Command="{Binding CloseCommand}" />
     </Window.InputBindings>
     <Grid
         Margin="5">
