@@ -11,10 +11,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
     {
         private readonly IBathtubFactory _bathtubFactory;
         private readonly UserSettings _userSettings;
-        private bool _columnThenRow;
         private string _folderPath;
         private bool _isLoading;
-        private bool _rowThenColumn;
 
         public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings)
         {

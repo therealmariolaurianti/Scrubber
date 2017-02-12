@@ -47,7 +47,6 @@ namespace Scrubber.Workers
         {
             foreach (XmlNode childNode in node.ChildNodes)
                 ProcessChildNode(childNode, xDoc);
-
             
             _attributeHelper.InitialClean(node, xDoc);
 
