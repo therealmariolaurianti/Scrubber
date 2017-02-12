@@ -23,6 +23,7 @@ namespace Scrubber.Workers
 
         private static int AttributeCountTolerance => 1;
         private static string IndentString => "\t";
+        public bool ClearComments { get; set; }
 
         //Entry
         public void Scrub(DirtyFile dirtyFile)
@@ -48,6 +49,7 @@ namespace Scrubber.Workers
             foreach (XmlNode childNode in node.ChildNodes)
                 ProcessChildNode(childNode, xDoc);
             
+            _attributeHelper.ClearComments(node, ClearComments);
             _attributeHelper.InitialClean(node, xDoc);
 
             if (!node.Name.EnumEquals(CommonControls.Grid))

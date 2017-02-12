@@ -4,6 +4,6 @@ namespace Scrubber.Factories
 {
     public interface IBathtubFactory : IFactory
     {
-        Bathtub Create(string folderPath);
+        Bathtub Create(string folderPath, bool clearComments);
     }
 }

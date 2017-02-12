@@ -24,7 +24,7 @@ namespace Scrubber.Workers
             node.Attributes?.Append(attribute);
         }
 
-        public void CleanComments(XmlNode node, bool clearComments)
+        public void ClearComments(XmlNode node, bool clearComments)
         {
             if (!clearComments)
                 return;

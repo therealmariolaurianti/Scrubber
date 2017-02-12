@@ -85,6 +85,7 @@
                             Grid.Row="1"
                             Grid.Column="0" />
                         <ToggleButton
+                            Name="ClearComments"
                             Margin="5"
                             HorizontalAlignment="Left"
                             Grid.Row="1"

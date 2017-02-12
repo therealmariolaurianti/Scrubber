@@ -9,14 +9,16 @@ namespace Scrubber.Workers
     {
         private readonly Soap _soap;
 
-        public Bathtub(Soap soap, string folderPath)
+        public Bathtub(Soap soap, string folderPath, bool clearComments)
         {
             FolderPath = folderPath;
+            ClearComments = clearComments;
             _soap = soap;
         }
 
         private List<DirtyFile> DirtyFiles { get; } = new List<DirtyFile>();
         public string FolderPath { get; set; }
+        public bool ClearComments { get; set; }
 
         public Result<Dictionary<bool, List<DirtyFile>>> Drain()
         {
@@ -39,6 +41,7 @@ namespace Scrubber.Workers
 
         public void Rinse()
         {
+            _soap.ClearComments = ClearComments;
             DirtyFiles.ForEach(dirtyFile => _soap.Scrub(dirtyFile));
         }
     }

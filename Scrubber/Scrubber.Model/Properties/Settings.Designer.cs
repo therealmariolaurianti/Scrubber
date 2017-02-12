@@ -34,5 +34,17 @@ namespace Scrubber.Model.Properties {
                 this["FolderPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ClearComments {
+            get {
+                return ((bool)(this["ClearComments"]));
+            }
+            set {
+                this["ClearComments"] = value;
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         private readonly UserSettings _userSettings;
         private string _folderPath;
         private bool _isLoading;
+        private bool _clearComments;
 
         public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings)
         {
@@ -42,7 +43,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 {
                     IsLoading = true;
 
-                    var bathtub = _bathtubFactory.Create(FolderPath);
+                    var bathtub = _bathtubFactory.Create(FolderPath, ClearComments);
 
                     bathtub.Fill();
                     bathtub.Rinse();
@@ -51,6 +52,19 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                     result.DisplayResult();
                 }).GetAwaiter()
                 .OnCompleted(() => { IsLoading = false; });
+        }
+
+        public bool ClearComments
+        {
+            get { return _clearComments; }
+            set
+            {
+                if (value == _clearComments) return;
+                _clearComments = value;
+                NotifyOfPropertyChange();
+
+                _userSettings?.SaveSingle(nameof(ClearComments), value);
+            }
         }
 
         public void Close()
