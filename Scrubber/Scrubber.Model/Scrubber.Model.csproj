@@ -109,7 +109,12 @@
     </Compile>
     <Compile Include="Bootstrapper\AppBootstrapper.cs" />
     <Compile Include="Bootstrapper\NinjectRegistration.cs" />
+    <Compile Include="Factories\IFileViewModelFactory.cs" />
     <Compile Include="Factories\IResultViewModelFactory.cs" />
+    <Compile Include="Maintenance\Files\ViewModels\FileViewModel.cs" />
+    <Compile Include="Maintenance\Files\Views\FileView.xaml.cs">
+      <DependentUpon>FileView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Maintenance\Result\ViewModels\ResultViewModel.cs" />
     <Compile Include="Maintenance\Result\Views\ResultView.xaml.cs">
       <DependentUpon>ResultView.xaml</DependentUpon>
@@ -154,6 +159,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Maintenance\Files\Views\FileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Maintenance\Result\Views\ResultView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

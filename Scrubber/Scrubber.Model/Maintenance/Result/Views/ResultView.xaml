@@ -29,12 +29,22 @@
             FontWeight="SemiBold"
             Margin="2"
             Text="{Binding ResultString}" />
-        <Button
-            Name="Close"
-            Margin="5"
-            Height="30"
-            Content="Close"
-            Width="75"
-            Grid.Row="1" />
+        <StackPanel
+            HorizontalAlignment="Center"
+            Orientation="Horizontal"
+            Grid.Row="1">
+            <Button
+                Name="ViewFiles"
+                Margin="5"
+                Height="30"
+                Content="View Files"
+                Width="95" />
+            <Button
+                Name="Close"
+                Margin="5"
+                Height="30"
+                Content="Close"
+                Width="95" />
+        </StackPanel>
     </Grid>
 </Window>

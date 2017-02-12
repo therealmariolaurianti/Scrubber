@@ -2,6 +2,7 @@
 using System.Linq;
 using Caliburn.Micro;
 using Scrubber.Helpers;
+using Scrubber.Model.Factories;
 using Scrubber.Objects;
 
 namespace Scrubber.Model.Maintenance.Result.ViewModels
@@ -9,10 +10,17 @@ namespace Scrubber.Model.Maintenance.Result.ViewModels
     public class ResultViewModel : Screen
     {
         public Result<Dictionary<bool, List<DirtyFile>>> Result { get; }
+        private IFileViewModelFactory _fileViewModelFactory;
+        private readonly IWindowManager _windowManager;
 
-        public ResultViewModel(Result<Dictionary<bool, List<DirtyFile>>> result)
+        public ResultViewModel(
+            Result<Dictionary<bool, List<DirtyFile>>> result, 
+            IFileViewModelFactory fileViewModelFactory, 
+            IWindowManager windowManager)
         {
             Result = result;
+            _fileViewModelFactory = fileViewModelFactory;
+            _windowManager = windowManager;
         }
 
         protected override void OnActivate()
@@ -24,6 +32,14 @@ namespace Scrubber.Model.Maintenance.Result.ViewModels
         public void Close()
         {
             TryClose();
+        }
+
+        public void ViewFiles()
+        {
+            var files = Result.ResultValue.SelectMany(result => result.Value).ToList();
+            var fileViewModel = _fileViewModelFactory.Create(files);
+
+            _windowManager.ShowDialog(fileViewModel);
         }
 
         public string ResultString
