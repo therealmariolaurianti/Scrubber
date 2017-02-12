@@ -32,31 +32,28 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ScrollViewer
-            PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
-            CanContentScroll="True"
+        <DataGrid
+            ScrollViewer.CanContentScroll="True"
             HorizontalScrollBarVisibility="Auto"
-            VerticalScrollBarVisibility="Auto">
-            <DataGrid
-                cal:Message.Attach="[Event MouseDoubleClick] = [Action OpenFile()]"
-                IsReadOnly="True"
-                AutoGenerateColumns="False"
-                SelectedItem="{Binding SelectedFile}"
-                ItemsSource="{Binding Files}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Header="File Name"
-                        Binding="{Binding FileName}"/>
-                    <DataGridCheckBoxColumn
-                        ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                        Header="Is Clean"
-                        Binding="{Binding IsClean}" />
-                    <DataGridTextColumn
-                        Header="File Path"
-                        Binding="{Binding FilePath}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </ScrollViewer>
+            VerticalScrollBarVisibility="Auto"
+            cal:Message.Attach="[Event MouseDoubleClick] = [Action OpenFile()]"
+            IsReadOnly="True"
+            AutoGenerateColumns="False"
+            SelectedItem="{Binding SelectedFile}"
+            ItemsSource="{Binding Files}">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Header="File Name"
+                    Binding="{Binding FileName}" />
+                <DataGridCheckBoxColumn
+                    ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                    Header="Is Clean"
+                    Binding="{Binding IsClean}" />
+                <DataGridTextColumn
+                    Header="File Path"
+                    Binding="{Binding FilePath}" />
+            </DataGrid.Columns>
+        </DataGrid>
         <Button
             Margin="5"
             Name="Close"

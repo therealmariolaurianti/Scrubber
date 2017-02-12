@@ -39,7 +39,7 @@
                         Style="{DynamicResource MaterialDesignTitleTextBlock}"
                         FontWeight="SemiBold"
                         Margin="2"
-                        Text="Scrubber Details" />
+                        Text="Scrubber" />
                 </GroupBox.Header>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -65,19 +65,37 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Label
+                            
                             Content="Folder Path"
                             Grid.Row="0"
                             Grid.Column="0" />
-                        <TextBox
-                            Name="FolderPath"
-                            FontSize="15"
-                            Margin="2"
+                        <Grid
                             Grid.Row="0"
-                            Grid.Column="1" />
+                            Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox
+                                Name="FolderPath"
+                                FontSize="15"
+                                Margin="2" />
+                            <Button
+                                Name="OpenFileExplorer"
+                                Width="30"
+                                Margin="2"
+                                Grid.Column="1">
+                                <Button.Content>
+                                    <TextBlock
+                                        Margin="-6,-5,-6,-5"
+                                        Text="..."/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
                         <Label
                             Content="Clear Comments"
                             Grid.Row="1"

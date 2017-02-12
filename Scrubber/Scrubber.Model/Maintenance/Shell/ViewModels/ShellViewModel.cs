@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -77,6 +78,24 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             base.OnActivate();
         }
 
+        public void OpenFileExplorer()
+        {
+            if (string.IsNullOrEmpty(FolderPath))
+            {
+                Process.Start("explorer.exe", "-p");
+            }
+            else
+            {
+                var info = new ProcessStartInfo
+                {
+                    Arguments = "/select, \"" + FolderPath + "\"",
+                    FileName = "explorer.exe"
+                };
+
+                Process.Start(info);
+            }
+        }
+
         public void RunScrubber()
         {
             if (string.IsNullOrEmpty(FolderPath))
@@ -94,7 +113,6 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                     bathtub.Rinse();
 
                     CleaningResults = bathtub.Drain();
-
                 }).GetAwaiter()
                 .OnCompleted(() =>
                 {
