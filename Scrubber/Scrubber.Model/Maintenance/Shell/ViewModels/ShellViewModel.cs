@@ -69,8 +69,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             }
         }
 
-        //public ICollection<InputAttribute> InputAttributes => InputAttributeViewModels.Select(
-        //    inputAttributeViewModel => inputAttributeViewModel.Item).ToList();
+        public ICollection<InputAttribute> InputAttributes => InputAttributeViewModels.Select(
+            inputAttributeViewModel => inputAttributeViewModel.Item).ToList();
 
         public ObservableCollection<InputAttributeViewModel> InputAttributeViewModels
         {
@@ -150,13 +150,13 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 {
                     IsLoading = true;
 
-                    //var bathtubOptions = new BathtubOptions(FolderPath, ClearComments, InputAttributes);
-                    //var bathtub = _bathtubFactory.Create(bathtubOptions);
-                    //
-                    //bathtub.Fill();
-                    //bathtub.Rinse();
-                    //
-                    //CleaningResults = bathtub.Drain();
+                    var bathtubOptions = new BathtubOptions(FolderPath, ClearComments, InputAttributes);
+                    var bathtub = _bathtubFactory.Create(bathtubOptions);
+                    
+                    bathtub.Fill();
+                    bathtub.Rinse();
+                    
+                    CleaningResults = bathtub.Drain();
                 }).GetAwaiter()
                 .OnCompleted(() =>
                 {

@@ -6,7 +6,7 @@ using Scrubber.Extensions;
 
 namespace Scrubber.Objects
 {
-    [DebuggerDisplay("{Name}, {Value}")]
+    [DebuggerDisplay("{ControlName}, {AttributeName}, {AttributeValue}")]
     public class InputAttribute
     {
         [Inject]
@@ -15,21 +15,17 @@ namespace Scrubber.Objects
             
         }
 
-        public InputAttribute(string name, object value)
+        public InputAttribute(string controlName, string attributeName, object attributeValue)
         {
-            Name = name;
-            Value = value;
+            ControlName = controlName;
+            AttributeName = attributeName;
+            AttributeValue = attributeValue;
         }
-
-        public InputAttribute(XmlAttribute nodeAttribute)
-        {
-            Name = nodeAttribute.Name;
-            Value = nodeAttribute.Value;
-        }
-
-        public bool IsDesignTimeAttribute => Value.ToString().Contains("d:");
-        public string Name { get; set; }
-        public string NamespaceXmnlsCharacter => IsDesignTimeAttribute ? Name[0].ToLowerCaseString() : string.Empty;
-        public object Value { get; set; }
+        
+        public bool IsDesignTimeAttribute => AttributeValue.ToString().Contains("d:");
+        public string NamespaceXmnlsCharacter => IsDesignTimeAttribute ? AttributeName[0].ToLowerCaseString() : string.Empty;
+        public string ControlName { get; set; }
+        public string AttributeName { get; set; }
+        public object AttributeValue { get; set; }
     }
 }

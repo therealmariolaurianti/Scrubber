@@ -5,31 +5,41 @@ using Scrubber.Objects;
 
 namespace Scrubber.Model.Maintenance.InputAttributes.ViewModels
 {
-    public class InputAttributeViewModel : ViewModel
+    public class InputAttributeViewModel : ViewModel<InputAttribute>
     {
-        private object _value;
-        private string _name;
         private Control _selectedControl;
         private ControlAttribute _selectedAttribute;
+        private AttributeValue _selectedAttributeValue;
 
-        public string Name
+        public string ControlName
         {
-            get { return _name; }
+            get { return Item.ControlName; }
             set
             {
-                if (value == _name) return;
-                _name = value;
+                if (value == Item.ControlName) return;
+                Item.ControlName = value;
                 NotifyOfPropertyChange();
             }
         }
 
-        public object Value
+        public string AttributeName
         {
-            get { return _value; }
+            get { return Item.AttributeName; }
             set
             {
-                if (Equals(value, _value)) return;
-                _value = value;
+                if (value == Item.AttributeName) return;
+                Item.AttributeName = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public object AttributeValue
+        {
+            get { return Item.AttributeValue; }
+            set
+            {
+                if (Equals(value, Item.AttributeValue)) return;
+                Item.AttributeValue = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -47,6 +57,8 @@ namespace Scrubber.Model.Maintenance.InputAttributes.ViewModels
                 _selectedControl = value;
                 NotifyOfPropertyChange();
                 NotifyOfPropertyChange(nameof(ControlAttributes));
+
+                Item.ControlName = value.Name;
             }
         }
 
@@ -59,6 +71,23 @@ namespace Scrubber.Model.Maintenance.InputAttributes.ViewModels
                 _selectedAttribute = value;
                 NotifyOfPropertyChange();
                 NotifyOfPropertyChange(nameof(AttributeValues));
+
+                Item.AttributeName = value.Name;
+                NotifyOfPropertyChange(nameof(Item.NamespaceXmnlsCharacter));
+            }
+        }
+
+        public AttributeValue SelectedAttributeValue
+        {
+            get { return _selectedAttributeValue; }
+            set
+            {
+                if (Equals(value, _selectedAttributeValue)) return;
+                _selectedAttributeValue = value;
+                NotifyOfPropertyChange();
+
+                Item.AttributeValue = value.Name;
+                NotifyOfPropertyChange(nameof(Item.IsDesignTimeAttribute));
             }
         }
     }

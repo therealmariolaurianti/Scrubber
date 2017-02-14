@@ -26,13 +26,15 @@ namespace Scrubber.Maintenance
         }
     }
 
-    public class ViewModel<T> : Screen, IViewModel<T>
+    public class ViewModel<T> : Screen, IViewModel<T> where T : new()
     {
-        public ViewModel(T item)
+        public ViewModel()
         {
-            Item = item;
+            Item = new T();
+            Id = NextId.GetNext();
         }
 
+        public int Id { get; private set; }
         public T Item { get; }
     }
 }

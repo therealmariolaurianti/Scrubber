@@ -35,6 +35,7 @@
             Margin="5"
             DisplayMemberPath="Name"
             ItemsSource="{Binding AttributeValues}"
+            SelectedItem="{Binding SelectedAttributeValue}"
             Width="85"
             Grid.Column="2"/>
     </Grid>
