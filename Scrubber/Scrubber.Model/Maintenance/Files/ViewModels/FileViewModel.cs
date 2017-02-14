@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Scrubber.Helpers;
+using Scrubber.Maintenance;
 using Scrubber.Objects;
 
 namespace Scrubber.Model.Maintenance.Files.ViewModels

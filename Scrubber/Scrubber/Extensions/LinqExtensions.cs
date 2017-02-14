@@ -15,15 +15,6 @@ namespace Scrubber.Extensions
         {
             return s.ToString().ToLower();
         }
-
-        public static bool Contains(this string s, CommonControls controlName)
-        {
-            return s.Contains(controlName.ToString());
-        }
-
-        public static bool EnumEquals(this string s, CommonControls controlName)
-        {
-            return s.Equals(controlName.ToString());
-        }
+        
     }
 }

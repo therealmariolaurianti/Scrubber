@@ -11,13 +11,5 @@ namespace Scrubber.Extensions
             if (attribute != null)
                 node.Attributes.Remove(attribute);
         }
-
-        public static void RemoveExistingAttribute(this XmlNode node, CommonAttributes commonAttribute)
-        {
-            var attributeName = commonAttribute.ToString();
-            var attribute = node.Attributes?[attributeName];
-            if (attribute != null)
-                node.Attributes.Remove(attribute);
-        }
     }
 }

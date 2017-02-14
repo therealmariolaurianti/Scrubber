@@ -1,11 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Scrubber.Objects
 {
     public class BathtubOptions
     {
         public BathtubOptions(string folderPath, bool clearComments,
-            ObservableCollection<InputAttribute> inputAttributes)
+            ICollection<InputAttribute> inputAttributes)
         {
             FolderPath = folderPath;
             ClearComments = clearComments;
@@ -15,6 +16,6 @@ namespace Scrubber.Objects
         public bool ClearComments { get; set; }
 
         public string FolderPath { get; set; }
-        public ObservableCollection<InputAttribute> InputAttributes { get; set; }
+        public ICollection<InputAttribute> InputAttributes { get; set; }
     }
 }

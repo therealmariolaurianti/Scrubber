@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Scrubber.Helpers;
+using Scrubber.Maintenance;
 using Scrubber.Model.Factories;
 using Scrubber.Objects;
 

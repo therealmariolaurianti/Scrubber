@@ -22,7 +22,7 @@ namespace Scrubber.Workers
 
         public string FolderPath => _bathtubOptions.FolderPath;
         public bool ClearComments => _bathtubOptions.ClearComments;
-        public ObservableCollection<InputAttribute> InputAttributes => _bathtubOptions.InputAttributes;
+        public ICollection<InputAttribute> InputAttributes => _bathtubOptions.InputAttributes;
 
         public Result<Dictionary<bool, List<DirtyFile>>> Drain()
         {

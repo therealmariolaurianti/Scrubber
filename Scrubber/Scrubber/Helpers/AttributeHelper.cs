@@ -31,8 +31,8 @@ namespace Scrubber.Helpers
                 node.Attributes?.Append(xmlAttribute);
         }
 
-        public void AddInputAttribute(XmlNode node, XmlDocument xDoc, 
-            ObservableCollection<InputAttribute> inputAttributes)
+        public void AddInputAttribute(XmlNode node, XmlDocument xDoc,
+            ICollection<InputAttribute> inputAttributes)
         {
             if (inputAttributes == null)
                 return;

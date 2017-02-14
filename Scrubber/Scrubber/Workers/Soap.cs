@@ -26,7 +26,7 @@ namespace Scrubber.Workers
         private static int AttributeCountTolerance => 1;
         private static string IndentString => "\t";
         public bool ClearComments { get; set; }
-        public ObservableCollection<InputAttribute> InputAttributes { get; set; }
+        public ICollection<InputAttribute> InputAttributes { get; set; }
 
         //Entry
         public void Scrub(DirtyFile dirtyFile)
@@ -55,7 +55,7 @@ namespace Scrubber.Workers
             _attributeHelper.ClearComments(node, ClearComments);
             _attributeHelper.AddInputAttribute(node, xDoc, InputAttributes);
 
-            if (!node.Name.EnumEquals(CommonControls.Grid))
+            if (!node.Name.Equals("Grid"))
                 return;
 
             // ReSharper disable once AssignNullToNotNullAttribute
