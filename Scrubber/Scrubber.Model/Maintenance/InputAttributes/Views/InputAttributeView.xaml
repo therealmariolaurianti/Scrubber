@@ -33,6 +33,8 @@
         <ComboBox
             IsEnabled="{calcBinding:Binding 'SelectedAttribute != null'}"
             Margin="5"
+            DisplayMemberPath="Name"
+            ItemsSource="{Binding AttributeValues}"
             Width="85"
             Grid.Column="2"/>
     </Grid>

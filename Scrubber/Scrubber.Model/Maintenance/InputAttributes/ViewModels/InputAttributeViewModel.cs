@@ -36,6 +36,7 @@ namespace Scrubber.Model.Maintenance.InputAttributes.ViewModels
 
         public List<Control> Controls => ControlHelper.Controls;
         public List<ControlAttribute> ControlAttributes => SelectedControl?.ControlAttributes;
+        public List<AttributeValue> AttributeValues => SelectedAttribute?.AttributeValues;
 
         public Control SelectedControl
         {
@@ -57,6 +58,7 @@ namespace Scrubber.Model.Maintenance.InputAttributes.ViewModels
                 if (Equals(value, _selectedAttribute)) return;
                 _selectedAttribute = value;
                 NotifyOfPropertyChange();
+                NotifyOfPropertyChange(nameof(AttributeValues));
             }
         }
     }

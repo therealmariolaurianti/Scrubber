@@ -10,8 +10,9 @@ namespace Scrubber.Objects
             Name = name;
         }
 
-        public string Name { get; set; }
         public List<ControlAttribute> ControlAttributes => ControlHelper.GetControlAttributesByName(Name);
+
+        public string Name { get; set; }
     }
 
     public class ControlAttribute
@@ -21,6 +22,19 @@ namespace Scrubber.Objects
             Name = name;
         }
 
+        public List<AttributeValue> AttributeValues
+            => new List<AttributeValue> {new AttributeValue("True"), new AttributeValue("False")};
+
         public string Name { get; set; }
+    }
+
+    public class AttributeValue
+    {
+        public AttributeValue(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; }
     }
 }
