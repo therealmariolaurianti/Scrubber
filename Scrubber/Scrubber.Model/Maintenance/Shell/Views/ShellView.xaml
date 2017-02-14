@@ -19,7 +19,7 @@
     WindowStartupLocation="CenterScreen"
     Title="Scrubber"
     Height="500"
-    Width="850"
+    Width="950"
     ResizeMode="NoResize"
     d:DataContext="{d:DesignInstance viewModels:ShellViewModel }">
     <Window.InputBindings>

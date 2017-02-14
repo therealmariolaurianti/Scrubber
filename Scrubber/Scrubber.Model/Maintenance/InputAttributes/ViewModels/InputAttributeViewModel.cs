@@ -72,8 +72,15 @@ namespace Scrubber.Model.Maintenance.InputAttributes.ViewModels
                 NotifyOfPropertyChange();
                 NotifyOfPropertyChange(nameof(AttributeValues));
 
-                Item.AttributeName = value.Name;
-                NotifyOfPropertyChange(nameof(Item.NamespaceXmnlsCharacter));
+                if (value != null)
+                {
+                    Item.AttributeName = value.Name;
+                    NotifyOfPropertyChange(nameof(Item.NamespaceXmnlsCharacter));
+                }
+                else
+                {
+                    Item.AttributeName = string.Empty;
+                }
             }
         }
 
@@ -86,8 +93,15 @@ namespace Scrubber.Model.Maintenance.InputAttributes.ViewModels
                 _selectedAttributeValue = value;
                 NotifyOfPropertyChange();
 
-                Item.AttributeValue = value.Name;
-                NotifyOfPropertyChange(nameof(Item.IsDesignTimeAttribute));
+                if (value != null)
+                {
+                    Item.AttributeValue = value.Name;
+                    NotifyOfPropertyChange(nameof(Item.IsDesignTimeAttribute));
+                }
+                else
+                {
+                    Item.AttributeValue = null;
+                }
             }
         }
     }

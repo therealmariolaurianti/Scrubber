@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Scrubber.Enums;
 
 namespace Scrubber.Extensions
 {
@@ -15,6 +14,17 @@ namespace Scrubber.Extensions
         {
             return s.ToString().ToLower();
         }
-        
+
+        public static string FormatAttribute(this string s)
+        {
+            var formatAttribute = s.Replace("Property", string.Empty).Trim();
+            return formatAttribute;
+        }
+
+        public static string SplitOnCapitals(this string str)
+        {
+            var newString = string.Join("", str.Select((c, i) => i != 0 && char.IsUpper(c) ? " " + c : c.ToString()));
+            return newString;
+        }
     }
 }
