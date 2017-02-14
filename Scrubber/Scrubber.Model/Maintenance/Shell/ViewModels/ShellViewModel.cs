@@ -105,8 +105,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
         public void AddAttribute()
         {
-            var attribute = _inputAttributeViewModelFactory.Create();
-            InputAttributeViewModels.Add(attribute);
+            InputAttributeViewModels.Add(_inputAttributeViewModelFactory.Create());
         }
 
         public void RemoveAttribute(object sender, RoutedEventArgs e)

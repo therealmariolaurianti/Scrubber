@@ -94,7 +94,7 @@
   <ItemGroup>
     <Compile Include="Bootstrapper\NinjectRegistration.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
-    <Compile Include="Extensions\CommonControls.cs" />
+    <Compile Include="Extensions\ControlHelper.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="Factories\IBathtubFactory.cs" />
     <Compile Include="Factories\IFactory.cs" />

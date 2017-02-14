@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Scrubber.Extensions;
 
 namespace Scrubber.Objects
 {
@@ -10,11 +11,16 @@ namespace Scrubber.Objects
         }
 
         public string Name { get; set; }
-        public List<ControlAttribute> ControlAttributes { get; set; }
+        public List<ControlAttribute> ControlAttributes => ControlHelper.GetControlAttributesByName(Name);
     }
 
     public class ControlAttribute
     {
+        public ControlAttribute(string name)
+        {
+            Name = name;
+        }
+
         public string Name { get; set; }
     }
 }

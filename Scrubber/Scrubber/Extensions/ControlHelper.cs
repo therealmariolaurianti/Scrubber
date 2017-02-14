@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using Scrubber.Objects;
 
 namespace Scrubber.Extensions
 {
-    public static class CommonControls
+    public static class ControlHelper
     {
         public static readonly List<Control> Controls = new List<Control>
         {
@@ -15,5 +16,10 @@ namespace Scrubber.Extensions
             new Control("TextBox"),
             new Control("GroupBox")
         };
+
+        public static List<ControlAttribute> GetControlAttributesByName(string name)
+        {
+            return new List<ControlAttribute>{ new ControlAttribute("IsEnabled")};
+        }
     }
 }
