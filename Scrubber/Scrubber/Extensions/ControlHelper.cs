@@ -10,7 +10,6 @@ namespace Scrubber.Extensions
 {
     public static class ControlHelper
     {
-        //reflection to get types and attributes
         public static readonly List<Control> Controls = new List<Control>
         {
             new Control(nameof(Grid)),
