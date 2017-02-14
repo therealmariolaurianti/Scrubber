@@ -2,27 +2,25 @@ using System.Diagnostics;
 using System.Xml;
 using Scrubber.Enums;
 using Scrubber.Extensions;
-using Scrubber.Helpers;
-using Scrubber.Workers;
 
 namespace Scrubber.Objects
 {
     [DebuggerDisplay("{Name}, {Value}")]
-    public class AdditionalAttribute
+    public class InputAttribute
     {
-        public AdditionalAttribute(string name, object value)
+        public InputAttribute(string name, object value)
         {
             Name = name;
             Value = value;
         }
 
-        public AdditionalAttribute(XmlAttribute nodeAttribute)
+        public InputAttribute(XmlAttribute nodeAttribute)
         {
             Name = nodeAttribute.Name;
             Value = nodeAttribute.Value;
         }
 
-        public AdditionalAttribute(CommonAttributes attributeName, object value)
+        public InputAttribute(CommonAttributes attributeName, object value)
         {
             Name = attributeName.ToString();
             Value = value;

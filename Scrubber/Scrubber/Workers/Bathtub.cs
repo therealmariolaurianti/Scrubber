@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Scrubber.Extensions;
 using Scrubber.Helpers;
@@ -40,9 +41,13 @@ namespace Scrubber.Workers
             });
         }
 
+        public ObservableCollection<InputAttribute> InputAttributes { get; set; }
+
         public void Rinse()
         {
             _soap.ClearComments = ClearComments;
+            _soap.InputAttributes = InputAttributes;
+
             DirtyFiles.ForEach(dirtyFile => _soap.Scrub(dirtyFile));
         }
     }

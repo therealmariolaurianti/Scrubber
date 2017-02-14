@@ -8,49 +8,19 @@ namespace Scrubber.Workers
 {
     public class AttributeAction
     {
-        public void AddToNode(XmlNode node, XmlDocument xDoc, AdditionalAttribute additionalAttribute)
+        public void AddToNode(XmlNode node, XmlDocument xDoc, InputAttribute inputAttribute)
         {
             if (node.Attributes != null && node.Attributes.Count > 0)
-                node.RemoveExistingAttribute(additionalAttribute.Name);
+                node.RemoveExistingAttribute(inputAttribute.Name);
 
-            var attribute = xDoc.CreateAttribute(additionalAttribute.Name);
+            var attribute = xDoc.CreateAttribute(inputAttribute.Name);
 
-            if (additionalAttribute.IsDesignTimeAttribute)
-                attribute.Prefix = additionalAttribute.NamespaceXmnlsCharacter;
+            if (inputAttribute.IsDesignTimeAttribute)
+                attribute.Prefix = inputAttribute.NamespaceXmnlsCharacter;
 
-            attribute.Value = additionalAttribute.Value.ToString();
+            attribute.Value = inputAttribute.Value.ToString();
 
             node.Attributes?.Append(attribute);
-        }
-
-        public void AddPaddingToGroupBox(XmlNode node, XmlDocument xDoc)
-        {
-            if (node.Name.EnumEquals(CommonControls.GroupBox))
-                AddToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.Padding, 0));
-        }
-
-        public void RemovePaddingFromGroupBox(XmlNode node)
-        {
-            if (!node.Name.EnumEquals(CommonControls.GroupBox))
-                return;
-
-            node.RemoveExistingAttribute(CommonAttributes.Padding);
-        }
-
-        public void AddFontSizeToTabItems(XmlNode node, XmlDocument xDoc)
-        {
-            if (node.Name.Contains(CommonControls.TabItemExt) ||
-                node.Name.Contains(CommonControls.TabControlExt))
-                AddToNode(node, xDoc, new AdditionalAttribute(CommonAttributes.FontSize, 12));
-        }
-
-        public void RemoveFontSizeFromTabItems(XmlNode node)
-        {
-            if (!node.Name.Contains(CommonControls.TabItemExt) &&
-                node.Name.Contains(CommonControls.TabControlExt))
-                return;
-
-            node.RemoveExistingAttribute(CommonAttributes.FontSize);
         }
     }
 }

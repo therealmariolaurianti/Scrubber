@@ -83,7 +83,6 @@
     <Compile Include="Extensions\AttributeExtensions.cs" />
     <Compile Include="Extensions\Containers.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />
-    <Compile Include="Factories\IAdditionalAttributeFactory.cs" />
     <Compile Include="Factories\IBathtubFactory.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
@@ -92,7 +91,7 @@
     <Compile Include="Enums\AttributeType.cs" />
     <Compile Include="Enums\CommonAttributes.cs" />
     <Compile Include="Helpers\AttributeValuePair.cs" />
-    <Compile Include="Objects\AdditionalAttribute.cs" />
+    <Compile Include="Objects\InputAttribute.cs" />
     <Compile Include="Workers\Bathtub.cs" />
     <Compile Include="Objects\DirtyFile.cs" />
     <Compile Include="Extensions\Extenstions.cs" />

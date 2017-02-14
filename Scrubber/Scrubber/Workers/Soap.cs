@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -25,6 +26,7 @@ namespace Scrubber.Workers
         private static int AttributeCountTolerance => 1;
         private static string IndentString => "\t";
         public bool ClearComments { get; set; }
+        public ObservableCollection<InputAttribute> InputAttributes { get; set; }
 
         //Entry
         public void Scrub(DirtyFile dirtyFile)
@@ -51,7 +53,7 @@ namespace Scrubber.Workers
                 ProcessChildNode(childNode, xDoc);
             
             _attributeHelper.ClearComments(node, ClearComments);
-            _attributeHelper.InitialClean(node, xDoc);
+            _attributeHelper.AddInputAttribute(node, xDoc, InputAttributes);
 
             if (!node.Name.EnumEquals(CommonControls.Grid))
                 return;

@@ -13,7 +13,6 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
     public class ShellViewModel : ViewModel
     {
         private readonly IBathtubFactory _bathtubFactory;
-
         private readonly IResultViewModelFactory _resultViewModelFactory;
         private readonly UserSettings _userSettings;
         private readonly IWindowManager _windowManager;
