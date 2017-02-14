@@ -23,10 +23,11 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         private readonly IResultViewModelFactory _resultViewModelFactory;
         private readonly UserSettings _userSettings;
         private readonly IWindowManager _windowManager;
+        private ObservableCollection<InputAttributeViewModel> _additionalInputAttributeViewModels;
         private bool _clearComments;
         private string _folderPath;
-        private ObservableCollection<InputAttributeViewModel> _inputAttributeViewModels;
         private bool _isLoading;
+        private ObservableCollection<InputAttributeViewModel> _removalInputAttributeViewModels;
 
         public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings,
             IWindowManager windowManager, IResultViewModelFactory resultViewModelFactory,
@@ -39,6 +40,17 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             _inputAttributeViewModelFactory = inputAttributeViewModelFactory;
 
             _userSettings.Load(this);
+        }
+
+        public ObservableCollection<InputAttributeViewModel> AdditionalInputAttributeViewModels
+        {
+            get { return _additionalInputAttributeViewModels; }
+            set
+            {
+                if (Equals(value, _additionalInputAttributeViewModels)) return;
+                _additionalInputAttributeViewModels = value;
+                NotifyOfPropertyChange();
+            }
         }
 
         private Result<Dictionary<bool, List<DirtyFile>>> CleaningResults { get; set; }
@@ -69,19 +81,11 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             }
         }
 
-        public ICollection<InputAttribute> InputAttributes => InputAttributeViewModels.Select(
+        public ICollection<InputAttribute> AdditionalInputAttributes => AdditionalInputAttributeViewModels.Select(
             inputAttributeViewModel => inputAttributeViewModel.Item).ToList();
 
-        public ObservableCollection<InputAttributeViewModel> InputAttributeViewModels
-        {
-            get { return _inputAttributeViewModels; }
-            set
-            {
-                if (Equals(value, _inputAttributeViewModels)) return;
-                _inputAttributeViewModels = value;
-                NotifyOfPropertyChange();
-            }
-        }
+        public ICollection<InputAttribute> RemovalInputAttributes => RemovalInputAttributeViewModels.Select(
+            attributeViewModel => attributeViewModel.Item).ToList();
 
         public bool IsLoading
         {
@@ -94,18 +98,49 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             }
         }
 
+        public ObservableCollection<InputAttributeViewModel> RemovalInputAttributeViewModels
+        {
+            get { return _removalInputAttributeViewModels; }
+            set
+            {
+                if (Equals(value, _removalInputAttributeViewModels)) return;
+                _removalInputAttributeViewModels = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public ICommand ScrubCommand => new DelegateCommand(RunScrubber);
+
 
         protected override void OnActivate()
         {
             DisplayName = "Scrubber";
-            InputAttributeViewModels = new ObservableCollection<InputAttributeViewModel>();
+            AdditionalInputAttributeViewModels = new ObservableCollection<InputAttributeViewModel>();
+            RemovalInputAttributeViewModels = new ObservableCollection<InputAttributeViewModel>();
             base.OnActivate();
         }
 
         public void AddAttribute()
         {
-            InputAttributeViewModels.Add(_inputAttributeViewModelFactory.Create());
+            AdditionalInputAttributeViewModels.Add(_inputAttributeViewModelFactory.Create());
+        }
+
+        public void AddRemoveAttribute()
+        {
+            RemovalInputAttributeViewModels.Add(_inputAttributeViewModelFactory.Create());
+        }
+
+        public void RemoveRemovalAttribute(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is Button button))
+                return;
+
+            var attribute = button.DataContext as InputAttributeViewModel;
+            if (attribute == null)
+                return;
+
+            var viewModel = RemovalInputAttributeViewModels.SingleOrDefault(vm => vm.Id == attribute.Id);
+            RemovalInputAttributeViewModels.Remove(viewModel);
         }
 
         public void RemoveAttribute(object sender, RoutedEventArgs e)
@@ -114,11 +149,11 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 return;
 
             var attribute = button.DataContext as InputAttributeViewModel;
-            if(attribute == null)
+            if (attribute == null)
                 return;
 
-            var viewModel = InputAttributeViewModels.SingleOrDefault(vm => vm.Id == attribute.Id);
-            InputAttributeViewModels.Remove(viewModel);
+            var viewModel = AdditionalInputAttributeViewModels.SingleOrDefault(vm => vm.Id == attribute.Id);
+            AdditionalInputAttributeViewModels.Remove(viewModel);
         }
 
         public void OpenFileExplorer()
@@ -150,12 +185,13 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 {
                     IsLoading = true;
 
-                    var bathtubOptions = new BathtubOptions(FolderPath, ClearComments, InputAttributes);
+                    var bathtubOptions = new BathtubOptions(FolderPath, ClearComments, AdditionalInputAttributes,
+                        RemovalInputAttributes);
                     var bathtub = _bathtubFactory.Create(bathtubOptions);
-                    
+
                     bathtub.Fill();
                     bathtub.Rinse();
-                    
+
                     CleaningResults = bathtub.Drain();
                 }).GetAwaiter()
                 .OnCompleted(() =>

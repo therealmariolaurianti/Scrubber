@@ -6,7 +6,7 @@ namespace Scrubber.Workers
 {
     public class AttributeAction
     {
-        public void AddToNode(XmlNode node, XmlDocument xDoc, InputAttribute inputAttribute)
+        public void Add(XmlNode node, XmlDocument xDoc, InputAttribute inputAttribute)
         {
             if (node.Name != inputAttribute.ControlName)
                 return;
@@ -22,6 +22,14 @@ namespace Scrubber.Workers
             attribute.Value = inputAttribute.AttributeValue.ToString();
 
             node.Attributes?.Append(attribute);
+        }
+
+        public void Remove(XmlNode node, InputAttribute existingAttribute)
+        {
+            if (node.Name != existingAttribute.ControlName)
+                return;
+
+            node.RemoveExistingAttribute(existingAttribute.AttributeName);
         }
     }
 }

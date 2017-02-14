@@ -11,7 +11,6 @@ namespace Scrubber.Objects
         }
 
         public List<ControlAttribute> ControlAttributes => ControlHelper.GetControlAttributesByName(Name);
-
         public string Name { get; set; }
     }
 

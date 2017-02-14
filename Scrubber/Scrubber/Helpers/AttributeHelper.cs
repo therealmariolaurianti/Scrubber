@@ -39,7 +39,19 @@ namespace Scrubber.Helpers
 
             foreach (var inputAttribute in inputAttributes)
             {
-                _attributeAction.AddToNode(node, xDoc, inputAttribute);
+                _attributeAction.Add(node, xDoc, inputAttribute);
+            }
+        }
+
+        public void RemoveExistingAttributes(XmlNode node,
+            ICollection<InputAttribute> existingAttributes)
+        {
+            if (existingAttributes == null)
+                return;
+
+            foreach (var existingAttribute in existingAttributes)
+            {
+                _attributeAction.Remove(node, existingAttribute);
             }
         }
     }

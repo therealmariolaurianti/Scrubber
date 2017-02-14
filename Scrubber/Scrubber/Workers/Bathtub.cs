@@ -22,7 +22,8 @@ namespace Scrubber.Workers
 
         public string FolderPath => _bathtubOptions.FolderPath;
         public bool ClearComments => _bathtubOptions.ClearComments;
-        public ICollection<InputAttribute> InputAttributes => _bathtubOptions.InputAttributes;
+        public ICollection<InputAttribute> AdditionalInputAttributes => _bathtubOptions.AdditionalInputAttributes;
+        public ICollection<InputAttribute> RemovalInputAttributes => _bathtubOptions.RemovalInputAttributes;
 
         public Result<Dictionary<bool, List<DirtyFile>>> Drain()
         {
@@ -46,7 +47,8 @@ namespace Scrubber.Workers
         public void Rinse()
         {
             _soap.ClearComments = ClearComments;
-            _soap.InputAttributes = InputAttributes;
+            _soap.InputAttributes = AdditionalInputAttributes;
+            _soap.ExistingAttributes = RemovalInputAttributes;
 
             DirtyFiles.ForEach(dirtyFile => _soap.Scrub(dirtyFile));
         }

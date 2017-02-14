@@ -19,7 +19,7 @@
     WindowStartupLocation="CenterScreen"
     Title="Scrubber"
     Height="500"
-    Width="750"
+    Width="850"
     ResizeMode="NoResize"
     d:DataContext="{d:DesignInstance viewModels:ShellViewModel }">
     <Window.InputBindings>
@@ -47,11 +47,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
                     <Grid.Resources>
                         <Style TargetType="Label">
                             <Setter Property="FontSize" Value="15" />
@@ -108,33 +105,22 @@
                             Grid.Row="1"
                             Grid.Column="1" />
                     </Grid>
-                    <!--<Label
-                        Content="Order By"
-                        Grid.Row="2"
-                        Grid.Column="0" />
-                    <StackPanel
-                        HorizontalAlignment="Left"
-                        Orientation="Horizontal"
-                        Grid.Row="2"
-                        Grid.Column="1">
-                        <CheckBox
-                            Margin="5"
-                            Content="Row then Column" />
-                        <CheckBox
-                            Margin="5"
-                            Content="Column then Row" />
-                    </StackPanel>-->
-                    <GroupBox
-                        Margin="5"
-                        Grid.Column="0"
+                    <Grid
                         Grid.Row="1">
-                        <GroupBox.Header>
-                            <TextBlock
-                                Style="{DynamicResource MaterialDesignTitleTextBlock}"
-                                FontWeight="SemiBold"
-                                Margin="2"
-                                Text="Additional Attributes" />
-                        </GroupBox.Header>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <GroupBox
+                            Margin="5"
+                            Grid.Column="0">
+                            <GroupBox.Header>
+                                <TextBlock
+                                    Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                    FontWeight="SemiBold"
+                                    Margin="2"
+                                    Text="Add Attributes" />
+                            </GroupBox.Header>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -143,7 +129,7 @@
                                 <ItemsControl
                                     MouseWheel="UIElement_OnMouseWheel"
                                     Background="Transparent"
-                                    ItemsSource="{Binding InputAttributeViewModels}">
+                                    ItemsSource="{Binding AdditionalInputAttributeViewModels}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -184,22 +170,84 @@
                                         Height="30" />
                                 </StackPanel>
                             </Grid>
-                    </GroupBox>
+                        </GroupBox>
+                        <GroupBox
+                            Margin="5"
+                            Grid.Column="1">
+                            <GroupBox.Header>
+                                <TextBlock
+                                    Style="{DynamicResource MaterialDesignTitleTextBlock}"
+                                    FontWeight="SemiBold"
+                                    Margin="2"
+                                    Text="Remove Attributes" />
+                            </GroupBox.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <ItemsControl
+                                    MouseWheel="UIElement_OnMouseWheel"
+                                    Background="Transparent"
+                                    ItemsSource="{Binding RemovalInputAttributeViewModels}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <ContentControl
+                                                    VerticalAlignment="Center"
+                                                    cal:View.Model="{Binding}" />
+                                                <Button
+                                                    Background="Red"
+                                                    cal:Message.Attach="[Event Click] = [Action RemoveRemovalAttribute($source, $eventArgs)]"
+                                                    Grid.Column="1"
+                                                    Width="40"
+                                                    Content="-"
+                                                    Height="30" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                                <StackPanel
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Center"
+                                    Grid.Row="1"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Name="AddRemoveAttribute"
+                                        Background="Green"
+                                        Width="40"
+                                        Margin="5"
+                                        Content="+"
+                                        Height="30" />
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
                     <StackPanel
                         HorizontalAlignment="Center"
                         Orientation="Horizontal"
-                        Grid.Row="1"
-                        Grid.Column="1">
+                        Grid.Row="2"
+                        Margin="5"
+                        Grid.Column="0">
                         <Button
+                            Margin="5"
                             Name="RunScrubber"
-                            Margin="10,20,20,20"
                             Height="50"
                             FontSize="22"
                             Content="SCRUB"
                             Width="100" />
                         <Button
+                            Margin="5"
                             Name="Close"
-                            Margin="10,20,20,20"
                             Height="50"
                             FontSize="22"
                             Content="CLOSE"

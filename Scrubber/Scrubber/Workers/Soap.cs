@@ -27,6 +27,7 @@ namespace Scrubber.Workers
         private static string IndentString => "\t";
         public bool ClearComments { get; set; }
         public ICollection<InputAttribute> InputAttributes { get; set; }
+        public ICollection<InputAttribute> ExistingAttributes { get; set; }
 
         //Entry
         public void Scrub(DirtyFile dirtyFile)
@@ -54,6 +55,7 @@ namespace Scrubber.Workers
             
             _attributeHelper.ClearComments(node, ClearComments);
             _attributeHelper.AddInputAttribute(node, xDoc, InputAttributes);
+            _attributeHelper.RemoveExistingAttributes(node, ExistingAttributes);
 
             if (!node.Name.Equals("Grid"))
                 return;
