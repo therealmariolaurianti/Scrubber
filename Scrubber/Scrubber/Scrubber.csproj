@@ -86,6 +86,7 @@
     <Compile Include="Factories\IBathtubFactory.cs" />
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
+    <Compile Include="Objects\BathtubOptions.cs" />
     <Compile Include="Workers\AttributeAction.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />
     <Compile Include="Enums\AttributeType.cs" />

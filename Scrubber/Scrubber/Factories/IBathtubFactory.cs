@@ -1,9 +1,10 @@
-﻿using Scrubber.Workers;
+﻿using Scrubber.Objects;
+using Scrubber.Workers;
 
-namespace Scrubber.Model.Factories
+namespace Scrubber.Factories
 {
     public interface IBathtubFactory : IFactory
     {
-        Bathtub Create(string folderPath, bool clearComments);
+        Bathtub Create(BathtubOptions bathtubOptions);
     }
 }

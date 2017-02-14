@@ -10,17 +10,19 @@ namespace Scrubber.Workers
     public class Bathtub
     {
         private readonly Soap _soap;
+        private readonly BathtubOptions _bathtubOptions;
 
-        public Bathtub(Soap soap, string folderPath, bool clearComments)
+        public Bathtub(Soap soap, BathtubOptions bathtubOptions)
         {
-            FolderPath = folderPath;
-            ClearComments = clearComments;
+            _bathtubOptions = bathtubOptions;
             _soap = soap;
         }
 
         private List<DirtyFile> DirtyFiles { get; } = new List<DirtyFile>();
-        public string FolderPath { get; set; }
-        public bool ClearComments { get; set; }
+
+        public string FolderPath => _bathtubOptions.FolderPath;
+        public bool ClearComments => _bathtubOptions.ClearComments;
+        public ObservableCollection<InputAttribute> InputAttributes => _bathtubOptions.InputAttributes;
 
         public Result<Dictionary<bool, List<DirtyFile>>> Drain()
         {
@@ -40,8 +42,6 @@ namespace Scrubber.Workers
                 DirtyFiles.Add(dirtyFile);
             });
         }
-
-        public ObservableCollection<InputAttribute> InputAttributes { get; set; }
 
         public void Rinse()
         {

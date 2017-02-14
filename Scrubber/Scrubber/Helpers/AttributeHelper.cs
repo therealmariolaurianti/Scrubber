@@ -34,6 +34,9 @@ namespace Scrubber.Helpers
         public void AddInputAttribute(XmlNode node, XmlDocument xDoc, 
             ObservableCollection<InputAttribute> inputAttributes)
         {
+            if (inputAttributes == null)
+                return;
+
             foreach (var inputAttribute in inputAttributes)
             {
                 _attributeAction.AddToNode(node, xDoc, inputAttribute);

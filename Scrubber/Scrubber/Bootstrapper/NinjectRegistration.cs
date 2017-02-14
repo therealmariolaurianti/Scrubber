@@ -2,7 +2,7 @@
 using Ninject;
 using Ninject.Extensions.Conventions;
 using NLog;
-using Scrubber.Model.Factories;
+using Scrubber.Factories;
 
 namespace Scrubber.Bootstrapper
 {

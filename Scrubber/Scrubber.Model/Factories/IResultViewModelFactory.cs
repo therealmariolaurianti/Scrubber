@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Scrubber.Factories;
 using Scrubber.Helpers;
 using Scrubber.Model.Maintenance.Result.ViewModels;
 using Scrubber.Objects;

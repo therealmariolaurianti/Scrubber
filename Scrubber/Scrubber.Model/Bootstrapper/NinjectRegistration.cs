@@ -1,7 +1,7 @@
 ﻿using Bootstrap.Ninject;
 using Ninject;
 using Ninject.Extensions.Conventions;
-using Scrubber.Model.Factories;
+using Scrubber.Factories;
 
 namespace Scrubber.Model.Bootstrapper
 {

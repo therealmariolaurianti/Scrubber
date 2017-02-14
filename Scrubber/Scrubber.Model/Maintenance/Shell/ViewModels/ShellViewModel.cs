@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Caliburn.Micro;
+using Scrubber.Factories;
 using Scrubber.Helpers;
 using Scrubber.Model.Factories;
 using Scrubber.Objects;
@@ -32,6 +34,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         }
 
         private Result<Dictionary<bool, List<DirtyFile>>> CleaningResults { get; set; }
+
+        public ObservableCollection<InputAttribute> InputAttributes { get; set; }
 
         public bool ClearComments
         {
@@ -107,7 +111,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 {
                     IsLoading = true;
 
-                    var bathtub = _bathtubFactory.Create(FolderPath, ClearComments);
+                    var bathtubOptions = new BathtubOptions(FolderPath, ClearComments, InputAttributes);
+                    var bathtub = _bathtubFactory.Create(bathtubOptions);
 
                     bathtub.Fill();
                     bathtub.Rinse();
