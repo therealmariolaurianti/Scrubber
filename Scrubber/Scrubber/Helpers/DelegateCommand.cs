@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Input;
-using Caliburn.Micro;
 using Action = System.Action;
 
 namespace Scrubber.Helpers
