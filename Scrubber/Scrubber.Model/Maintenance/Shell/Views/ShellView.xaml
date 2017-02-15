@@ -185,23 +185,27 @@
 							</GroupBox.Header>
 							<Grid>
 								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition/>
-								</Grid.RowDefinitions>
-								<ItemsControl
+                                    <RowDefinition Height="240"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ScrollViewer
+                                    CanContentScroll="True"
+									HorizontalScrollBarVisibility="Disabled"
+									VerticalScrollBarVisibility="Hidden">
+                                    <ItemsControl
 									Background="Transparent"
 									ItemsSource="{Binding RemovalInputAttributeViewModels}">
-									<ItemsControl.ItemTemplate>
-										<DataTemplate>
-											<Grid>
-												<Grid.ColumnDefinitions>
-													<ColumnDefinition/>
-													<ColumnDefinition Width="Auto"/>
-												</Grid.ColumnDefinitions>
-												<ContentControl
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ContentControl
 													VerticalAlignment="Center"
 													cal:View.Model="{Binding}"/>
-												<Button
+                                                    <Button
 													Width="40"
 													Height="30"
 													Grid.Column="1"
@@ -209,19 +213,20 @@
 													BorderBrush="Red"
 													cal:Message.Attach="[Event Click] = [Action RemoveRemovalAttribute($source, $eventArgs)]"
 													Content="-"/>
-											</Grid>
-										</DataTemplate>
-									</ItemsControl.ItemTemplate>
-									<ItemsControl.ItemsPanel>
-										<ItemsPanelTemplate>
-											<StackPanel Orientation="Vertical"/>
-										</ItemsPanelTemplate>
-									</ItemsControl.ItemsPanel>
-								</ItemsControl>
-								<StackPanel
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                                <StackPanel
 									Grid.Row="1"
 									HorizontalAlignment="Center"
-									VerticalAlignment="Top"
+									VerticalAlignment="Bottom"
 									Orientation="Horizontal">
 									<Button
 										Name="AddRemoveAttribute"

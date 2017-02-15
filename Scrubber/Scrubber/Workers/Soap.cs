@@ -54,13 +54,13 @@ namespace Scrubber.Workers
             _attributeHelper.AddInputAttribute(node, xDoc, InputAttributes);
             _attributeHelper.RemoveExistingAttributes(node, ExistingAttributes);
 
+            ProcessGrid(node, xDoc);
 
             //TEMP
             //_attributeHelper.SwapControls(node, xDoc, "TabControlExt", "TabControl");
             //_attributeHelper.SwapControls(node, xDoc, "TabItemExt", "TabItem");
             //TEMP
-            
-            ProcessGrid(node, xDoc);
+
         }
 
         private void ProcessGrid(XmlNode node, XmlDocument xDoc)

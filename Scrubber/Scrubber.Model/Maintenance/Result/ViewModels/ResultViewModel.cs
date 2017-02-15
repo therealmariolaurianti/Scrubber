@@ -34,7 +34,7 @@ namespace Scrubber.Model.Maintenance.Result.ViewModels
         public void ViewFiles()
         {
             var files = Result.ResultValue.SelectMany(result => result.Value).ToList();
-            var fileViewModel = _fileViewModelFactory.Create(files);
+            var fileViewModel = _fileViewModelFactory.Create(files.OrderBy(x => x.IsClean).ToList());
 
             _windowManager.ShowDialog(fileViewModel);
         }

@@ -13,12 +13,16 @@ namespace Scrubber.Model.Maintenance.Files.ViewModels
     {
         public List<DirtyFile> Files { get; }
         public DirtyFile SelectedFile { get; set; }
-
-        public ICommand CloseCommand => new DelegateCommand(Close);
-
+        
         public FileViewModel(List<DirtyFile> files)
         {
-            Files = files.OrderBy(x => x.IsClean).ToList();
+            Files = files;
+        }
+
+        protected override void OnActivate()
+        {
+            DisplayName = "Files";
+            base.OnActivate();
         }
 
         public void OpenFile()
