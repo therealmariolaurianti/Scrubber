@@ -55,8 +55,8 @@ namespace Scrubber.Workers
             _attributeHelper.RemoveExistingAttributes(node, ExistingAttributes);    
 
             //TEMP
-            _attributeHelper.SwapControls(node, xDoc, "TabControlExt", "TabControl");
-            _attributeHelper.SwapControls(node, xDoc, "TabItemExt", "TabItem");
+            //_attributeHelper.SwapControls(node, xDoc, "TabControlExt", "TabControl");
+            //_attributeHelper.SwapControls(node, xDoc, "TabItemExt", "TabItem");
             //TEMP
             
             ProcessGrid(node, xDoc);
