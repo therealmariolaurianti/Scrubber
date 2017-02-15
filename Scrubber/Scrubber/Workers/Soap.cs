@@ -47,23 +47,30 @@ namespace Scrubber.Workers
 
         private void ProcessChildNode(XmlNode node, XmlDocument xDoc)
         {
-            foreach (XmlNode childNode in node.ChildNodes)
+            foreach (XmlNode childNode in node.ChildNodes.OfType<XmlNode>().ToList())
                 ProcessChildNode(childNode, xDoc);
             
             _attributeHelper.ClearComments(node, ClearComments);
             _attributeHelper.AddInputAttribute(node, xDoc, InputAttributes);
-            _attributeHelper.RemoveExistingAttributes(node, ExistingAttributes);
+            _attributeHelper.RemoveExistingAttributes(node, ExistingAttributes);    
 
             //TEMP
             //_attributeHelper.SwapControls(node, xDoc, "TabControlExt", "TabControl");
             //_attributeHelper.SwapControls(node, xDoc, "TabItemExt", "TabItem");
             //TEMP
+            
+            ProcessGrid(node, xDoc);
+        }
 
+        private void ProcessGrid(XmlNode node, XmlDocument xDoc)
+        {
             if (!node.Name.Equals("Grid"))
                 return;
 
-            // ReSharper disable once AssignNullToNotNullAttribute
-            var nodeAttributes = new List<XmlAttribute>(node.Attributes.Cast<XmlAttribute>().ToList());
+            var attributes = node.Attributes;
+            var nodeAttributes = attributes != null 
+                ? new List<XmlAttribute>(attributes.Cast<XmlAttribute>().ToList())
+                : Enumerable.Empty<XmlAttribute>().ToList();
 
             var orderedNodes = node.ChildNodes.Cast<XmlNode>()
                 .OrderBy(un => un.Attributes?["Grid.Column"]?.Value)
@@ -76,7 +83,7 @@ namespace Scrubber.Workers
             node.RemoveAll();
             _attributeHelper.RebuildDefaultAttributes(node, xDoc, nodeAttributes);
 
-            orderedNodes.ForEach(on => node.AppendChild(on));
+            orderedNodes.ForEach(on => node.AppendChild(@on));
         }
 
         private void FormatAndOrder(DirtyFile dirtyFile)
