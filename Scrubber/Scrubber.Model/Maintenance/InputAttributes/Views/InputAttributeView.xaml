@@ -20,6 +20,7 @@
             Width="125"
             DisplayMemberPath="Name"
             Grid.Column="0"
+            IsEditable="True"
             SelectedItem="{Binding SelectedControl}"
             ItemsSource="{Binding Controls}"/>
         <ComboBox
@@ -27,12 +28,14 @@
             SelectedItem="{Binding SelectedAttribute}"
             DisplayMemberPath="Name"
             Margin="5"
+            IsEditable="True"
             Width="125"
             Grid.Column="1"
             ItemsSource="{Binding ControlAttributes}"/>
         <ComboBox
             IsEnabled="{calcBinding:Binding 'SelectedAttribute != null'}"
             Margin="5"
+            IsEditable="True"
             DisplayMemberPath="Name"
             ItemsSource="{Binding AttributeValues}"
             SelectedItem="{Binding SelectedAttributeValue}"

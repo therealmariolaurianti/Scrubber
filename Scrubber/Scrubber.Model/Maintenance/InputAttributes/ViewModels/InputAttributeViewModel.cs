@@ -58,7 +58,7 @@ namespace Scrubber.Model.Maintenance.InputAttributes.ViewModels
                 NotifyOfPropertyChange();
                 NotifyOfPropertyChange(nameof(ControlAttributes));
 
-                Item.ControlName = value.Name;
+                Item.ControlName = value != null ? value.Name : string.Empty;
             }
         }
 

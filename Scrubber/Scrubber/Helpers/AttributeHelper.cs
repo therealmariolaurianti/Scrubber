@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml;
 using Scrubber.Objects;
 using Scrubber.Workers;
@@ -9,6 +9,19 @@ namespace Scrubber.Helpers
     public class AttributeHelper
     {
         private readonly AttributeAction _attributeAction;
+
+        public List<string> BadAttributes = new List<string>
+        {
+            "AllowDragDrop",
+            "CloseButtonType",
+            "EnableLabelEdit",
+            "ShowTabItemContextMenu",
+            "ShowTabListContextMenu",
+            "TabItemLayout",
+            "DefaultContextMenuItemVisibility",
+            "TabItemSize",
+            "IsCustomTabItemContextMenuEnabled"
+        };
 
         public AttributeHelper(AttributeAction attributeAction)
         {
@@ -38,9 +51,7 @@ namespace Scrubber.Helpers
                 return;
 
             foreach (var inputAttribute in inputAttributes)
-            {
                 _attributeAction.Add(node, xDoc, inputAttribute);
-            }
         }
 
         public void RemoveExistingAttributes(XmlNode node,
@@ -50,9 +61,35 @@ namespace Scrubber.Helpers
                 return;
 
             foreach (var existingAttribute in existingAttributes)
-            {
                 _attributeAction.Remove(node, existingAttribute);
+        }
+
+        public void SwapControls(XmlNode node, XmlDocument xDoc, string oldControlName, string newControl)
+        {
+            if (node.LocalName != oldControlName)
+                return;
+
+            var tabControl = xDoc.CreateNode(XmlNodeType.Element, newControl, "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
+
+            var nodes = node.ChildNodes.Cast<XmlNode>().ToList();
+            nodes.ForEach(xmlNode => tabControl.AppendChild(xmlNode));
+
+            var nodeAttributes = node.Attributes;
+            if (nodeAttributes != null)
+            {
+                //TODO finish getfieldsbycontroltype
+                //var newControlAttributes = ControlHelper.GetFieldsByControlType(newControl).Select(x => x.Name).ToList();
+                //var attributes = new List<XmlAttribute>(nodeAttributes.Cast<XmlAttribute>()
+                //    .Where(attr => newControlAttributes.Contains(attr.Name)));
+
+                var attributes = new List<XmlAttribute>(nodeAttributes.Cast<XmlAttribute>()
+                    .Where(attr => !BadAttributes.Contains(attr.Name)).ToList());
+
+                attributes.ForEach(attr => tabControl.Attributes?.Append(attr));
             }
+
+            var parentNode = node.ParentNode;
+            parentNode?.ReplaceChild(tabControl, node);
         }
     }
 }

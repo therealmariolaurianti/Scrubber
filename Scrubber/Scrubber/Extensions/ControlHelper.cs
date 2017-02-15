@@ -18,7 +18,9 @@ namespace Scrubber.Extensions
             new Control(nameof(Expander)),
             new Control(nameof(Button)),
             new Control(nameof(TextBox)),
-            new Control(nameof(GroupBox))
+            new Control(nameof(GroupBox)),
+            new Control(nameof(TabControl)),
+            new Control(nameof(TabItem))
         };
 
         public static List<ControlAttribute> GetFieldsByControlType(string controlName)
@@ -46,7 +48,7 @@ namespace Scrubber.Extensions
             return propertyType?.Select(t => new AttributeValue(t.Name)).ToList();
         }
 
-        private static Type FindType(string qualifiedTypeName)
+        public static Type FindType(string qualifiedTypeName)
         {
             var type = Type.GetType(qualifiedTypeName);
 
