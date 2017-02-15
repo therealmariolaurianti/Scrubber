@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 using Caliburn.Micro;
 using Ninject;
+using Scrubber.Helpers;
 
 namespace Scrubber.Maintenance
 {
@@ -14,6 +16,8 @@ namespace Scrubber.Maintenance
         }
 
         public int Id { get; private set; }
+
+        public ICommand CloseCommand => new DelegateCommand(Close);
 
         public void Close()
         {

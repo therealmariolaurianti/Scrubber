@@ -19,6 +19,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
     public class ShellViewModel : ViewModel
     {
         private readonly IBathtubFactory _bathtubFactory;
+
+        private readonly IErrorViewModelFactory _errorViewModelFactory;
         private readonly IInputAttributeViewModelFactory _inputAttributeViewModelFactory;
         private readonly IResultViewModelFactory _resultViewModelFactory;
         private readonly UserSettings _userSettings;
@@ -31,16 +33,20 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
         public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings,
             IWindowManager windowManager, IResultViewModelFactory resultViewModelFactory,
-            IInputAttributeViewModelFactory inputAttributeViewModelFactory)
+            IInputAttributeViewModelFactory inputAttributeViewModelFactory, IErrorViewModelFactory errorViewModelFactory)
         {
             _bathtubFactory = bathtubFactory;
             _userSettings = userSettings;
             _windowManager = windowManager;
             _resultViewModelFactory = resultViewModelFactory;
             _inputAttributeViewModelFactory = inputAttributeViewModelFactory;
+            _errorViewModelFactory = errorViewModelFactory;
 
             _userSettings.Load(this);
         }
+
+        public ICollection<InputAttribute> AdditionalInputAttributes => AdditionalInputAttributeViewModels.Select(
+            inputAttributeViewModel => inputAttributeViewModel.Item).ToList();
 
         public ObservableCollection<InputAttributeViewModel> AdditionalInputAttributeViewModels
         {
@@ -81,12 +87,6 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             }
         }
 
-        public ICollection<InputAttribute> AdditionalInputAttributes => AdditionalInputAttributeViewModels.Select(
-            inputAttributeViewModel => inputAttributeViewModel.Item).ToList();
-
-        public ICollection<InputAttribute> RemovalInputAttributes => RemovalInputAttributeViewModels.Select(
-            attributeViewModel => attributeViewModel.Item).ToList();
-
         public bool IsLoading
         {
             get { return _isLoading; }
@@ -97,6 +97,9 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+
+        public ICollection<InputAttribute> RemovalInputAttributes => RemovalInputAttributeViewModels.Select(
+            attributeViewModel => attributeViewModel.Item).ToList();
 
         public ObservableCollection<InputAttributeViewModel> RemovalInputAttributeViewModels
         {
@@ -178,7 +181,9 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         {
             if (string.IsNullOrEmpty(FolderPath))
             {
-                MessageBox.Show("Enter path.");
+                IsLoading = true;
+                _windowManager.ShowDialog(_errorViewModelFactory.Create("Please Enter a Path."));
+                IsLoading = false;
                 return;
             }
             Task.Run(() =>

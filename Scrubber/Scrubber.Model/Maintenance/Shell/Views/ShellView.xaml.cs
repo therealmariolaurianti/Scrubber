@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Scrubber.Model.Maintenance.Shell.Views
@@ -12,11 +13,6 @@ namespace Scrubber.Model.Maintenance.Shell.Views
         public ShellView()
         {
             InitializeComponent();
-        }
-
-        private void UIElement_OnMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            
         }
     }
 }

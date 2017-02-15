@@ -52,7 +52,8 @@ namespace Scrubber.Workers
             
             _attributeHelper.ClearComments(node, ClearComments);
             _attributeHelper.AddInputAttribute(node, xDoc, InputAttributes);
-            _attributeHelper.RemoveExistingAttributes(node, ExistingAttributes);    
+            _attributeHelper.RemoveExistingAttributes(node, ExistingAttributes);
+
 
             //TEMP
             //_attributeHelper.SwapControls(node, xDoc, "TabControlExt", "TabControl");
@@ -83,7 +84,7 @@ namespace Scrubber.Workers
             node.RemoveAll();
             _attributeHelper.RebuildDefaultAttributes(node, xDoc, nodeAttributes);
 
-            orderedNodes.ForEach(on => node.AppendChild(@on));
+            orderedNodes.ForEach(on => node.AppendChild(on));
         }
 
         private void FormatAndOrder(DirtyFile dirtyFile)

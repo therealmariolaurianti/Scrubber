@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Scrubber.Helpers;
@@ -17,7 +18,7 @@ namespace Scrubber.Model.Maintenance.Files.ViewModels
 
         public FileViewModel(List<DirtyFile> files)
         {
-            Files = files;
+            Files = files.OrderBy(x => x.IsClean).ToList();
         }
 
         public void OpenFile()

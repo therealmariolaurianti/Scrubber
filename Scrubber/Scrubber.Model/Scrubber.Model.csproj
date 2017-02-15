@@ -109,9 +109,14 @@
     </Compile>
     <Compile Include="Bootstrapper\AppBootstrapper.cs" />
     <Compile Include="Bootstrapper\NinjectRegistration.cs" />
+    <Compile Include="Factories\IErrorViewModelFactory.cs" />
     <Compile Include="Factories\IFileViewModelFactory.cs" />
     <Compile Include="Factories\IInputAttributeViewModelFactory.cs" />
     <Compile Include="Factories\IResultViewModelFactory.cs" />
+    <Compile Include="Maintenance\Error\ViewModels\ErrorViewModel.cs" />
+    <Compile Include="Maintenance\Error\Views\ErrorView.xaml.cs">
+      <DependentUpon>ErrorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Maintenance\Files\ViewModels\FileViewModel.cs" />
     <Compile Include="Maintenance\Files\Views\FileView.xaml.cs">
       <DependentUpon>FileView.xaml</DependentUpon>
@@ -164,6 +169,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Maintenance\Error\Views\ErrorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Maintenance\Files\Views\FileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

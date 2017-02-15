@@ -57,6 +57,5 @@ namespace Scrubber.Model.Maintenance.Result.ViewModels
         }
 
         public ICommand ViewFilesCommand => new DelegateCommand(ViewFiles);
-        public ICommand CloseCommand => new DelegateCommand(Close);
     }
 }

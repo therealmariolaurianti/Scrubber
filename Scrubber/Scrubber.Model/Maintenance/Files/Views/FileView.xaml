@@ -1,68 +1,68 @@
-﻿<Window x:Class="Scrubber.Model.Maintenance.Files.Views.FileView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:Scrubber.Model.Maintenance.Files.ViewModels"
-        xmlns:cal="http://www.caliburnproject.org"
-        mc:Ignorable="d"
-        Title="Files"
-        AllowsTransparency="True"
-        MaxWidth="1500"
-        MinWidth="300"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal"
-        TextOptions.TextRenderingMode="Auto"
-        Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}"
-        WindowStartupLocation="CenterOwner"
-        WindowStyle="None"
-        SizeToContent="Width"
-        d:DataContext="{d:DesignInstance viewModels:FileViewModel }">
-    <Window.InputBindings>
-        <KeyBinding
-            Key="Enter"
-            Command="{Binding CloseCommand}" />
-        <KeyBinding
-            Key="Escape"
-            Command="{Binding CloseCommand}" />
-    </Window.InputBindings>
-    <Grid
-        Margin="5">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <DataGrid
-            ScrollViewer.CanContentScroll="True"
-            HorizontalScrollBarVisibility="Auto"
-            VerticalScrollBarVisibility="Auto"
-            cal:Message.Attach="[Event MouseDoubleClick] = [Action OpenFile()]"
-            IsReadOnly="True"
-            AutoGenerateColumns="False"
-            SelectedItem="{Binding SelectedFile}"
-            ItemsSource="{Binding Files}">
-            <DataGrid.Columns>
-                <DataGridTextColumn
-                    Header="File Name"
-                    Binding="{Binding FileName}" />
-                <DataGridCheckBoxColumn
-                    ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                    Header="Is Clean"
-                    Binding="{Binding IsClean}" />
-                <DataGridTextColumn
-                    Header="File Path"
-                    Binding="{Binding FilePath}" />
-            </DataGrid.Columns>
-        </DataGrid>
-        <Button
-            Margin="5"
-            Name="Close"
-            Content="Close"
-            Width="95"
-            Height="30"
-            Grid.Row="1" />
-    </Grid>
+
+<Window
+	x:Class="Scrubber.Model.Maintenance.Files.Views.FileView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:cal="http://www.caliburnproject.org"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:viewModels="clr-namespace:Scrubber.Model.Maintenance.Files.ViewModels"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	MaxWidth="1500"
+	MinWidth="300"
+	Background="{DynamicResource MaterialDesignPaper}"
+	d:DataContext="{d:DesignInstance viewModels:FileViewModel }"
+	FontFamily="{DynamicResource MaterialDesignFont}"
+	SizeToContent="Width"
+	TextElement.FontSize="13"
+	TextElement.FontWeight="Regular"
+	TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+	TextOptions.TextFormattingMode="Ideal"
+	TextOptions.TextRenderingMode="Auto"
+	Title="Files"
+	WindowStartupLocation="CenterOwner"
+	WindowStyle="SingleBorderWindow" 
+	mc:Ignorable="d">
+	<Window.InputBindings>
+		<KeyBinding
+			Key="Enter"
+			Command="{Binding CloseCommand}"/>
+		<KeyBinding
+			Key="Escape"
+			Command="{Binding CloseCommand}"/>
+	</Window.InputBindings>
+	<Grid Margin="5">
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<DataGrid
+			AutoGenerateColumns="False"
+			cal:Message.Attach="[Event MouseDoubleClick] = [Action OpenFile()]"
+			HorizontalScrollBarVisibility="Auto"
+			IsReadOnly="True"
+			ItemsSource="{Binding Files}"
+			ScrollViewer.CanContentScroll="True"
+			SelectedItem="{Binding SelectedFile}"
+			VerticalScrollBarVisibility="Auto">
+			<DataGrid.Columns>
+				<DataGridTextColumn
+					Binding="{Binding FileName}"
+					Header="File Name"/>
+				<DataGridCheckBoxColumn
+					Binding="{Binding IsClean}"
+					ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+					Header="Is Clean"/>
+				<DataGridTextColumn
+					Binding="{Binding FilePath}"
+					Header="File Path"/>
+			</DataGrid.Columns>
+		</DataGrid>
+		<Button
+			Name="Close"
+			Width="95"
+			Height="30"
+			Grid.Row="1"
+			Margin="5"
+			Content="Close"/>
+	</Grid>
 </Window>
