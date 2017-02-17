@@ -2,7 +2,7 @@
 using Scrubber.Extensions;
 using Scrubber.Objects;
 
-namespace Scrubber.Workers
+namespace Scrubber.Helpers
 {
     public class AttributeAction
     {

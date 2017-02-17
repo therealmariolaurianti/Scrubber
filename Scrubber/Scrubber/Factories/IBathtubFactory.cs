@@ -1,5 +1,4 @@
-﻿using Scrubber.Objects;
-using Scrubber.Options;
+﻿using Scrubber.Options;
 using Scrubber.Workers;
 
 namespace Scrubber.Factories

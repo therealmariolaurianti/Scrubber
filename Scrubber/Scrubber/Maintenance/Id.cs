@@ -2,11 +2,11 @@
 {
     public static class NextId
     {
-        private static int _id = 1;
+        private static int _id;
 
         public static int GetNext()
         {
-            return _id++;
+            return --_id;
         }
     }
 }

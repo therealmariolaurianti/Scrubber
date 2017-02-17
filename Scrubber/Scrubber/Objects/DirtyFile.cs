@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Scrubber.Extensions;
-using Scrubber.Helpers;
 
 namespace Scrubber.Objects
 {

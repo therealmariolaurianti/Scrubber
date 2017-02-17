@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Caliburn.Micro;
-using Ninject;
 using Scrubber.Helpers;
 
 namespace Scrubber.Maintenance

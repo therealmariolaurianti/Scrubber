@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Scrubber.Extensions;
+using Scrubber.Helpers;
 
 namespace Scrubber.Objects
 {

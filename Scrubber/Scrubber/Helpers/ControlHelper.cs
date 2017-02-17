@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
+using Scrubber.Extensions;
 using Scrubber.Objects;
 using Control = Scrubber.Objects.Control;
 
-namespace Scrubber.Extensions
+namespace Scrubber.Helpers
 {
     public static class ControlHelper
     {
@@ -25,32 +25,34 @@ namespace Scrubber.Extensions
 
         public static List<ControlAttribute> GetFieldsByControlType(string controlName)
         {
-            var type = FindType($"System.Windows.Controls.{controlName}");
+            var type = FindType(controlName);
             if (type == null)
                 return Enumerable.Empty<ControlAttribute>().ToList();
 
-            var fields = typeof(FrameworkElement).GetFields()
-                .Where(field => !field.Name.Contains("Event") ||
-                !field.Name.Contains("Style")).ToList();
-
-            fields.AddRange(type.GetFields().ToList());
-
-            var controlAttributes = fields.Select(fieldInfo => new ControlAttribute(fieldInfo.Name.FormatAttribute(), controlName)).OrderBy(x => x.Name).ToList();
+            var fields = type.GetFields().ToList();
+            
+            var controlAttributes = fields.Select(fieldInfo => 
+                new ControlAttribute(fieldInfo.Name.FormatAttribute(), controlName))
+                    .OrderBy(x => x.Name).ToList();
             return controlAttributes;
         }
 
         public static List<AttributeValue> GetValuesByAttribute(string attributeName, string controlName)
         {
-            var type = FindType($"System.Windows.Controls.{controlName}");
+            var type = FindType(controlName);
+            if (type == null)
+                return Enumerable.Empty<AttributeValue>().ToList();
+
             var fieldValues = type.GetProperties().SingleOrDefault(field => field.Name == attributeName);
             var propertyType = fieldValues?.PropertyType.GetFields();
 
             return propertyType?.Select(t => new AttributeValue(t.Name)).ToList();
         }
 
-        public static Type FindType(string qualifiedTypeName)
+        private static Type FindType(string qualifiedTypeName)
         {
-            var type = Type.GetType(qualifiedTypeName);
+            var typeName = $"System.Windows.Controls.{qualifiedTypeName}";
+            var type = Type.GetType(typeName);
 
             if (type != null)
             {
@@ -65,7 +67,5 @@ namespace Scrubber.Extensions
 
             return null;
         }
-
-       
     }
 }
