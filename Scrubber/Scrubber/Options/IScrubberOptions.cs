@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Scrubber.Objects;
 
-namespace Scrubber.Objects
+namespace Scrubber.Options
 {
     public interface IScrubberOptions
     {

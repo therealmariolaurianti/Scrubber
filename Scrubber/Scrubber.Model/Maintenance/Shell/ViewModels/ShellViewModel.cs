@@ -14,6 +14,7 @@ using Scrubber.Maintenance;
 using Scrubber.Model.Factories;
 using Scrubber.Model.Maintenance.InputAttributes.ViewModels;
 using Scrubber.Objects;
+using Scrubber.Options;
 
 namespace Scrubber.Model.Maintenance.Shell.ViewModels
 {

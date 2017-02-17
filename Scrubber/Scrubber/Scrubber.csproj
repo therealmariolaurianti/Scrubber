@@ -125,8 +125,8 @@
     <Compile Include="Objects\AttributeValue.cs" />
     <Compile Include="Objects\Control.cs" />
     <Compile Include="Objects\ControlAttribute.cs" />
-    <Compile Include="Objects\IScrubberOptions.cs" />
-    <Compile Include="Objects\ScrubberOptions.cs" />
+    <Compile Include="Options\IScrubberOptions.cs" />
+    <Compile Include="Options\ScrubberOptions.cs" />
     <Compile Include="Workers\AttributeAction.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />
     <Compile Include="Enums\AttributeType.cs" />

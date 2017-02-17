@@ -6,14 +6,15 @@ using System.Xml;
 using NLog;
 using Scrubber.Helpers;
 using Scrubber.Objects;
+using Scrubber.Options;
 
 namespace Scrubber.Workers
 {
     public class Soap
     {
         private readonly AttributeHelper _attributeHelper;
-        private readonly IScrubberOptions _options;
         private readonly Logger _logger;
+        private readonly IScrubberOptions _options;
 
         public Soap(Logger logger, AttributeHelper attributeHelper, IScrubberOptions options)
         {
@@ -46,14 +47,10 @@ namespace Scrubber.Workers
 
         private void ProcessChildNode(XmlNode node, XmlDocument xDoc)
         {
-            foreach (XmlNode childNode in node.ChildNodes.OfType<XmlNode>().ToList())
+            foreach (var childNode in node.ChildNodes.OfType<XmlNode>().ToList())
                 ProcessChildNode(childNode, xDoc);
-            
-            _attributeHelper.ClearComments(node, _options.ClearComments);
-            _attributeHelper.AddInputAttribute(node, xDoc, _options.InputAttributes);
-            _attributeHelper.RemoveExistingAttributes(node, _options.ExistingAttributes);
-            _attributeHelper.SwapControls(Enumerable.Empty<XmlNode>().ToList(), xDoc, string.Empty, string.Empty);
 
+            _attributeHelper.GoToCleaner(node, xDoc, _options);
             ProcessGrid(node, xDoc);
         }
 
@@ -63,13 +60,13 @@ namespace Scrubber.Workers
                 return;
 
             var attributes = node.Attributes;
-            var nodeAttributes = attributes != null 
+            var nodeAttributes = attributes != null
                 ? new List<XmlAttribute>(attributes.Cast<XmlAttribute>().ToList())
                 : Enumerable.Empty<XmlAttribute>().ToList();
-            
+
             var nodes = node.ChildNodes.Cast<XmlNode>().ToList();
 
-            if(!nodes.Any())
+            if (!nodes.Any())
                 return;
 
             var orderedNodes = nodes.OrderBy(on => on.Attributes?["Grid.Row"]?.Value).ToList();
@@ -83,7 +80,7 @@ namespace Scrubber.Workers
 
             orderedNodes.ForEach(on => node.AppendChild(on));
         }
-        
+
         private void Run(DirtyFile dirtyFile)
         {
             try

@@ -28,6 +28,11 @@ namespace Scrubber.Extensions
             return newString;
         }
 
+        public static List<T2> ToListOfType<T,T2>(this IEnumerable<T> list)
+        {
+            return list.OfType<T2>().ToList();
+        }
+
         public static List<List<float[]>> SplitList(List<float[]> locations, int nSize)
         {
             var list = new List<List<float[]>>();

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml;
 using Scrubber.Extensions;
 using Scrubber.Objects;
+using Scrubber.Options;
 using Scrubber.Workers;
 
 namespace Scrubber.Helpers
@@ -11,25 +12,12 @@ namespace Scrubber.Helpers
     {
         private readonly AttributeAction _attributeAction;
 
-        public List<string> BadAttributes = new List<string>
-        {
-            "AllowDragDrop",
-            "CloseButtonType",
-            "EnableLabelEdit",
-            "ShowTabItemContextMenu",
-            "ShowTabListContextMenu",
-            "TabItemLayout",
-            "DefaultContextMenuItemVisibility",
-            "TabItemSize",
-            "IsCustomTabItemContextMenuEnabled"
-        };
-
         public AttributeHelper(AttributeAction attributeAction)
         {
             _attributeAction = attributeAction;
         }
 
-        public void ClearComments(XmlNode node, bool clearComments)
+        private void ClearComments(XmlNode node, bool clearComments)
         {
             if (!clearComments)
                 return;
@@ -45,7 +33,7 @@ namespace Scrubber.Helpers
                 node.Attributes?.Append(xmlAttribute);
         }
 
-        public void AddInputAttribute(XmlNode node, XmlDocument xDoc,
+        private void AddInputAttribute(XmlNode node, XmlDocument xDoc,
             ICollection<InputAttribute> inputAttributes)
         {
             if (inputAttributes == null)
@@ -55,7 +43,7 @@ namespace Scrubber.Helpers
                 _attributeAction.Add(node, xDoc, inputAttribute);
         }
 
-        public void RemoveExistingAttributes(XmlNode node,
+        private void RemoveExistingAttributes(XmlNode node,
             ICollection<InputAttribute> existingAttributes)
         {
             if (existingAttributes == null)
@@ -65,12 +53,10 @@ namespace Scrubber.Helpers
                 _attributeAction.Remove(node, existingAttribute);
         }
 
-        public void SwapControls(List<XmlNode> nodes, XmlDocument xDoc, string oldControlName, string newControl)
+        private void SwapControls(List<XmlNode> nodes, XmlDocument xDoc, string oldControlName, string newControl)
         {
             foreach (var node in nodes)
-            {
                 SwapControl(node, xDoc, oldControlName, newControl);
-            }
         }
 
         private void SwapControl(XmlNode node, XmlDocument xDoc, string oldControlName, string newControl)
@@ -78,7 +64,8 @@ namespace Scrubber.Helpers
             if (node.LocalName != oldControlName)
                 return;
 
-            var tabControl = xDoc.CreateNode(XmlNodeType.Element, newControl, "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
+            var tabControl = xDoc.CreateNode(XmlNodeType.Element, newControl,
+                "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
 
             var nodes = node.ChildNodes.Cast<XmlNode>().ToList();
             nodes.ForEach(xmlNode => tabControl.AppendChild(xmlNode));
@@ -87,12 +74,9 @@ namespace Scrubber.Helpers
             if (nodeAttributes != null)
             {
                 //TODO finish getfieldsbycontroltype
-                //var newControlAttributes = ControlHelper.GetFieldsByControlType(newControl).Select(x => x.Name).ToList();
-                //var attributes = new List<XmlAttribute>(nodeAttributes.Cast<XmlAttribute>()
-                //    .Where(attr => newControlAttributes.Contains(attr.Name)));
-
+                var newControlAttributes = ControlHelper.GetFieldsByControlType(newControl).Select(x => x.Name).ToList();
                 var attributes = new List<XmlAttribute>(nodeAttributes.Cast<XmlAttribute>()
-                    .Where(attr => !BadAttributes.Contains(attr.Name)).ToList());
+                    .Where(attr => newControlAttributes.Contains(attr.Name)));
 
                 attributes.ForEach(attr => tabControl.Attributes?.Append(attr));
             }
@@ -100,5 +84,13 @@ namespace Scrubber.Helpers
             var parentNode = node.ParentNode;
             parentNode?.ReplaceChild(tabControl, node);
         }
+
+        public void GoToCleaner(XmlNode node, XmlDocument xDoc, IScrubberOptions options)
+        {
+            ClearComments(node, options.ClearComments);
+            AddInputAttribute(node, xDoc, options.InputAttributes);
+            RemoveExistingAttributes(node, options.ExistingAttributes);
+            SwapControls(Enumerable.Empty<XmlNode>().ToList(), xDoc, string.Empty, string.Empty);
+        }
     }
-}
+}   

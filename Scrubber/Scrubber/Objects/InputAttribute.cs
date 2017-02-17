@@ -1,7 +1,5 @@
 using System.Diagnostics;
-using System.Xml;
 using Ninject;
-using Scrubber.Enums;
 using Scrubber.Extensions;
 
 namespace Scrubber.Objects

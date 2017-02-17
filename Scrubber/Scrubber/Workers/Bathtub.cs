@@ -4,6 +4,7 @@ using Scrubber.Extensions;
 using Scrubber.Factories;
 using Scrubber.Helpers;
 using Scrubber.Objects;
+using Scrubber.Options;
 
 namespace Scrubber.Workers
 {
