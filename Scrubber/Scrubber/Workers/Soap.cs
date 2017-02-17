@@ -12,27 +12,26 @@ namespace Scrubber.Workers
     public class Soap
     {
         private readonly AttributeHelper _attributeHelper;
+        private readonly IScrubberOptions _options;
         private readonly Logger _logger;
 
-        public Soap(Logger logger, AttributeHelper attributeHelper)
+        public Soap(Logger logger, AttributeHelper attributeHelper, IScrubberOptions options)
         {
             _logger = logger;
             _attributeHelper = attributeHelper;
+            _options = options;
         }
 
         private static int AttributeCountTolerance => 1;
         private static string IndentString => "\t";
-        public bool ClearComments { get; set; }
-        public ICollection<InputAttribute> InputAttributes { get; set; }
-        public ICollection<InputAttribute> ExistingAttributes { get; set; }
 
         //Entry
         public void Scrub(DirtyFile dirtyFile)
         {
-            FormatAndOrder(dirtyFile);
+            Run(dirtyFile);
         }
 
-        private void OrderControls(string filePath)
+        private void Format(string filePath)
         {
             var xDoc = new XmlDocument();
             xDoc.Load(filePath);
@@ -50,17 +49,12 @@ namespace Scrubber.Workers
             foreach (XmlNode childNode in node.ChildNodes.OfType<XmlNode>().ToList())
                 ProcessChildNode(childNode, xDoc);
             
-            _attributeHelper.ClearComments(node, ClearComments);
-            _attributeHelper.AddInputAttribute(node, xDoc, InputAttributes);
-            _attributeHelper.RemoveExistingAttributes(node, ExistingAttributes);
+            _attributeHelper.ClearComments(node, _options.ClearComments);
+            _attributeHelper.AddInputAttribute(node, xDoc, _options.InputAttributes);
+            _attributeHelper.RemoveExistingAttributes(node, _options.ExistingAttributes);
+            _attributeHelper.SwapControls(Enumerable.Empty<XmlNode>().ToList(), xDoc, string.Empty, string.Empty);
 
             ProcessGrid(node, xDoc);
-
-            //TEMP
-            //_attributeHelper.SwapControls(node, xDoc, "TabControlExt", "TabControl");
-            //_attributeHelper.SwapControls(node, xDoc, "TabItemExt", "TabItem");
-            //TEMP
-
         }
 
         private void ProcessGrid(XmlNode node, XmlDocument xDoc)
@@ -72,10 +66,13 @@ namespace Scrubber.Workers
             var nodeAttributes = attributes != null 
                 ? new List<XmlAttribute>(attributes.Cast<XmlAttribute>().ToList())
                 : Enumerable.Empty<XmlAttribute>().ToList();
+            
+            var nodes = node.ChildNodes.Cast<XmlNode>().ToList();
 
-            var orderedNodes = node.ChildNodes.Cast<XmlNode>()
-                .OrderBy(un => un.Attributes?["Grid.Column"]?.Value)
-                .ThenBy(un => un.Attributes?["Grid.Row"]?.Value).ToList();
+            if(!nodes.Any())
+                return;
+
+            var orderedNodes = nodes.OrderBy(on => on.Attributes?["Grid.Row"]?.Value).ToList();
 
             foreach (var orderedNode in orderedNodes)
                 if (orderedNode.HasChildNodes)
@@ -86,12 +83,12 @@ namespace Scrubber.Workers
 
             orderedNodes.ForEach(on => node.AppendChild(on));
         }
-
-        private void FormatAndOrder(DirtyFile dirtyFile)
+        
+        private void Run(DirtyFile dirtyFile)
         {
             try
             {
-                OrderControls(dirtyFile.FilePath);
+                Format(dirtyFile.FilePath);
 
                 var path = dirtyFile.FilePath;
                 var fileContent = File.ReadAllText(path);

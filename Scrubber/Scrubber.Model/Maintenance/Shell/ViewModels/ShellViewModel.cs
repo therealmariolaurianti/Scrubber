@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Caliburn.Micro;
+using Ninject;
 using Scrubber.Factories;
 using Scrubber.Helpers;
 using Scrubber.Maintenance;
@@ -19,7 +20,6 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
     public class ShellViewModel : ViewModel
     {
         private readonly IBathtubFactory _bathtubFactory;
-
         private readonly IErrorViewModelFactory _errorViewModelFactory;
         private readonly IInputAttributeViewModelFactory _inputAttributeViewModelFactory;
         private readonly IResultViewModelFactory _resultViewModelFactory;
@@ -190,8 +190,9 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 {
                     IsLoading = true;
 
-                    var bathtubOptions = new BathtubOptions(FolderPath, ClearComments, AdditionalInputAttributes,
+                    var bathtubOptions = new ScrubberOptions(FolderPath, ClearComments, AdditionalInputAttributes,
                         RemovalInputAttributes);
+
                     var bathtub = _bathtubFactory.Create(bathtubOptions);
 
                     bathtub.Fill();

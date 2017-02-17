@@ -244,23 +244,15 @@
 						Grid.Column="0"
 						Grid.Row="2"
 						HorizontalAlignment="Center"
-						Margin="5"
 						Orientation="Horizontal">
-						<Button
+                        <Button
 							Name="RunScrubber"
 							Width="110"
 							Height="50"
-							Margin="5"
+							Margin="10"
 							Content="SCRUB"
 							FontSize="22"/>
-						<Button
-							Name="Close"
-							Width="110"
-							Height="50"
-							Margin="5"
-							Content="CLOSE"
-							FontSize="22"/>
-					</StackPanel>
+                    </StackPanel>
 				</Grid>
 			</GroupBox>
 		</Grid>

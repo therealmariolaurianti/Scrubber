@@ -65,7 +65,15 @@ namespace Scrubber.Helpers
                 _attributeAction.Remove(node, existingAttribute);
         }
 
-        public void SwapControls(XmlNode node, XmlDocument xDoc, string oldControlName, string newControl)
+        public void SwapControls(List<XmlNode> nodes, XmlDocument xDoc, string oldControlName, string newControl)
+        {
+            foreach (var node in nodes)
+            {
+                SwapControl(node, xDoc, oldControlName, newControl);
+            }
+        }
+
+        private void SwapControl(XmlNode node, XmlDocument xDoc, string oldControlName, string newControl)
         {
             if (node.LocalName != oldControlName)
                 return;

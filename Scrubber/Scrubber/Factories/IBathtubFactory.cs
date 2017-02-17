@@ -5,6 +5,6 @@ namespace Scrubber.Factories
 {
     public interface IBathtubFactory : IFactory
     {
-        Bathtub Create(BathtubOptions bathtubOptions);
+        Bathtub Create(IScrubberOptions bathtubOptions);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Scrubber.Extensions
@@ -25,6 +26,18 @@ namespace Scrubber.Extensions
         {
             var newString = string.Join("", str.Select((c, i) => i != 0 && char.IsUpper(c) ? " " + c : c.ToString()));
             return newString;
+        }
+
+        public static List<List<float[]>> SplitList(List<float[]> locations, int nSize)
+        {
+            var list = new List<List<float[]>>();
+
+            for (int i = 0; i < locations.Count; i += nSize)
+            {
+                list.Add(locations.GetRange(i, Math.Min(nSize, locations.Count - i)));
+            }
+
+            return list;
         }
     }
 }

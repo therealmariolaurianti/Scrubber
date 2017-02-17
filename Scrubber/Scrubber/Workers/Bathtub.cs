@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Scrubber.Extensions;
+using Scrubber.Factories;
 using Scrubber.Helpers;
 using Scrubber.Objects;
 
@@ -9,21 +9,16 @@ namespace Scrubber.Workers
 {
     public class Bathtub
     {
-        private readonly Soap _soap;
-        private readonly BathtubOptions _bathtubOptions;
+        private readonly IScrubberOptions _bathtubOptions;
+        private readonly ISoapFactory _soapFactory;
 
-        public Bathtub(Soap soap, BathtubOptions bathtubOptions)
+        public Bathtub(IScrubberOptions bathtubOptions, ISoapFactory soapFactory)
         {
             _bathtubOptions = bathtubOptions;
-            _soap = soap;
+            _soapFactory = soapFactory;
         }
 
         private List<DirtyFile> DirtyFiles { get; } = new List<DirtyFile>();
-
-        public string FolderPath => _bathtubOptions.FolderPath;
-        public bool ClearComments => _bathtubOptions.ClearComments;
-        public ICollection<InputAttribute> AdditionalInputAttributes => _bathtubOptions.AdditionalInputAttributes;
-        public ICollection<InputAttribute> RemovalInputAttributes => _bathtubOptions.RemovalInputAttributes;
 
         public Result<Dictionary<bool, List<DirtyFile>>> Drain()
         {
@@ -37,7 +32,7 @@ namespace Scrubber.Workers
 
         public void Fill()
         {
-            FolderPath.GetFilesByExtenstion("*.xaml").ForEach(file =>
+            _bathtubOptions.FolderPath.GetFilesByExtenstion("*.xaml").ForEach(file =>
             {
                 var dirtyFile = new DirtyFile(file);
                 DirtyFiles.Add(dirtyFile);
@@ -46,11 +41,8 @@ namespace Scrubber.Workers
 
         public void Rinse()
         {
-            _soap.ClearComments = ClearComments;
-            _soap.InputAttributes = AdditionalInputAttributes;
-            _soap.ExistingAttributes = RemovalInputAttributes;
-
-            DirtyFiles.ForEach(dirtyFile => _soap.Scrub(dirtyFile));
+            var soap = _soapFactory.Create(_bathtubOptions);
+            DirtyFiles.ForEach(dirtyFile => soap.Scrub(dirtyFile));
         }
     }
 }
