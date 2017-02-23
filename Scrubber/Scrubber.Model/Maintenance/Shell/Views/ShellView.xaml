@@ -13,7 +13,7 @@
 	Background="{DynamicResource MaterialDesignPaper}"
 	d:DataContext="{d:DesignInstance viewModels:ShellViewModel }"
 	FontFamily="{DynamicResource MaterialDesignFont}"
-	ResizeMode="NoResize"
+	ResizeMode="CanResizeWithGrip"
 	TextElement.FontSize="13"
 	TextElement.FontWeight="Regular"
 	TextElement.Foreground="{DynamicResource MaterialDesignBody}"

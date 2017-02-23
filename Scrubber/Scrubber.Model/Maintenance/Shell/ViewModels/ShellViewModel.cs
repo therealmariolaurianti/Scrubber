@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Caliburn.Micro;
-using Ninject;
+using Scrubber.Extensions;
 using Scrubber.Factories;
 using Scrubber.Helpers;
 using Scrubber.Maintenance;
@@ -177,37 +177,45 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 Process.Start(info);
             }
         }
+        
+        private bool CanRunScrubber()
+        {
+            if (FolderPath.Exists())    
+                return true;
+
+            IsLoading = true;
+            _windowManager.ShowDialog(_errorViewModelFactory.Create("The folder path is invaild."));
+            IsLoading = false;
+            return false;
+        }
 
         public void RunScrubber()
         {
-            if (string.IsNullOrEmpty(FolderPath))
-            {
-                IsLoading = true;
-                _windowManager.ShowDialog(_errorViewModelFactory.Create("Please Enter a Path."));
-                IsLoading = false;
+            if (!CanRunScrubber())
                 return;
-            }
-            Task.Run(() =>
-                {
-                    IsLoading = true;
 
-                    var bathtubOptions = new ScrubberOptions(FolderPath, ClearComments, AdditionalInputAttributes,
-                        RemovalInputAttributes);
+            Task.Run(() => BeginClean()).GetAwaiter().OnCompleted(CompleteClean);
+        }
 
-                    var bathtub = _bathtubFactory.Create(bathtubOptions);
+        private void CompleteClean()
+        {
+            var resultViewModel = _resultViewModelFactory.Create(CleaningResults);
+            _windowManager.ShowDialog(resultViewModel);
 
-                    bathtub.Fill();
-                    bathtub.Rinse();
+            IsLoading = false;
+        }
 
-                    CleaningResults = bathtub.Drain();
-                }).GetAwaiter()
-                .OnCompleted(() =>
-                {
-                    var resultViewModel = _resultViewModelFactory.Create(CleaningResults);
-                    _windowManager.ShowDialog(resultViewModel);
+        private void BeginClean()
+        {
+            IsLoading = true;
 
-                    IsLoading = false;
-                });
+            var bathtubOptions = new ScrubberOptions(FolderPath, ClearComments, AdditionalInputAttributes,
+                RemovalInputAttributes);
+
+            var bathtub = _bathtubFactory.Create(bathtubOptions);
+            bathtub.Fill();
+
+            CleaningResults = bathtub.Drain();
         }
     }
 }

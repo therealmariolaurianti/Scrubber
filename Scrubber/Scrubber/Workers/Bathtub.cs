@@ -38,6 +38,8 @@ namespace Scrubber.Workers
                 var dirtyFile = new DirtyFile(file);
                 DirtyFiles.Add(dirtyFile);
             });
+
+            Rinse();
         }
 
         public void Rinse()

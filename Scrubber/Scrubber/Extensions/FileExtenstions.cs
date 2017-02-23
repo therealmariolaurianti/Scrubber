@@ -6,6 +6,10 @@ namespace Scrubber.Extensions
 {
     public static class FileExtenstions
     {
+        public static bool Exists(this string path)
+        {
+            return Directory.Exists(path);
+        }
         public static List<string> GetFilesByExtenstion(this string path, string extenstion,
             SearchOption searchOption = SearchOption.AllDirectories)
         {

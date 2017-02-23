@@ -125,6 +125,7 @@
     <Compile Include="Objects\AttributeValue.cs" />
     <Compile Include="Objects\Control.cs" />
     <Compile Include="Objects\ControlAttribute.cs" />
+    <Compile Include="Objects\GridXmlNode.cs" />
     <Compile Include="Options\IScrubberOptions.cs" />
     <Compile Include="Options\ScrubberOptions.cs" />
     <Compile Include="Helpers\AttributeAction.cs" />
