@@ -6,7 +6,7 @@ namespace Scrubber.Extensions
 {
     public static class FileExtenstions
     {
-        public static bool Exists(this string path)
+        public static bool DirectoryExists(this string path)
         {
             return Directory.Exists(path);
         }

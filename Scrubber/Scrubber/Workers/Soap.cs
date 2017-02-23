@@ -97,7 +97,6 @@ namespace Scrubber.Workers
                             && n.Attributes["Grid.Row"] != null).ToList();
 
             var nodesWithoutAssociatedControl = new List<GridXmlNode>();
-            
             var orderedNodes = new List<XmlNode>();
 
             while (!nodesWithAttributes.IsNullOrEmpty())
@@ -121,13 +120,14 @@ namespace Scrubber.Workers
                     if (rowValue != rowCount)
                         continue;
 
-                    var nodesBeforeNode = new List<XmlNode>();
-                    if (nodesWithoutAssociatedControl.Any(nwa => nwa.Row == rowValue))
-                    {
-                        nodesBeforeNode = nodesWithoutAssociatedControl.Where(nwa => nwa.Row == rowValue).Select(n => n.XmlNode).ToList();
-                    }
+                    var nodesWithoutExplicitDeclaration = new List<XmlNode>();
+                    if (nodesWithoutAssociatedControl.Any(nwac => nwac.Row == rowValue))
+                        nodesWithoutExplicitDeclaration =
+                            nodesWithoutAssociatedControl.Where(nwac => nwac.Row == rowValue)
+                                .Select(n => n.XmlNode)
+                                .ToList();
 
-                    orderedNodes.AddRange(nodesBeforeNode);
+                    orderedNodes.AddRange(nodesWithoutExplicitDeclaration);
                     orderedNodes.Add(xmlNode);
                     nodesWithAttributes.Remove(xmlNode);
 

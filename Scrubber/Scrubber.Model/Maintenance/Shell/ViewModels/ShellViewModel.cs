@@ -180,7 +180,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         
         private bool CanRunScrubber()
         {
-            if (FolderPath.Exists())    
+            if (FolderPath.DirectoryExists())    
                 return true;
 
             IsLoading = true;
