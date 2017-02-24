@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Windows.Controls;
 using Scrubber.Extensions;
 using Scrubber.Objects;
@@ -30,10 +32,10 @@ namespace Scrubber.Helpers
                 return Enumerable.Empty<ControlAttribute>().ToList();
 
             var fields = type.GetFields().ToList();
-            
-            var controlAttributes = fields.Select(fieldInfo => 
-                new ControlAttribute(fieldInfo.Name.FormatAttribute(), controlName))
-                    .OrderBy(x => x.Name).ToList();
+
+            var controlAttributes = fields.Select(fieldInfo =>
+                    new ControlAttribute(fieldInfo.Name.FormatAttribute(), controlName))
+                .OrderBy(x => x.Name).ToList();
             return controlAttributes;
         }
 
@@ -44,9 +46,24 @@ namespace Scrubber.Helpers
                 return Enumerable.Empty<AttributeValue>().ToList();
 
             var fieldValues = type.GetProperties().SingleOrDefault(field => field.Name == attributeName);
-            var propertyType = fieldValues?.PropertyType.GetFields();
+            if (fieldValues == null)
+                return Enumerable.Empty<AttributeValue>().ToList();
+
+            var propertyType = fieldValues.PropertyType.GetFields().ToList();
+
+            RemoveDefaultValue(propertyType);
 
             return propertyType?.Select(t => new AttributeValue(t.Name)).ToList();
+        }
+
+        private static void RemoveDefaultValue(List<FieldInfo> propertyType)
+        {
+            if (propertyType == null)
+                return;
+
+            var defaultValue = propertyType.SingleOrDefault(pt => pt.Name == "value__");
+            if (defaultValue != null)
+                propertyType.Remove(defaultValue);
         }
 
         private static Type FindType(string qualifiedTypeName)
@@ -58,12 +75,12 @@ namespace Scrubber.Helpers
             {
                 return type;
             }
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                type = assembly.GetType(qualifiedTypeName);
-                if (type != null)
-                    return type;
-            }
+
+            var assembly = typeof(Grid).Assembly;
+            type = assembly.GetType(typeName);
+            if (type != null)
+                return type;
+
 
             return null;
         }

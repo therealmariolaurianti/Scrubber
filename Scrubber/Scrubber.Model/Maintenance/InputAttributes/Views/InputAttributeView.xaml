@@ -12,12 +12,11 @@
 	mc:Ignorable="d">
 	<Grid VerticalAlignment="Center">
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 		<ComboBox
-			Width="125"
 			Grid.Column="0"
 			Margin="5"
 			DisplayMemberPath="Name"
@@ -25,7 +24,6 @@
 			ItemsSource="{Binding Controls}"
 			SelectedItem="{Binding SelectedControl}"/>
 		<ComboBox
-			Width="125"
 			Grid.Column="1"
 			Margin="5"
 			DisplayMemberPath="Name"
@@ -34,7 +32,6 @@
 			ItemsSource="{Binding ControlAttributes}"
 			SelectedItem="{Binding SelectedAttribute}"/>
 		<ComboBox
-			Width="85"
 			Grid.Column="2"
 			Margin="5"
 			DisplayMemberPath="Name"

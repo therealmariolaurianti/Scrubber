@@ -4,7 +4,7 @@ namespace Scrubber.Objects
     {
         public AttributeValue(string name)
         {
-            Name = name;
+            Name = name.EndsWith("String") ? name.Replace("String", string.Empty) : name;
         }
 
         public string Name { get; }
