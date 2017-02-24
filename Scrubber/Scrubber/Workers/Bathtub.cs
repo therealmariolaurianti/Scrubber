@@ -31,7 +31,7 @@ namespace Scrubber.Workers
                 : Result<Dictionary<bool, List<DirtyFile>>>.CreateSuccess(result);
         }
 
-        public void Fill()
+        public void FillAndRinse()
         {
             _bathtubOptions.FolderPath.GetFilesByExtenstion("*.xaml").ForEach(file =>
             {

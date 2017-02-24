@@ -38,7 +38,7 @@ namespace Scrubber.Extensions
                 node.Attributes.Remove(attribute);
         }
 
-        public static int FindMaxValue(this List<XmlNode> nodes, string attribute)
+        public static int FindMaxGridValue(this List<XmlNode> nodes, string attribute)
         {
             var maxColumn = 0;
             foreach (var orderedNode in nodes)

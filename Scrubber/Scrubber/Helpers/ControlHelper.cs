@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Windows.Controls;
 using Scrubber.Extensions;
 using Scrubber.Objects;
@@ -53,7 +52,7 @@ namespace Scrubber.Helpers
 
             RemoveDefaultValue(propertyType);
 
-            return propertyType?.Select(t => new AttributeValue(t.Name)).ToList();
+            return propertyType.Select(t => new AttributeValue(t.Name)).ToList();
         }
 
         private static void RemoveDefaultValue(List<FieldInfo> propertyType)
@@ -78,11 +77,7 @@ namespace Scrubber.Helpers
 
             var assembly = typeof(Grid).Assembly;
             type = assembly.GetType(typeName);
-            if (type != null)
-                return type;
-
-
-            return null;
+            return type;
         }
     }
 }

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Castle.Core.Internal;
-using DevExpress.Mvvm.Native;
 using NLog;
 using Scrubber.Extensions;
 using Scrubber.Helpers;
@@ -86,8 +85,8 @@ namespace Scrubber.Workers
 
         private static List<XmlNode> OrderNodes(List<XmlNode> nodes)
         {
-            var maxColumns = nodes.FindMaxValue("Grid.Column");
-            var maxRows = nodes.FindMaxValue("Grid.Row");
+            var maxColumns = nodes.FindMaxGridValue("Grid.Column");
+            var maxRows = nodes.FindMaxGridValue("Grid.Row");
 
             var rowCount = 0;
             var columnCount = 0;

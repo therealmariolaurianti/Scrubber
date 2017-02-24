@@ -213,7 +213,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 RemovalInputAttributes);
 
             var bathtub = _bathtubFactory.Create(bathtubOptions);
-            bathtub.Fill();
+            bathtub.FillAndRinse();
 
             CleaningResults = bathtub.Drain();
         }
