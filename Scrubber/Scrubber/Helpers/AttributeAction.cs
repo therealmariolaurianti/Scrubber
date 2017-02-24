@@ -8,7 +8,7 @@ namespace Scrubber.Helpers
     {
         public void Add(XmlNode node, XmlDocument xDoc, InputAttribute inputAttribute)
         {
-            if (node.Name != inputAttribute.ControlName)
+            if (node.LocalName != inputAttribute.ControlName)
                 return;
 
             if (node.Attributes != null && node.Attributes.Count > 0)
