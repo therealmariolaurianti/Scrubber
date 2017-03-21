@@ -33,7 +33,7 @@ namespace Scrubber.Workers
 
         public void FillAndRinse()
         {
-            _bathtubOptions.FolderPath.GetFilesByExtenstion("*.xaml").ForEach(file =>
+            _bathtubOptions.FolderPath.GetFilesByExtenstion("xaml").ForEach(file =>
             {
                 var dirtyFile = new DirtyFile(file);
                 DirtyFiles.Add(dirtyFile);

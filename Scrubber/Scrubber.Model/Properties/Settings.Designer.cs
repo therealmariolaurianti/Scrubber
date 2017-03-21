@@ -46,5 +46,17 @@ namespace Scrubber.Model.Properties {
                 this["ClearComments"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FormatFiles {
+            get {
+                return ((bool)(this["FormatFiles"]));
+            }
+            set {
+                this["FormatFiles"] = value;
+            }
+        }
     }
 }

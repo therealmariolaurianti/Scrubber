@@ -6,8 +6,9 @@ namespace Scrubber.Options
     public interface IScrubberOptions
     {
         bool ClearComments { get; }
-        ICollection<InputAttribute> ExistingAttributes { get; }
+        bool FormatFiles { get; set; }
         string FolderPath { get; }
+        ICollection<InputAttribute> ExistingAttributes { get; }
         ICollection<InputAttribute> InputAttributes { get; }
     }
 }

@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Scrubber.Extensions;
 using Scrubber.Objects;
 using Scrubber.Options;
-using Scrubber.Workers;
 
 namespace Scrubber.Helpers
 {
@@ -52,6 +49,8 @@ namespace Scrubber.Helpers
 
             foreach (var existingAttribute in existingAttributes)
                 _attributeAction.Remove(node, existingAttribute);
+
+            _attributeAction.Remove(node, new InputAttribute("autoCompleteControl:AutoCompleteControl", "Margin"));
         }
 
         private void SwapControls(List<XmlNode> nodes, XmlDocument xDoc, string oldControlName, string newControl)

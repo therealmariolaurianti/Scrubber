@@ -12,11 +12,8 @@ namespace Scrubber.Objects
         }
 
         public string FilePath { get; set; }
-
         public string FileContent { get; set; }
-
         public string FileName => FilePath.GetFileName();
-
         public bool IsClean { get; set; }
     }
 }

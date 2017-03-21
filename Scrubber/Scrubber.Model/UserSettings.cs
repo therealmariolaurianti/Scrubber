@@ -7,24 +7,21 @@ namespace Scrubber.Model
     {
         public UserSettings()
         {
-            Initialize();
+            FolderPath = Settings.FolderPath;
+            ClearComments = Settings.ClearComments;
+            FormatFiles = Settings.FormatFiles;
         }
 
         private static Settings Settings => Settings.Default;
-
         public string FolderPath { get; set; }
         public bool ClearComments { get; set; }
-
-        private void Initialize()
-        {
-            FolderPath = Settings.FolderPath;
-            ClearComments = Settings.ClearComments;
-        }
+        public bool FormatFiles { get; set; }
 
         public void Load(ShellViewModel shellViewModel)
         {
             shellViewModel.FolderPath = FolderPath;
             shellViewModel.ClearComments = ClearComments;
+            shellViewModel.FormatFiles = FormatFiles;
         }
 
         public void SaveSingle(string settingName, object newValue)

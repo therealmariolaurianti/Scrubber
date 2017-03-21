@@ -31,6 +31,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         private string _folderPath;
         private bool _isLoading;
         private ObservableCollection<InputAttributeViewModel> _removalInputAttributeViewModels;
+        private bool _formatFiles;
 
         public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings,
             IWindowManager windowManager, IResultViewModelFactory resultViewModelFactory,
@@ -61,6 +62,19 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         }
 
         private Result<Dictionary<bool, List<DirtyFile>>> CleaningResults { get; set; }
+
+        public bool FormatFiles
+        {
+            get { return _formatFiles; }
+            set
+            {
+                if (value == _formatFiles) return;
+                _formatFiles = value;
+                NotifyOfPropertyChange();
+
+                _userSettings?.SaveSingle(nameof(FormatFiles), value);
+            }
+        }
 
         public bool ClearComments
         {
@@ -209,7 +223,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         {
             IsLoading = true;
 
-            var bathtubOptions = new ScrubberOptions(FolderPath, ClearComments, AdditionalInputAttributes,
+            var bathtubOptions = new ScrubberOptions(FolderPath, ClearComments, FormatFiles, AdditionalInputAttributes,
                 RemovalInputAttributes);
 
             var bathtub = _bathtubFactory.Create(bathtubOptions);

@@ -13,7 +13,7 @@ namespace Scrubber.Extensions
         public static List<string> GetFilesByExtenstion(this string path, string extenstion,
             SearchOption searchOption = SearchOption.AllDirectories)
         {
-            return Directory.GetFiles(path, extenstion, searchOption).ToList();
+            return Directory.GetFiles(path, $"*.{extenstion}", searchOption).ToList();
         }
 
         public static string GetFileName(this string file)
