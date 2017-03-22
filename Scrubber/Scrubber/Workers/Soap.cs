@@ -71,7 +71,7 @@ namespace Scrubber.Workers
             if (!nodes.Any())
                 return;
 
-            var orderedNodes = OrderNodes(nodes);
+            var orderedNodes = _attributeHelper.OrderNodes(nodes);
 
             foreach (var orderedNode in orderedNodes)
                 if (orderedNode.HasChildNodes)
@@ -81,68 +81,6 @@ namespace Scrubber.Workers
             _attributeHelper.RebuildDefaultAttributes(node, xDoc, nodeAttributes);
 
             orderedNodes.ForEach(on => node.AppendChild(on));
-        }
-
-        private static List<XmlNode> OrderNodes(List<XmlNode> nodes)
-        {
-            var rowCount = 0;
-            var columnCount = 0;
-            var nodesWithoutAssociatedControl = new List<GridXmlNode>();
-            var orderedNodes = new List<XmlNode>();
-
-            var nodesWithAttributes = nodes
-                .Where(n => n.Attributes?["Grid.Column"] != null
-                            && n.Attributes["Grid.Row"] != null).ToList();
-
-            var maxColumns = nodesWithAttributes.FindMaxGridValue("Grid.Column");
-            var maxRows = nodesWithAttributes.FindMaxGridValue("Grid.Row");
-
-            while (!nodesWithAttributes.IsNullOrEmpty())
-                foreach (var xmlNode in nodesWithAttributes.ToList())
-                {
-                    var columnValue = xmlNode.GetAttributeValue("Grid.Column");
-                    var rowValue = xmlNode.GetAttributeValue("Grid.Row");
-
-                    if (!xmlNode.HasAssociatedControl(nodesWithAttributes, columnValue, rowValue))
-                    {
-                        nodesWithoutAssociatedControl.Add(new GridXmlNode(xmlNode));
-                        nodesWithAttributes.Remove(xmlNode);
-                        continue;
-                    }
-
-                    if (maxRows < rowCount)
-                        continue;
-                    if (columnValue != columnCount)
-                        continue;
-                    if (rowValue != rowCount)
-                        continue;
-
-                    var nodesWithoutExplicitDeclaration = new List<XmlNode>();
-                    if (nodesWithoutAssociatedControl.Any(nwac => nwac.Row == rowValue))
-                        nodesWithoutExplicitDeclaration =
-                            nodesWithoutAssociatedControl.Where(nwac => nwac.Row == rowValue)
-                                .Select(n => n.XmlNode)
-                                .ToList();
-
-                    orderedNodes.AddRange(nodesWithoutExplicitDeclaration);
-                    orderedNodes.Add(xmlNode);
-                    nodesWithAttributes.Remove(xmlNode);
-
-                    if (maxColumns > columnCount)
-                    {
-                        columnCount++;
-                    }
-                    else
-                    {
-                        rowCount++;
-                        columnCount = 0;
-                    }
-                }
-
-            var unorderedNodes = nodes.Where(n => !orderedNodes.Contains(n)).ToList();
-            unorderedNodes.AddRange(orderedNodes);
-
-            return unorderedNodes;
         }
 
         private void Run(DirtyFile dirtyFile)

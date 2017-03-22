@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Castle.Core.Internal;
+using Scrubber.Extensions;
 using Scrubber.Objects;
 using Scrubber.Options;
 
@@ -49,8 +51,6 @@ namespace Scrubber.Helpers
 
             foreach (var existingAttribute in existingAttributes)
                 _attributeAction.Remove(node, existingAttribute);
-
-            _attributeAction.Remove(node, new InputAttribute("autoCompleteControl:AutoCompleteControl", "Margin"));
         }
 
         private void SwapControls(List<XmlNode> nodes, XmlDocument xDoc, string oldControlName, string newControl)
@@ -64,8 +64,7 @@ namespace Scrubber.Helpers
             if (node.LocalName != oldControlName)
                 return;
 
-            var tabControl = xDoc.CreateNode(XmlNodeType.Element, newControl,
-                "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
+            var tabControl = xDoc.CreateNode(XmlNodeType.Element, newControl, "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
 
             var nodes = node.ChildNodes.Cast<XmlNode>().ToList();
             nodes.ForEach(xmlNode => tabControl.AppendChild(xmlNode));
@@ -91,6 +90,68 @@ namespace Scrubber.Helpers
             AddInputAttribute(node, xDoc, options.InputAttributes);
             RemoveExistingAttributes(node, options.ExistingAttributes);
             SwapControls(Enumerable.Empty<XmlNode>().ToList(), xDoc, string.Empty, string.Empty);
+        }
+
+        public List<XmlNode> OrderNodes(List<XmlNode> nodes)
+        {
+            var rowCount = 0;
+            var columnCount = 0;
+            var nodesWithoutAssociatedControl = new List<GridXmlNode>();
+            var orderedNodes = new List<XmlNode>();
+
+            var nodesWithAttributes = nodes
+                .Where(n => n.Attributes?["Grid.Column"] != null
+                            && n.Attributes["Grid.Row"] != null).ToList();
+
+            var maxColumns = nodesWithAttributes.FindMaxGridValue("Grid.Column");
+            var maxRows = nodesWithAttributes.FindMaxGridValue("Grid.Row");
+
+            while (!nodesWithAttributes.IsNullOrEmpty())
+                foreach (var xmlNode in nodesWithAttributes.ToList())
+                {
+                    var columnValue = xmlNode.GetAttributeValue("Grid.Column");
+                    var rowValue = xmlNode.GetAttributeValue("Grid.Row");
+
+                    if (!xmlNode.HasAssociatedControl(nodesWithAttributes, columnValue, rowValue))
+                    {
+                        nodesWithoutAssociatedControl.Add(new GridXmlNode(xmlNode));
+                        nodesWithAttributes.Remove(xmlNode);
+                        continue;
+                    }
+
+                    if (maxRows < rowCount)
+                        continue;
+                    if (columnValue != columnCount)
+                        continue;
+                    if (rowValue != rowCount)
+                        continue;
+
+                    var nodesWithoutExplicitDeclaration = new List<XmlNode>();
+                    if (nodesWithoutAssociatedControl.Any(nwac => nwac.Row == rowValue))
+                        nodesWithoutExplicitDeclaration =
+                            nodesWithoutAssociatedControl.Where(nwac => nwac.Row == rowValue)
+                                .Select(n => n.XmlNode)
+                                .ToList();
+
+                    orderedNodes.AddRange(nodesWithoutExplicitDeclaration);
+                    orderedNodes.Add(xmlNode);
+                    nodesWithAttributes.Remove(xmlNode);
+
+                    if (maxColumns > columnCount)
+                    {
+                        columnCount++;
+                    }
+                    else
+                    {
+                        rowCount++;
+                        columnCount = 0;
+                    }
+                }
+
+            var unorderedNodes = nodes.Where(n => !orderedNodes.Contains(n)).ToList();
+            unorderedNodes.AddRange(orderedNodes);
+
+            return unorderedNodes;
         }
     }
 }   
