@@ -49,39 +49,75 @@ namespace Scrubber.Workers
 
         private void ProcessChildNode(XmlNode node, XmlDocument xDoc)
         {
-            foreach (var childNode in node.ChildNodes.OfType<XmlNode>().ToList())
+            var childNodes = node.ChildNodes.OfType<XmlNode>().ToList();
+            foreach (var childNode in childNodes)
                 ProcessChildNode(childNode, xDoc);
 
-            _attributeHelper.GoToCleaner(node, xDoc, _options);
-            ProcessGrid(node, xDoc);
+            _attributeHelper.GoToCleaners(node, xDoc, _options);
+
+            if (node.Name.Equals(Grid))
+                ProcessGrid(node, xDoc);
         }
 
         private void ProcessGrid(XmlNode node, XmlDocument xDoc)
         {
-            if (!node.Name.Equals("Grid"))
+            if (node?.Attributes == null)
                 return;
 
-            var attributes = node.Attributes;
-            var nodeAttributes = attributes != null
-                ? new List<XmlAttribute>(attributes.Cast<XmlAttribute>().ToList())
-                : Enumerable.Empty<XmlAttribute>().ToList();
-
             var nodes = node.ChildNodes.Cast<XmlNode>().ToList();
-
             if (!nodes.Any())
                 return;
 
-            var orderedNodes = _attributeHelper.OrderNodes(nodes);
+            var orderedNodes = OrderNodes(nodes).ToList();
+
+            foreach (var orderedNode in orderedNodes.Where(on => on.HasChildNodes))
+                ProcessChildNode(orderedNode, xDoc);
 
             foreach (var orderedNode in orderedNodes)
-                if (orderedNode.HasChildNodes)
-                    ProcessChildNode(orderedNode, xDoc);
+                node.AppendChild(orderedNode);
 
-            node.RemoveAll();
-            _attributeHelper.RebuildDefaultAttributes(node, xDoc, nodeAttributes);
-
-            orderedNodes.ForEach(on => node.AppendChild(on));
+            //TODO?
+            //var nodeAttributes = new List<XmlAttribute>(node.Attributes.Cast<XmlAttribute>().ToList());
+            //node.RemoveAll();
+            //_attributeHelper.RebuildDefaultAttributes(node, xDoc, nodeAttributes);
         }
+
+        private IEnumerable<XmlNode> OrderNodes(List<XmlNode> nodes)
+        {
+            var rows = GetAttributeValues(nodes, "Grid.Row").ToList();
+
+            for (var nodeIndex = 0; nodeIndex <= rows.Max(); nodeIndex++)
+            {
+                var rowControls = GetControlsByRow(nodes, nodeIndex).ToList();
+                foreach (var rowControl in rowControls)
+                    yield return rowControl;
+            }
+        }
+
+        public IEnumerable<XmlNode> GetControlsByRow(IEnumerable<XmlNode> nodes, int row)
+        {
+            var controlsInRow = nodes.Where(node => node.GetAttributeValue(GridProperties.Row) == row);
+            return controlsInRow.OrderBy(control => control.GetAttributeValue(GridProperties.Column));
+        }
+
+        public IEnumerable<int> GetAttributeValues(IEnumerable<XmlNode> nodes, string attributeName)
+        {
+            foreach (var node in nodes)
+            {
+                var attributes = node.Attributes;
+                var attribute = attributes?[attributeName];
+
+                if (attribute?.Value == null)
+                    yield return -1;
+                if (attribute?.Value == null)
+                    continue;
+
+                var attributeValue = int.Parse(attribute?.Value);
+                yield return attributeValue;
+            }
+        }
+
+        private static string Grid => "Grid";
 
         private void Run(DirtyFile dirtyFile)
         {

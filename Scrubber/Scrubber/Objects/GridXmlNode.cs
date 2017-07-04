@@ -10,7 +10,7 @@ namespace Scrubber.Objects
             XmlNode = xmlNode;
         }
         public XmlNode XmlNode { get; set; }
-        public int Column => XmlNode.GetAttributeValue("Grid.Column");
-        public int Row => XmlNode.GetAttributeValue("Grid.Row");
+        public int Column => XmlNode.GetAttributeValue(GridProperties.Column);
+        public int Row => XmlNode.GetAttributeValue(GridProperties.Row);
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Configuration;
 using System.Xml;
 
 namespace Scrubber.Extensions
@@ -10,8 +12,8 @@ namespace Scrubber.Extensions
         {
             foreach (var xmlNode in nodes)
             {
-                var xmlNodeColumnValue = xmlNode.GetAttributeValue("Grid.Column");
-                var xmlNodeRowValue = xmlNode.GetAttributeValue("Grid.Row");
+                var xmlNodeColumnValue = xmlNode.GetAttributeValue(GridProperties.Column);
+                var xmlNodeRowValue = xmlNode.GetAttributeValue(GridProperties.Row);
 
                 return xmlNodeColumnValue == columnValue + 1 &&
                        xmlNodeRowValue == rowValue;
@@ -31,6 +33,7 @@ namespace Scrubber.Extensions
             return attributeValue;
         }
 
+        
         public static void RemoveExistingAttribute(this XmlNode node, string attributeName)
         {
             var attribute = node.Attributes?[attributeName];

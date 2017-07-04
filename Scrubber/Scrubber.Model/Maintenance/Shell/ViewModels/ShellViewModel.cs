@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -194,7 +195,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         
         private bool CanRunScrubber()
         {
-            if (FolderPath.DirectoryExists())    
+            if (Directory.Exists(FolderPath))    
                 return true;
 
             IsLoading = true;

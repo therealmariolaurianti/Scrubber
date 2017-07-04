@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="Bootstrapper\NinjectRegistration.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
+    <Compile Include="Extensions\Grid.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="Factories\IBathtubFactory.cs" />
