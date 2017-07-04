@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Castle.Core.Internal;
 using NLog;
 using Scrubber.Extensions;
 using Scrubber.Helpers;
@@ -75,16 +74,11 @@ namespace Scrubber.Workers
 
             foreach (var orderedNode in orderedNodes)
                 node.AppendChild(orderedNode);
-
-            //TODO?
-            //var nodeAttributes = new List<XmlAttribute>(node.Attributes.Cast<XmlAttribute>().ToList());
-            //node.RemoveAll();
-            //_attributeHelper.RebuildDefaultAttributes(node, xDoc, nodeAttributes);
         }
 
-        private IEnumerable<XmlNode> OrderNodes(List<XmlNode> nodes)
+        private IEnumerable<XmlNode> OrderNodes(IReadOnlyCollection<XmlNode> nodes)
         {
-            var rows = GetAttributeValues(nodes, "Grid.Row").ToList();
+            var rows = GetAttributeValues(nodes, GridProperties.Row).ToList();
 
             for (var nodeIndex = 0; nodeIndex <= rows.Max(); nodeIndex++)
             {

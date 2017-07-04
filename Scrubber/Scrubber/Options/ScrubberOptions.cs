@@ -14,6 +14,7 @@ namespace Scrubber.Options
             InputAttributes = additionalInputAttributes;
             ExistingAttributes = removalInputAttributes;
         }
+
         public string FolderPath { get; set; }
         public bool ClearComments { get; set; }
         public bool FormatFiles { get; set; }

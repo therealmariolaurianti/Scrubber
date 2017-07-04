@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Caliburn.Micro;
-using Scrubber.Extensions;
 using Scrubber.Factories;
 using Scrubber.Helpers;
 using Scrubber.Maintenance;
@@ -30,13 +29,14 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         private ObservableCollection<InputAttributeViewModel> _additionalInputAttributeViewModels;
         private bool _clearComments;
         private string _folderPath;
+        private bool _formatFiles;
         private bool _isLoading;
         private ObservableCollection<InputAttributeViewModel> _removalInputAttributeViewModels;
-        private bool _formatFiles;
 
         public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings,
             IWindowManager windowManager, IResultViewModelFactory resultViewModelFactory,
-            IInputAttributeViewModelFactory inputAttributeViewModelFactory, IErrorViewModelFactory errorViewModelFactory)
+            IInputAttributeViewModelFactory inputAttributeViewModelFactory,
+            IErrorViewModelFactory errorViewModelFactory)
         {
             _bathtubFactory = bathtubFactory;
             _userSettings = userSettings;
@@ -48,12 +48,12 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             _userSettings.Load(this);
         }
 
-        public ICollection<InputAttribute> AdditionalInputAttributes => AdditionalInputAttributeViewModels.Select(
+        public ICollection<InputAttribute> AdditionalInputAttributes => AdditionalInputAttributeViewModels?.Select(
             inputAttributeViewModel => inputAttributeViewModel.Item).ToList();
 
         public ObservableCollection<InputAttributeViewModel> AdditionalInputAttributeViewModels
         {
-            get { return _additionalInputAttributeViewModels; }
+            get => _additionalInputAttributeViewModels;
             set
             {
                 if (Equals(value, _additionalInputAttributeViewModels)) return;
@@ -64,22 +64,9 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
         private Result<Dictionary<bool, List<DirtyFile>>> CleaningResults { get; set; }
 
-        public bool FormatFiles
-        {
-            get { return _formatFiles; }
-            set
-            {
-                if (value == _formatFiles) return;
-                _formatFiles = value;
-                NotifyOfPropertyChange();
-
-                _userSettings?.SaveSingle(nameof(FormatFiles), value);
-            }
-        }
-
         public bool ClearComments
         {
-            get { return _clearComments; }
+            get => _clearComments;
             set
             {
                 if (value == _clearComments) return;
@@ -92,7 +79,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
         public string FolderPath
         {
-            get { return _folderPath; }
+            get => _folderPath;
             set
             {
                 if (value == _folderPath) return;
@@ -103,9 +90,22 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             }
         }
 
+        public bool FormatFiles
+        {
+            get => _formatFiles;
+            set
+            {
+                if (value == _formatFiles) return;
+                _formatFiles = value;
+                NotifyOfPropertyChange();
+
+                _userSettings?.SaveSingle(nameof(FormatFiles), value);
+            }
+        }
+
         public bool IsLoading
         {
-            get { return _isLoading; }
+            get => _isLoading;
             set
             {
                 if (value == _isLoading) return;
@@ -114,12 +114,12 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             }
         }
 
-        public ICollection<InputAttribute> RemovalInputAttributes => RemovalInputAttributeViewModels.Select(
+        public ICollection<InputAttribute> RemovalInputAttributes => RemovalInputAttributeViewModels?.Select(
             attributeViewModel => attributeViewModel.Item).ToList();
 
         public ObservableCollection<InputAttributeViewModel> RemovalInputAttributeViewModels
         {
-            get { return _removalInputAttributeViewModels; }
+            get => _removalInputAttributeViewModels;
             set
             {
                 if (Equals(value, _removalInputAttributeViewModels)) return;
@@ -134,8 +134,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         protected override void OnActivate()
         {
             DisplayName = "Scrubber";
-            AdditionalInputAttributeViewModels = new ObservableCollection<InputAttributeViewModel>();
-            RemovalInputAttributeViewModels = new ObservableCollection<InputAttributeViewModel>();
+
             base.OnActivate();
         }
 
@@ -192,10 +191,10 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 Process.Start(info);
             }
         }
-        
+
         private bool CanRunScrubber()
         {
-            if (Directory.Exists(FolderPath))    
+            if (Directory.Exists(FolderPath))
                 return true;
 
             IsLoading = true;
