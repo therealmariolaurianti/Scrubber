@@ -145,6 +145,7 @@
     </Compile>
     <Compile Include="Bootstrapper\AppBootstrapper.cs" />
     <Compile Include="Bootstrapper\NinjectRegistration.cs" />
+    <Compile Include="EnumToBooleanConverter.cs" />
     <Compile Include="Factories\IErrorViewModelFactory.cs" />
     <Compile Include="Factories\IFileViewModelFactory.cs" />
     <Compile Include="Factories\IInputAttributeViewModelFactory.cs" />

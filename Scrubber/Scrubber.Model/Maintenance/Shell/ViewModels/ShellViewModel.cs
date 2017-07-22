@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -8,11 +9,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Caliburn.Micro;
+using Scrubber.Enums;
 using Scrubber.Factories;
 using Scrubber.Helpers;
 using Scrubber.Maintenance;
 using Scrubber.Model.Factories;
 using Scrubber.Model.Maintenance.InputAttributes.ViewModels;
+using Scrubber.Model.Maintenance.Shell.Views;
 using Scrubber.Objects;
 using Scrubber.Options;
 
@@ -28,10 +31,11 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         private readonly IWindowManager _windowManager;
         private ObservableCollection<InputAttributeViewModel> _additionalInputAttributeViewModels;
         private bool _clearComments;
-        private string _folderPath;
+        private string _path;
         private bool _formatFiles;
         private bool _isLoading;
         private ObservableCollection<InputAttributeViewModel> _removalInputAttributeViewModels;
+        private FolderOrFile _folderOrFile;
 
         public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings,
             IWindowManager windowManager, IResultViewModelFactory resultViewModelFactory,
@@ -77,16 +81,16 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             }
         }
 
-        public string FolderPath
+        public string Path
         {
-            get => _folderPath;
+            get => _path;
             set
             {
-                if (value == _folderPath) return;
-                _folderPath = value;
+                if (value == _path) return;
+                _path = value;
                 NotifyOfPropertyChange();
 
-                _userSettings?.SaveSingle(nameof(FolderPath), value);
+                _userSettings?.SaveSingle(nameof(Path), value);
             }
         }
 
@@ -130,11 +134,33 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
         public ICommand ScrubCommand => new DelegateCommand(RunScrubber);
 
+        public DelegateCommand SelectFolderPathCommand => new DelegateCommand(SelectFolderPath);
+
+        public FolderOrFile FolderOrFile
+        {
+            get => _folderOrFile;
+            set
+            {
+                if (value == _folderOrFile) return;
+                _folderOrFile = value;
+                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(nameof(FolderPathLabel));
+            }
+        }
+
+        public string FolderPathLabel => FolderOrFile == FolderOrFile.Folder ? "Folder Path" : "File Path";
+
+        private static void SelectFolderPath()
+        {
+            var textBox = VisualHelper.FindChild<TextBox>(Application.Current.MainWindow, "FolderPath");
+            Keyboard.Focus(textBox);
+            textBox.SelectAll();
+        }
 
         protected override void OnActivate()
         {
             DisplayName = "Scrubber";
-
+            FolderOrFile = FolderOrFile.Folder;
             base.OnActivate();
         }
 
@@ -176,7 +202,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
         public void OpenFileExplorer()
         {
-            if (string.IsNullOrEmpty(FolderPath))
+            if (string.IsNullOrEmpty(Path))
             {
                 Process.Start("explorer.exe", "-p");
             }
@@ -184,7 +210,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             {
                 var info = new ProcessStartInfo
                 {
-                    Arguments = "/select, \"" + FolderPath + "\"",
+                    Arguments = "/select, \"" + Path + "\"",
                     FileName = "explorer.exe"
                 };
 
@@ -194,11 +220,22 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
         private bool CanRunScrubber()
         {
-            if (Directory.Exists(FolderPath))
-                return true;
+            switch (FolderOrFile)
+            {
+                case FolderOrFile.Folder:
+                    if (Directory.Exists(Path))
+                        return true;
+                    break;
+                case FolderOrFile.File:
+                    if (File.Exists(Path))
+                        return true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             IsLoading = true;
-            _windowManager.ShowDialog(_errorViewModelFactory.Create("The folder path is invaild."));
+            _windowManager.ShowDialog(_errorViewModelFactory.Create($"The {FolderPathLabel} is invaild."));
             IsLoading = false;
             return false;
         }
@@ -223,8 +260,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         {
             IsLoading = true;
 
-            var bathtubOptions = new ScrubberOptions(FolderPath, ClearComments, FormatFiles, AdditionalInputAttributes,
-                RemovalInputAttributes);
+            var bathtubOptions = new ScrubberOptions(Path, ClearComments, FormatFiles, AdditionalInputAttributes,
+                RemovalInputAttributes, FolderOrFile);
 
             var bathtub = _bathtubFactory.Create(bathtubOptions);
             bathtub.FillAndRinse();

@@ -8,6 +8,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:viewModels="clr-namespace:Scrubber.Model.Maintenance.Shell.ViewModels"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:enums="clr-namespace:Scrubber.Enums;assembly=Scrubber"
 	Width="1000"
 	Height="600"
 	Background="{DynamicResource MaterialDesignPaper}"
@@ -27,7 +28,11 @@
 		<KeyBinding
 			Key="Enter"
 			Command="{Binding ScrubCommand}"/>
-	</Window.InputBindings>
+	    <KeyBinding
+            Modifiers="Alt"
+	        Key="D"
+            Command="{Binding SelectFolderPathCommand}" />
+    </Window.InputBindings>
 	<Grid>
 		<Grid>
 			<GroupBox>
@@ -40,7 +45,8 @@
 				</GroupBox.Header>
 				<Grid>
 					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
+					    <RowDefinition Height="Auto"/>
+					    <RowDefinition Height="Auto"/>
 						<RowDefinition/>
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
@@ -52,11 +58,33 @@
 							<Setter Property="VerticalAlignment" Value="Center"/>
 						</Style>
 					</Grid.Resources>
-					<Grid
-						Grid.ColumnSpan="2"
+                    <Border
+                        BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                        HorizontalAlignment="Center"
+                        BorderThickness="1">
+                        <StackPanel
+                            Margin="5"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                            <RadioButton
+                                IsChecked="{Binding FolderOrFile, 
+                                                    Converter={StaticResource EnumToBooleanConverter}, 
+                                                    ConverterParameter={x:Static enums:FolderOrFile.Folder}}"
+                                Margin="2"
+                                Content="Folder" />
+                            <RadioButton
+                                IsChecked="{Binding FolderOrFile, 
+                                                    Converter={StaticResource EnumToBooleanConverter}, 
+                                                    ConverterParameter={x:Static enums:FolderOrFile.File}}"
+                                Margin="2"
+                                Content="File" />
+                        </StackPanel>
+                    </Border>
+                    <Grid
+					    Grid.Row="1" Grid.ColumnSpan="2"
 						Margin="5">
 						<Grid.RowDefinitions>
-							<RowDefinition/>
+						    <RowDefinition/>
 							<RowDefinition/>
 						    <RowDefinition />
 						</Grid.RowDefinitions>
@@ -64,14 +92,15 @@
 							<ColumnDefinition Width="Auto"/>
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
-						<Label
+                        <Label
 							Grid.Column="0"
 							Grid.Row="0"
-							Content="Folder Path"/>
+                            VerticalAlignment="Bottom"
+                            Content="{Binding FolderPathLabel}"/>
 						<Label
 							Grid.Column="0"
 							Grid.Row="1"
-							Content="Clear Comments"/>
+						    Content="Clear Comments"/>
                         <Label
                             Grid.Column="0"
                             Grid.Row="2"
@@ -84,17 +113,19 @@
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
 							<TextBox
-								Name="FolderPath"
+                                Text="{Binding Path}"
+                                x:Name="FolderPath"
 								Margin="2"
 								FontSize="15"/>
 							<Button
 								Name="OpenFileExplorer"
-								Width="30"
+								Width="25"
+                                Height="25"
 								Grid.Column="1"
 								Margin="2">
 								<Button.Content>
 									<TextBlock
-										Margin="-6,-5,-6,-5"
+										Margin="-9,-9"
 										Text="..."/>
 								</Button.Content>
 							</Button>
@@ -103,7 +134,7 @@
 							Name="ClearComments"
 							Grid.Column="1"
 							Grid.Row="1"
-							HorizontalAlignment="Left"
+						    HorizontalAlignment="Left"
 							Margin="5"/>
                         <ToggleButton
                             Name="FormatFiles"
@@ -112,7 +143,7 @@
                             HorizontalAlignment="Left"
                             Margin="5" />
                     </Grid>
-					<Grid Grid.Row="1">
+					<Grid Grid.Row="2">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition/>
 							<ColumnDefinition/>
@@ -253,8 +284,8 @@
 					</Grid>
 					<StackPanel
 						Grid.Column="0"
-						Grid.Row="2"
-						HorizontalAlignment="Center"
+						Grid.Row="3"
+					    HorizontalAlignment="Center"
 						Orientation="Horizontal">
                         <Button
 							Name="RunScrubber"

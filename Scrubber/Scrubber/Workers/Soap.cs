@@ -82,7 +82,7 @@ namespace Scrubber.Workers
 
             for (var nodeIndex = 0; nodeIndex <= rows.Max(); nodeIndex++)
             {
-                var rowControls = GetControlsByRow(nodes, nodeIndex).ToList();
+                var rowControls = GetControlsByColumn(nodes, nodeIndex).ToList();
                 foreach (var rowControl in rowControls)
                     yield return rowControl;
             }
@@ -92,6 +92,12 @@ namespace Scrubber.Workers
         {
             var controlsInRow = nodes.Where(node => node.GetAttributeValue(GridProperties.Row) == row);
             return controlsInRow.OrderBy(control => control.GetAttributeValue(GridProperties.Column));
+        }
+
+        public IEnumerable<XmlNode> GetControlsByColumn(IEnumerable<XmlNode> nodes, int column)
+        {
+            var controlsInRow = nodes.Where(node => node.GetAttributeValue(GridProperties.Column) == column);
+            return controlsInRow.OrderBy(control => control.GetAttributeValue(GridProperties.Row));
         }
 
         public IEnumerable<int> GetAttributeValues(IEnumerable<XmlNode> nodes, string attributeName)

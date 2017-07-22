@@ -74,9 +74,6 @@
     <Reference Include="CommonServiceLocator.NinjectAdapter.Unofficial, Version=3.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.NinjectAdapter.Unofficial.3.2.2.0\lib\Net40\CommonServiceLocator.NinjectAdapter.Unofficial.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Mvvm.v16.1, Version=16.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -92,6 +89,7 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.2\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -112,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper\NinjectRegistration.cs" />
+    <Compile Include="Enums\FolderOrFile.cs" />
     <Compile Include="Extensions\AttributeExtensions.cs" />
     <Compile Include="Extensions\Grid.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
@@ -120,6 +119,7 @@
     <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Factories\ISoapFactory.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
+    <Compile Include="Helpers\VisualHelper.cs" />
     <Compile Include="Maintenance\Id.cs" />
     <Compile Include="Maintenance\IViewModel.cs" />
     <Compile Include="Maintenance\ViewModel.cs" />

@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Scrubber.Enums;
 using Scrubber.Extensions;
 using Scrubber.Factories;
 using Scrubber.Helpers;
@@ -33,13 +35,30 @@ namespace Scrubber.Workers
 
         public void FillAndRinse()
         {
-            _bathtubOptions.FolderPath.GetFilesByExtenstion("xaml").ForEach(file =>
+            Fill();
+            Rinse();
+        }
+
+        private void Fill()
+        {
+            var filesByExtenstion = new List<string>();
+            switch (_bathtubOptions.FolderOrFile)
+            {
+                case FolderOrFile.Folder:
+                    filesByExtenstion = _bathtubOptions.Path.GetFilesByExtenstion("xaml");
+                    break;
+                case FolderOrFile.File:
+                    filesByExtenstion.Add(_bathtubOptions.Path);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            foreach (var file in filesByExtenstion)
             {
                 var dirtyFile = new DirtyFile(file);
                 DirtyFiles.Add(dirtyFile);
-            });
-
-            Rinse();
+            }
         }
 
         public void Rinse()

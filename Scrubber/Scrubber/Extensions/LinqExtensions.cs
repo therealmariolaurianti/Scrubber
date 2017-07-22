@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Scrubber.Extensions
 {
@@ -36,7 +38,7 @@ namespace Scrubber.Extensions
             return newString;
         }
 
-        public static List<T2> ToListOfType<T,T2>(this IEnumerable<T> list)
+        public static List<T2> ToListOfType<T, T2>(this IEnumerable<T> list)
         {
             return list.OfType<T2>().ToList();
         }
