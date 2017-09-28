@@ -67,6 +67,7 @@
                             Orientation="Horizontal"
                             HorizontalAlignment="Center">
                             <RadioButton
+                                FontWeight="Black"
                                 IsChecked="{Binding FolderOrFile, 
                                                     Converter={StaticResource EnumToBooleanConverter}, 
                                                     ConverterParameter={x:Static enums:FolderOrFile.Folder}}"
@@ -170,7 +171,7 @@
 									<ItemsControl
 										x:Name="ItemsControl"
 										Background="Transparent"
-										ItemsSource="{Binding AdditionalInputAttributeViewModels}">
+										ItemsSource="{Binding InputAttributeViewModels}">
 										<ItemsControl.ItemTemplate>
 											<DataTemplate>
 												<Grid>
@@ -236,7 +237,7 @@
 									VerticalScrollBarVisibility="Hidden">
                                     <ItemsControl
 									Background="Transparent"
-									ItemsSource="{Binding RemovalInputAttributeViewModels}">
+									ItemsSource="{Binding RemoveInputAttributeViewModels}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid>

@@ -15,7 +15,6 @@ using Scrubber.Helpers;
 using Scrubber.Maintenance;
 using Scrubber.Model.Factories;
 using Scrubber.Model.Maintenance.InputAttributes.ViewModels;
-using Scrubber.Model.Maintenance.Shell.Views;
 using Scrubber.Objects;
 using Scrubber.Options;
 
@@ -29,16 +28,19 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         private readonly IResultViewModelFactory _resultViewModelFactory;
         private readonly UserSettings _userSettings;
         private readonly IWindowManager _windowManager;
-        private ObservableCollection<InputAttributeViewModel> _additionalInputAttributeViewModels;
+        private ObservableCollection<InputAttributeViewModel> _inputAttributeViewModels;
         private bool _clearComments;
         private string _path;
         private bool _formatFiles;
         private bool _isLoading;
-        private ObservableCollection<InputAttributeViewModel> _removalInputAttributeViewModels;
+        private ObservableCollection<InputAttributeViewModel> _removeInputAttributeViewModels;
         private FolderOrFile _folderOrFile;
 
-        public ShellViewModel(IBathtubFactory bathtubFactory, UserSettings userSettings,
-            IWindowManager windowManager, IResultViewModelFactory resultViewModelFactory,
+        public ShellViewModel(
+            IBathtubFactory bathtubFactory, 
+            UserSettings userSettings,
+            IWindowManager windowManager, 
+            IResultViewModelFactory resultViewModelFactory,
             IInputAttributeViewModelFactory inputAttributeViewModelFactory,
             IErrorViewModelFactory errorViewModelFactory)
         {
@@ -48,20 +50,20 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             _resultViewModelFactory = resultViewModelFactory;
             _inputAttributeViewModelFactory = inputAttributeViewModelFactory;
             _errorViewModelFactory = errorViewModelFactory;
-
+            
             _userSettings.Load(this);
         }
 
-        public ICollection<InputAttribute> AdditionalInputAttributes => AdditionalInputAttributeViewModels?.Select(
+        public ICollection<InputAttribute> InputAttributes => InputAttributeViewModels?.Select(
             inputAttributeViewModel => inputAttributeViewModel.Item).ToList();
 
-        public ObservableCollection<InputAttributeViewModel> AdditionalInputAttributeViewModels
+        public ObservableCollection<InputAttributeViewModel> InputAttributeViewModels
         {
-            get => _additionalInputAttributeViewModels;
+            get => _inputAttributeViewModels;
             set
             {
-                if (Equals(value, _additionalInputAttributeViewModels)) return;
-                _additionalInputAttributeViewModels = value;
+                if (Equals(value, _inputAttributeViewModels)) return;
+                _inputAttributeViewModels = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -83,7 +85,7 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
 
         public string Path
         {
-            get => _path;
+            get => _path.Trim();
             set
             {
                 if (value == _path) return;
@@ -118,16 +120,16 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             }
         }
 
-        public ICollection<InputAttribute> RemovalInputAttributes => RemovalInputAttributeViewModels?.Select(
+        public ICollection<InputAttribute> RemoveInputAttributes => RemoveInputAttributeViewModels?.Select(
             attributeViewModel => attributeViewModel.Item).ToList();
 
-        public ObservableCollection<InputAttributeViewModel> RemovalInputAttributeViewModels
+        public ObservableCollection<InputAttributeViewModel> RemoveInputAttributeViewModels
         {
-            get => _removalInputAttributeViewModels;
+            get => _removeInputAttributeViewModels;
             set
             {
-                if (Equals(value, _removalInputAttributeViewModels)) return;
-                _removalInputAttributeViewModels = value;
+                if (Equals(value, _removeInputAttributeViewModels)) return;
+                _removeInputAttributeViewModels = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -145,6 +147,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
                 _folderOrFile = value;
                 NotifyOfPropertyChange();
                 NotifyOfPropertyChange(nameof(FolderPathLabel));
+
+                _userSettings?.SaveSingle(nameof(FolderOrFile), value);
             }
         }
 
@@ -160,18 +164,19 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         protected override void OnActivate()
         {
             DisplayName = "Scrubber";
-            FolderOrFile = FolderOrFile.Folder;
+            InputAttributeViewModels = new ObservableCollection<InputAttributeViewModel>();
+            RemoveInputAttributeViewModels = new ObservableCollection<InputAttributeViewModel>();
             base.OnActivate();
         }
 
         public void AddAttribute()
         {
-            AdditionalInputAttributeViewModels.Add(_inputAttributeViewModelFactory.Create());
+            InputAttributeViewModels.Add(_inputAttributeViewModelFactory.Create());
         }
 
         public void AddRemoveAttribute()
         {
-            RemovalInputAttributeViewModels.Add(_inputAttributeViewModelFactory.Create());
+            RemoveInputAttributeViewModels.Add(_inputAttributeViewModelFactory.Create());
         }
 
         public void RemoveRemovalAttribute(object sender, RoutedEventArgs e)
@@ -183,8 +188,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             if (attribute == null)
                 return;
 
-            var viewModel = RemovalInputAttributeViewModels.SingleOrDefault(vm => vm.Id == attribute.Id);
-            RemovalInputAttributeViewModels.Remove(viewModel);
+            var viewModel = RemoveInputAttributeViewModels.SingleOrDefault(vm => vm.Id == attribute.Id);
+            RemoveInputAttributeViewModels.Remove(viewModel);
         }
 
         public void RemoveAttribute(object sender, RoutedEventArgs e)
@@ -196,8 +201,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
             if (attribute == null)
                 return;
 
-            var viewModel = AdditionalInputAttributeViewModels.SingleOrDefault(vm => vm.Id == attribute.Id);
-            AdditionalInputAttributeViewModels.Remove(viewModel);
+            var viewModel = InputAttributeViewModels.SingleOrDefault(vm => vm.Id == attribute.Id);
+            InputAttributeViewModels.Remove(viewModel);
         }
 
         public void OpenFileExplorer()
@@ -260,8 +265,8 @@ namespace Scrubber.Model.Maintenance.Shell.ViewModels
         {
             IsLoading = true;
 
-            var bathtubOptions = new ScrubberOptions(Path, ClearComments, FormatFiles, AdditionalInputAttributes,
-                RemovalInputAttributes, FolderOrFile);
+            var bathtubOptions = new ScrubberOptions(Path, ClearComments, FormatFiles, InputAttributes,
+                RemoveInputAttributes, FolderOrFile);
 
             var bathtub = _bathtubFactory.Create(bathtubOptions);
             bathtub.FillAndRinse();

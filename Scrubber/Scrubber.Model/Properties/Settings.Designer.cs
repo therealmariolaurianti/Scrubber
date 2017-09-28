@@ -58,5 +58,17 @@ namespace Scrubber.Model.Properties {
                 this["FormatFiles"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Folder")]
+        public global::Scrubber.Enums.FolderOrFile FolderOrFile {
+            get {
+                return ((global::Scrubber.Enums.FolderOrFile)(this["FolderOrFile"]));
+            }
+            set {
+                this["FolderOrFile"] = value;
+            }
+        }
     }
 }

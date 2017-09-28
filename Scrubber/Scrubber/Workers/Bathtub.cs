@@ -53,12 +53,9 @@ namespace Scrubber.Workers
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             foreach (var file in filesByExtenstion)
-            {
-                var dirtyFile = new DirtyFile(file);
-                DirtyFiles.Add(dirtyFile);
-            }
+                DirtyFiles.Add(new DirtyFile(file));
         }
 
         public void Rinse()

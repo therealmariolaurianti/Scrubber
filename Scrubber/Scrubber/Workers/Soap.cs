@@ -67,7 +67,8 @@ namespace Scrubber.Workers
             if (!nodes.Any())
                 return;
 
-            var orderedNodes = OrderNodes(nodes).ToList();
+            var orderedNodes = OrderNodesByColumn(nodes).ToList();
+            //var orderedNodes = OrderNodesByRow(nodes).ToList();
 
             foreach (var orderedNode in orderedNodes.Where(on => on.HasChildNodes))
                 ProcessChildNode(orderedNode, xDoc);
@@ -76,28 +77,34 @@ namespace Scrubber.Workers
                 node.AppendChild(orderedNode);
         }
 
-        private IEnumerable<XmlNode> OrderNodes(IReadOnlyCollection<XmlNode> nodes)
+        private IEnumerable<XmlNode> OrderNodesByColumn(IReadOnlyCollection<XmlNode> nodes)
         {
-            var rows = GetAttributeValues(nodes, GridProperties.Row).ToList();
+            var rows = GetAttributeValues(nodes, GridProperties.Column).ToList();
 
             for (var nodeIndex = 0; nodeIndex <= rows.Max(); nodeIndex++)
             {
-                var rowControls = GetControlsByColumn(nodes, nodeIndex).ToList();
+                var index = nodeIndex;
+                var controlsInRow = nodes.Where(node => node.GetAttributeValue(GridProperties.Column) == index);
+                var rowControls = controlsInRow.OrderBy(control => control.GetAttributeValue(GridProperties.Row)).ToList();
+
                 foreach (var rowControl in rowControls)
                     yield return rowControl;
             }
         }
 
-        public IEnumerable<XmlNode> GetControlsByRow(IEnumerable<XmlNode> nodes, int row)
+        private IEnumerable<XmlNode> OrderNodesByRow(IReadOnlyCollection<XmlNode> nodes)
         {
-            var controlsInRow = nodes.Where(node => node.GetAttributeValue(GridProperties.Row) == row);
-            return controlsInRow.OrderBy(control => control.GetAttributeValue(GridProperties.Column));
-        }
+            var rows = GetAttributeValues(nodes, GridProperties.Row).ToList();
 
-        public IEnumerable<XmlNode> GetControlsByColumn(IEnumerable<XmlNode> nodes, int column)
-        {
-            var controlsInRow = nodes.Where(node => node.GetAttributeValue(GridProperties.Column) == column);
-            return controlsInRow.OrderBy(control => control.GetAttributeValue(GridProperties.Row));
+            for (var nodeIndex = 0; nodeIndex <= rows.Max(); nodeIndex++)
+            {
+                var index = nodeIndex;
+                var controlsInRow = nodes.Where(node => node.GetAttributeValue(GridProperties.Row) == index);
+                var rowControls = controlsInRow.OrderBy(control => control.GetAttributeValue(GridProperties.Column)).ToList();
+
+                foreach (var rowControl in rowControls)
+                    yield return rowControl;
+            }
         }
 
         public IEnumerable<int> GetAttributeValues(IEnumerable<XmlNode> nodes, string attributeName)

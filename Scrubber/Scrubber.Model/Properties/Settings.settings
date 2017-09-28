@@ -11,5 +11,8 @@
     <Setting Name="FormatFiles" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="FolderOrFile" Type="Scrubber.Enums.FolderOrFile" Scope="User">
+      <Value Profile="(Default)">Folder</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -41,6 +41,9 @@ namespace Scrubber.Helpers
         {
             foreach (var inputAttribute in inputAttributes)
                 Add(node, xDoc, inputAttribute);
+            
+            //Add(node, xDoc, new InputAttribute("DoubleTextBox", "NumberDecimalDigits", 5));
+            //Add(node, xDoc, new InputAttribute("DoubleTextBox", "MinValue", 0));
         }
 
         public void RemoveMany(XmlNode node, ICollection<InputAttribute> existingAttributes)
